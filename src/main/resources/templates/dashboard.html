@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+    <title>EHR - Electronic Hospital Records</title>
+
+    
+
+</head>
+
+<body>
+	
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+   
+    <!-- Page content -->
+    <div class="page-content">  
+
+
+        <!-- Main content -->
+        <div class="content-wrapper">
+
+            <!-- Page header -->
+            <div class="page-header">
+                <div class="page-header-content header-elements-md-inline">
+                    <div class="page-title d-flex">
+                        <h4><span class="font-weight-semibold">Home</span></h4>
+                        <a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+                    </div>                  
+                </div>
+            </div>
+            <!-- /page header -->
+
+
+            <!-- Content area -->
+            <div class="content pt-0">
+
+                <!-- Dashboard content -->
+                <div class="row">
+                
+                	<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
+                	
+                    <div class="col-sm-6 col-xl-3">
+                    	<a th:href="@{/personnels}">
+                        <div class="card card-body bg-success-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-meter2 icon-3x opacity-75"></i>
+                                </div>
+
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">Admin</h3>
+                                    <span class="text-uppercase font-size-xs">Module</span>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    
+                    </th:block>
+
+                    <div class="col-sm-6 col-xl-3">
+                    	<a th:href="@{/erdashboard}">
+                        <div class="card card-body bg-indigo-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-target icon-3x opacity-75"></i>
+                                </div>
+
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">Emergency Room</h3>
+                                    <span class="text-uppercase font-size-xs">Module</span>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+
+                    <div class="col-sm-6 col-xl-3">
+                    	<a th:href="@{/admission_dashboard}">
+                        <div class="card card-body bg-orange-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-download7 icon-3x opacity-75"></i>
+                                </div>
+
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">Admission</h3>
+                                    <span class="text-uppercase font-size-xs">Module</span>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>                  
+                                   
+                    
+                    <div class="col-sm-6 col-xl-3">
+                    	<a th:href="@{/nurses_station_dashboard}">
+                        <div class="card card-body bg-danger-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-aid-kit icon-3x opacity-75"></i>
+                                </div>
+
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">Nurse Station</h3>
+                                    <span class="text-uppercase font-size-xs">Module</span>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+                    
+                    <th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_DOCTOR_EMR'}">
+                    
+                    <div class="col-sm-6 col-xl-3">
+                    	<a th:href="@{/emrdashboard}">
+                        <div class="card card-body bg-violet-400 has-bg-image">
+                            <div class="media">
+                                <div class="mr-3 align-self-center">
+                                    <i class="icon-lifebuoy icon-3x opacity-75"></i>
+                                </div>
+
+                                <div class="media-body text-right">
+                                    <h3 class="mb-0">EMR</h3>
+                                    <span class="text-uppercase font-size-xs">Module</span>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>  
+                    
+                    </th:block>
+                    
+                </div>                  
+                
+                <!-- /dashboard content -->
+
+            </div>
+            <!-- /content area -->
+
+			<!-- Footer -->
+			<div th:replace="fragments/common::footer"></div>
+			<!-- /Footer -->            
+
+        </div>
+        <!-- /main content -->
+
+    </div>
+    <!-- /page content -->
+
+    
+</body>
+</html>

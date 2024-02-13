@@ -1,0 +1,3 @@
+-- insert ignore into sys_user(id,username,password,first_name,last_name,gender,address,contact_number,email,status,user_type) values(1,'admin','password','Ian','Orozco','M','QC','09062794574','admin@gmail.com','A','ROLE_ADMIN');
+
+insert ignore into employee(id,username,password,emp_hash_code,first_name,last_name,gender,mobileno1,email1,status,user_type) values(1,'admin','admin','isHklfn35Rgnd456556rfgngdfg12','Ian','Orozco','M','09062794574','admin@gmail.com','A','ROLE_ADMIN');

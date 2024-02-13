@@ -1,14 +1,33 @@
-# Compiled class file
+# Ignore all the compiled bytecode
 *.class
 
-# Log file
-*.log
+# Ignore all build directories
+target/
 
-# BlueJ files
-*.ctxt
+# Ignore IntelliJ IDEA project files
+.idea/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Ignore Eclipse project files
+# .classpath
+# .project
+# .factorypath
+# .settings/
+
+# Ignore NetBeans project files
+nbproject/
+
+# Ignore Maven specific files
+log/
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/
+.mvn/wrapper/maven-wrapper.jar
 
 # Package Files #
 *.jar
