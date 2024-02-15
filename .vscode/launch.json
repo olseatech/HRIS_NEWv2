@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-HrispApplication<hrisp>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.ian.web.HrispApplication",
+            "projectName": "hrisp",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
