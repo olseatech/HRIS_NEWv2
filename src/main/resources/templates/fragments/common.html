@@ -124,88 +124,7 @@
     
 </th:block>
 
-<!-- EMR Area -->
 
-<th:block th:fragment="main-navbar-old">
-    <!-- Main navbar -->
-    <div class="navbar navbar-expand-md navbar-dark">
-        <div class="navbar-brand wmin-0 mr-5">
-            <a th:href="@{/dashboard}" class="d-inline-block">
-                <img th:src="@{/global_assets/images/logo_light.png}" alt="">
-            </a>
-        </div>
-
-        <div class="d-md-none">
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
-                <i class="icon-paragraph-justify3"></i>
-            </button>
-        </div>
-
-        <div class="collapse navbar-collapse" id="navbar-mobile">
-
-            <span class="badge badge-pill ml-md-3 mr-md-auto">&nbsp;</span>
-
-            <ul class="navbar-nav">
-
-                <!-- Modules to insert -->
-                <th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
-	                <li class="nav-item">
-				        <a th:href="@{/personnels}" class="navbar-nav-link d-flex align-items-center" id="adminModuleNav">
-				            <i class="icon-meter2 mr-2"></i>
-				            <span>Admin Module</span>
-				        </a>
-				    </li>
-			    </th:block>
-			    <li class="nav-item">
-			        <a th:href="@{/erdashboard}" class="navbar-nav-link d-flex align-items-center" id="erModuleNav">
-			            <i class="icon-target mr-2"></i>
-			            <span>ER Module</span>
-			        </a>
-			    </li>
-			    <li class="nav-item">
-			        <a th:href="@{/admission_dashboard}" class="navbar-nav-link d-flex align-items-center" id="admissionModuleNav">
-			            <i class="icon-download7 mr-2"></i>
-			            <span>Admission Module</span>
-			        </a>
-			    </li>			    
-			    <li class="nav-item">
-			        <a th:href="@{/nurses_station_dashboard}" class="navbar-nav-link d-flex align-items-center" id="nurseStationNav">
-			            <i class="icon-aid-kit mr-2"></i>
-			            <span>Nurses' Station</span>
-			        </a>
-			    </li>
-                
-                <th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_DOCTOR_EMR'}">
-	                <li class="nav-item">
-				        <a th:href="@{/emrdashboard}" class="navbar-nav-link d-flex align-items-center" id="emrNav">
-				            <i class="icon-lifebuoy mr-2"></i>
-				            <span>EMR</span>
-				        </a>
-				    </li>
-			    </th:block>
-
-                <li class="nav-item dropdown dropdown-user">
-                    <a href="#" class="navbar-nav-link d-flex align-items-center dropdown-toggle" data-toggle="dropdown">
-                        <i class="icon-gear mr-2"></i>
-<!--                        <span>Ian Orozco</span>-->
-                        <span sec:authentication="principal.fullName"></span>
-                    </a>
-
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <a th:href="@{/myProfile}" class="dropdown-item"><i class="icon-user-plus"></i> My profile</a>
-                        <a th:href="@{/changePassword}" class="dropdown-item"><i class="icon-lock2"></i> Change Password</a>
-                        <a th:href="@{javascript:logoutForm.submit();}" class="dropdown-item"><i class="icon-switch2"></i> Logout</a>
-                        <form name="logoutForm" th:hidden="true" method="post"
-                            th:action="@{/logout}">
-                            <input type="submit" value="Logout" />
-                        </form>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-    <!-- /main navbar -->
-</th:block>
 
 <th:block th:fragment="main-navbar">
 	
@@ -350,7 +269,17 @@
 									Dashboard									
 								</span>
 							</a>
-						</li>						
+						</li>
+						
+						<li class="nav-item nav-item-submenu" id="systemSettingsNav">
+							<a href="#" class="nav-link"><i class="icon-gear"></i> <span>System Settings</span></a>
+							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
+								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="academicHonorsNav"><i class="icon-location4"></i> Academic Honors</a></li>
+                                <!-- 
+								<li class="nav-item"><a th:href="@{/hmos}" class="nav-link" id="hmo2ndNav"><i class="icon-library2"></i> HMO Management</a></li>
+								 -->                                														
+							</ul>
+						</li>							
 						
 						<li class="nav-item">
 							<a th:href="@{emrChangePassword}" class="nav-link" id="emrChangePasswordNav">
