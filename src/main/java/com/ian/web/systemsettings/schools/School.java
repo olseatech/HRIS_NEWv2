@@ -1,4 +1,4 @@
-package com.ian.web.systemsettings.degreelevels;
+package com.ian.web.systemsettings.schools;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,18 +12,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "school")
 @Builder
-@Table(name = "degree_levels")
-@Entity
-public class DegreeLevel {
+public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = " is mandatory.")
-    public String degreeName;
+    @NotBlank(message = " not mandatory.")
+    private String schoolName;
     @Builder.Default
     private boolean isActive = true;
 }

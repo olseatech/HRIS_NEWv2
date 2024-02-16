@@ -1,11 +1,16 @@
-package com.ian.web.systemsettings.degreelevels;
+package com.ian.web.systemsettings.employee_status;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+
+import com.ian.web.constants.EmploymentType;
+import com.ian.web.constants.PayrollBehavior;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,15 +20,19 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "employee_status")
 @Builder
-@Table(name = "degree_levels")
 @Entity
-public class DegreeLevel {
+public class EmployeeStatus {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = " is mandatory.")
-    public String degreeName;
+    private String employeeStatusName;
+    @Enumerated(EnumType.STRING)
+    private PayrollBehavior payrollBehavior;
+    @Enumerated(EnumType.STRING)
+    private EmploymentType employmentType;
     @Builder.Default
     private boolean isActive = true;
 }
