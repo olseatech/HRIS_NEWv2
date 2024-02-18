@@ -14,7 +14,7 @@ public class NavController {
 		Employee actor = (Employee) auth.getPrincipal();
         session.setAttribute("actorObj", actor);
                 
-        return "emr_dashboard";
+        return "dashboard";
     }
 
 }

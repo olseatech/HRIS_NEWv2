@@ -5,6 +5,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import com.ian.web.systemsettings.academichonors.AcademicHonors;
+import com.ian.web.systemsettings.degree_courses.DegreeCourses;
+import com.ian.web.systemsettings.schools.School;
 
 public class EducationalBackground {
 	
@@ -15,7 +17,7 @@ public class EducationalBackground {
 	private boolean isDeceased;
 	private String level;
 	private School school;
-	private DegreeCourse degree;
+	private DegreeCourses degree;
 	
 	private int startYear;
 	private int startMonth;

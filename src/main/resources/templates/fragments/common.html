@@ -115,7 +115,8 @@
 	<script th:src="@{/global_assets/js/demo_pages/uploader_bootstrap.js}"></script>
 
     <script th:src="@{/assets/js/app.js}"></script>
-    <script th:src="@{/global_assets/js/demo_pages/datatables_basic.js}"></script>
+    
+    <script th:src="@{/global_assets/js/demo_pages/datatables_advanced.js}"></script>
     <!-- /theme JS files 2-->
     
     <script th:src="@{/js/philippines.js}"></script>
@@ -263,7 +264,7 @@
 
 						<!-- Main -->						
 						<li class="nav-item">							
-							<a th:href="@{/emrdashboard}" class="nav-link" id="emrDashboardNav">
+							<a th:href="@{/dashboard}" class="nav-link" id="emrDashboardNav">
 								<i class="icon-home4"></i>
 								<span>
 									Dashboard									
@@ -271,18 +272,49 @@
 							</a>
 						</li>
 						
+						<li class="nav-item nav-item-submenu" id="myAccountNav">
+							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>My Account</span></a>
+							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
+								<li class="nav-item"><a th:href="@{/degree-levels}" class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> Personal Data Sheet</a></li>
+								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="myClearanceNav"><i class="icon-paste2"></i> Clearance</a></li>								
+								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="myServiceRecordNav"><i class="icon-cabinet"></i> Service Record</a></li>						
+                                                        														
+							</ul>
+						</li>
+						
+						<li class="nav-item nav-item-submenu" id="employeeManagementNav">
+							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>Employee Management</span></a>
+							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
+								<li class="nav-item"><a th:href="@{/employee-list}" class="nav-link" id="employeeListNav"><i class="icon-user-tie"></i> Employee List</a></li>
+								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="clearanceListNav"><i class="icon-paste2"></i> Clearance List</a></li>
+								<li class="nav-item nav-item-submenu">
+									<a href="#" class="nav-link"><i class="icon-vcard"></i> Reports</a>
+									<ul class="nav nav-group-sub">
+										<li class="nav-item">
+											<a th:href="@{/degree-levels}" class="nav-link"><i class="icon-magazine"></i>Personal Data Sheet</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/degree-levels}" class="nav-link"><i class="icon-magazine"></i>Employee List Report</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/degree-levels}" class="nav-link"><i class="icon-magazine"></i>Clearance List Report</a>
+										</li>
+									</ul>
+								</li>                                                   														
+							</ul>
+						</li>
+						
 						<li class="nav-item nav-item-submenu" id="systemSettingsNav">
 							<a href="#" class="nav-link"><i class="icon-gear"></i> <span>System Settings</span></a>
 							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
-								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="academicHonorsNav"><i class="icon-location4"></i> Academic Honors</a></li>
-								<li class="nav-item"><a th:href="@{/degree-levels}" class="nav-link" id="degreeLevelNav"><i class="icon-location4"></i> Degree Levels</a></li>
-								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="degreeCoursesNav"><i class="icon-location4"></i> Degree Courses</a></li>
-								<li class="nav-item"><a th:href="@{/document-type}" class="nav-link" id="documentTypeNav"><i class="icon-location4"></i> Document Type</a></li>
-								<li class="nav-item"><a th:href="@{/profession}" class="nav-link" id="professionNav"><i class="icon-location4"></i>Profession</a></li>
-								<li class="nav-item"><a th:href="@{/school}" class="nav-link" id="schoolNav"><i class="icon-location4"></i>School</a></li>
-                                <!-- 
-								<li class="nav-item"><a th:href="@{/hmos}" class="nav-link" id="hmo2ndNav"><i class="icon-library2"></i> HMO Management</a></li>
-								 -->                                														
+								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="academicHonorsNav"><i class="icon-graduation2"></i> Academic Honors</a></li>
+								<li class="nav-item"><a th:href="@{/degree-levels}" class="nav-link" id="degreeLevelNav"><i class="icon-graduation2"></i> Degree Levels</a></li>
+								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="degreeCoursesNav"><i class="icon-graduation2"></i> Degree Courses</a></li>
+								<li class="nav-item"><a th:href="@{/division-list}" class="nav-link" id="divisionNav"><i class="icon-wall"></i> Divisions</a></li>
+								<li class="nav-item"><a th:href="@{/document-type}" class="nav-link" id="documentTypeNav"><i class="icon-images2"></i> Document Type</a></li>
+								<li class="nav-item"><a th:href="@{/profession}" class="nav-link" id="professionNav"><i class="icon-brain"></i>Profession</a></li>
+								<li class="nav-item"><a th:href="@{/school}" class="nav-link" id="schoolNav"><i class="icon-city"></i>School</a></li>
+                                                  														
 							</ul>
 						</li>							
 						
@@ -303,7 +335,7 @@
 								</span>
 							</a>
 							<form name="logoutForm" th:hidden="true" method="post"
-                                th:action="@{/`logout}">
+                                th:action="@{/logout}">
                                 <input type="submit" value="Logout" />
                             </form>
 						</li>			

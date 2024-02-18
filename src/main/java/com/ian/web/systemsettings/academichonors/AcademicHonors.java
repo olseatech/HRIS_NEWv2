@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
@@ -16,6 +18,6 @@ public class AcademicHonors {
     private long id;
 	
 	@NotBlank(message = " is mandatory.")
-    private String academicHonorsName;
+    private String academicHonorsName;	
 
 }

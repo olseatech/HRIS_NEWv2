@@ -70,13 +70,13 @@
 										<input type="text" th:field="*{abbreviation}" placeholder="ex. BSCS" class="form-control">
 									</div>
 								</div>		
-                                <div id="activeLawDegree" class="form-group row align-items-center justify-content-start ">
+                                <!--<div id="activeLawDegree" class="form-group row align-items-center justify-content-start ">
                                     <label class="col-form-label col-sm-4" ></label>
                                     <div class="col-sm-8 d-flex align-items-center ">
                                         <input class="bg-primary" type="checkbox" value="" id="law-degree">&nbsp;
                                         <label for="law-degree">is Law Degree</label>
                                     </div>                      
-                                </div>					
+                                </div>		-->			
 								
 							</div>
 
@@ -113,7 +113,7 @@
 									<tr>
 										<th>Degree Course</th>
                                         <th>Abbreviation</th>
-										<th>Law Degree Course</th>
+										<!--<th>Law Degree Course</th>-->
                                         <th>Status</th>					
 										<th class="text-center">Actions</th>
 									</tr>
@@ -123,14 +123,14 @@
 										<tr>
 											<td id="degreeCourse" th:text="${degreeCourse.getDegreeCourse()}">Degree Course</td>
                                             <td id="abbreviation" th:text="${degreeCourse.getAbbreviation()}">Abbreviation</td>
-											<td id="lawDegree">
+											<!--<td id="lawDegree">
 												<form th:action="@{/update-degree-courses-status/isLawDegree/{id}(id=${degreeCourse.getId()})}" method="post">
 													<input type="hidden" name="_method" value="put" />
 													<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" >
 														<input type="checkbox" name="lawDegree" th:checked="${degreeCourse.isLawDegree()}" />
 													</a>
 												</form>
-											</td>
+											</td>-->
                                             <td id="degreeStatus" >
 												<form th:action="@{/update-degree-courses-status/isActive/{id}(id=${degreeCourse.getId()})}" method="post">
 													<input type="hidden" name="_method" value="put" />

@@ -1,27 +1,35 @@
 package com.ian.web.employee;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
+@RequiredArgsConstructor
 public class EmployeeController {
 	
-	private EmployeeRepository employeeRepository;
+	private final EmployeeRepository employeeRepository;		
 	
-	public EmployeeController (EmployeeRepository employeeRepository) {
-		this.employeeRepository = employeeRepository;
-	}
+	@GetMapping("/employee/datalist")
+    public ResponseEntity<FlexDatalistResult> doctorsFlexDatalist() {
+        Set<Employee> allEmployeeSet = new HashSet<>(employeeRepository.findAll());
+        return ResponseEntity.ok().body(new FlexDatalistResult(allEmployeeSet));
+    }
 	
-	@GetMapping("/employees")
+	@GetMapping("/employee-list")
 	public String listAll(Model model) {
-		Iterable<Employee> employees = employeeRepository.findAll();
-		model.addAttribute("employees", employees);
-		return "employee/employee_list";
+		Iterable<Employee> employeeList = employeeRepository.findAll();
+		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("employee", new Employee());
+		return "employee/employee-list";
 	}
 	
 	@GetMapping("/employee/{employeeId}")
@@ -29,7 +37,7 @@ public class EmployeeController {
 		Optional<Employee> optional = employeeRepository.findById(employeeId);
 		Employee employee = optional.orElseGet(() -> new Employee());
 		model.addAttribute("employee", employee);
-		return "employee/employee_profile";
+		return "employee/employee-profile";
 	}
 	
 	@GetMapping("/employee/{employeeId}/{empHashCode}")
@@ -37,7 +45,7 @@ public class EmployeeController {
 		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
 		Employee employee = optional.orElseGet(() -> new Employee());
 		model.addAttribute("employee", employee);
-		return "employee/employee_profile";
+		return "employee/employee-profile";
 	}
 	
 }

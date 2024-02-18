@@ -4,9 +4,7 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,16 +15,13 @@ import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.ian.web.common.model.Address;
 import com.ian.web.common.model.Person;
-
+import com.ian.web.systemsettings.division.Division;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -81,6 +76,10 @@ public class Employee extends Person  implements UserDetails {
     private String mobileno2;
 	
     private String status = "ACTIVE";
+    
+    @ManyToOne
+    @JoinColumn(name = "division_id")
+    private Division division;
     
     @NotBlank
     private String userType;

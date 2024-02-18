@@ -39,7 +39,8 @@ public class AcademicHonorsController {
 			model.addAttribute("uxmessage", new UXMessage("ERROR", "Please check items marked in red."));
 			return "system-settings/academic-honors/academic-honors-list";
 		}
-				
+		
+		academicHonors.setAcademicHonorsName(academicHonors.getAcademicHonorsName().toUpperCase());
 		academicHonorsRepository.save(academicHonors);		
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
