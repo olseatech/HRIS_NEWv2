@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ian.web.common.model.UXMessage;
-import com.ian.web.systemsettings.academichonors.AcademicHonors;
-import com.ian.web.systemsettings.degreelevels.DegreeLevel;
 
 import lombok.RequiredArgsConstructor;
 

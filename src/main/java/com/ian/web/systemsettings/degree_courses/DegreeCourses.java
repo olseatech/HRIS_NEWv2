@@ -24,6 +24,7 @@ public class DegreeCourses {
     private Long id;
     @NotBlank(message = " is mandatory.")
     private String degreeCourse;
+    @NotBlank(message = " is mandatory.")
     private String abbreviation;
     private boolean isLawDegree;
     @Builder.Default

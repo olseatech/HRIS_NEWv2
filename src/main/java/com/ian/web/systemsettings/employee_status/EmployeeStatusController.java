@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ian.web.common.model.UXMessage;
-import com.ian.web.constants.EmploymentType;
-import com.ian.web.constants.PayrollBehavior;
-import com.ian.web.systemsettings.profession.Profession;
 
 import lombok.RequiredArgsConstructor;
 

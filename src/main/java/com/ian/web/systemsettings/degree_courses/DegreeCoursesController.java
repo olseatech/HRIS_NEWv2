@@ -1,7 +1,6 @@
 package com.ian.web.systemsettings.degree_courses;
 
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -9,17 +8,14 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ian.web.common.model.UXMessage;
-import com.ian.web.systemsettings.academichonors.AcademicHonors;
-import com.ian.web.systemsettings.degreelevels.DegreeLevel;
+
+import lombok.RequiredArgsConstructor;
 
 
 @Controller
@@ -31,7 +27,7 @@ public class DegreeCoursesController {
     public String getData(Model model) {
         Iterable<DegreeCourses> listOfDegreeCourses = degreeCoursesRepository.findAll();
         model.addAttribute("listOfDegreeCourses", listOfDegreeCourses);
-        model.addAttribute("degreeCourseModel", new DegreeCourses());
+        model.addAttribute("degreeCourse", new DegreeCourses());
         return "system-settings/degree-courses/degree-courses-list";
     }
 
@@ -43,7 +39,10 @@ public class DegreeCoursesController {
 			,final RedirectAttributes redirect
 			,Model model
 			) {
+
 		if (errors.hasErrors()) {
+			System.out.println(errors);
+			model.addAttribute("degreeCourse", degreeCourses);
 			model.addAttribute("uxmessage", new UXMessage("ERROR", "Please check items marked in red."));
 			return "system-settings/degree-courses/degree-courses-list";
 		}
