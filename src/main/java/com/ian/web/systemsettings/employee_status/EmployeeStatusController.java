@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ian.web.common.model.UXMessage;
+import com.ian.web.constants.EmploymentType;
+import com.ian.web.constants.PayrollBehavior;
 import com.ian.web.systemsettings.profession.Profession;
 
 import lombok.RequiredArgsConstructor;
@@ -51,6 +53,7 @@ public class EmployeeStatusController {
 		}
         employeeStatus.setEmployeeStatusName(employeeStatus.getEmployeeStatusName().toUpperCase());
 		employeeStatusRepository.save(employeeStatus);
+
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
 		return "redirect:/employee-status";

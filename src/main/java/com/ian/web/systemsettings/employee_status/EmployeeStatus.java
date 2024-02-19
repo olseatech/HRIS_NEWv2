@@ -29,10 +29,8 @@ public class EmployeeStatus {
     private Long id;
     @NotBlank(message = " is mandatory.")
     private String employeeStatusName;
-    @Enumerated(EnumType.STRING)
-    private PayrollBehavior payrollBehavior;
-    @Enumerated(EnumType.STRING)
-    private EmploymentType employmentType;
+    private String payrollBehavior;
+    private String employmentType;
     @Builder.Default
     private boolean isActive = true;
 }

@@ -4,10 +4,15 @@ public enum EmploymentType {
     PLANTILLA("Plantilla"),
     NON_PLANTILLA("Non-Plantilla");
 
-    private final String displayEmployeeType;
+    final String displayEmployeeType;
 
     EmploymentType(String displayEmployeeType){
         this.displayEmployeeType = displayEmployeeType;
+    }
+
+    EmploymentType valueOf(EmploymentType employmentType) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'valueOf'");
     }
 
 

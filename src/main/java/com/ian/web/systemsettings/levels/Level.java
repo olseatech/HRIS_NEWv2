@@ -1,4 +1,4 @@
-package com.ian.web.systemsettings.profession;
+package com.ian.web.systemsettings.levels;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,22 +8,19 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Table(name = "profession")
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "level")
 @Entity
-@Builder
-public class Profession {
+public class Level {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = " is mandatory.")
-    private String professionName;
-    @Builder.Default
+    private String levelName;
     private boolean isActive = true;
 }
