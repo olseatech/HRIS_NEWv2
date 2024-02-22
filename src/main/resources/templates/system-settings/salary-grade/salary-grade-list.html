@@ -73,7 +73,7 @@
 									<label class="col-form-label col-sm-4">Salary Grade Number</label>
 									<div class="col-sm-8">
 										<span class="validationError text-danger" th:if="${#fields.hasErrors('salaryGradeNumber')}" th:errors="*{salaryGradeNumber}"></span>
-										<input type="text" id="salaryGradeNumber" th:field="*{salaryGradeNumber}" placeholder="Salary Grade Number" class="form-control">
+										<input type="number" id="salaryGradeNumber" th:field="*{salaryGradeNumber}" placeholder="Salary Grade Number" class="form-control">
                                         
 									</div>
 								</div>	
