@@ -9,5 +9,4 @@ import java.util.List;
 
 @Repository
 public interface PositionTitleRepository extends JpaRepository<PositionTitle, Long> {
-    Optional<PositionTitle>findById(Long id);
 }

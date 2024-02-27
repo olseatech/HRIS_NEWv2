@@ -1,4 +1,4 @@
-package com.ian.web.systemsettings.schools;
+package com.ian.web.systemsettings.scholarship;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -18,22 +18,22 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "school")
+@Table(name = "scholarships")
+@Entity
 @Builder
-public class School {
+public class Scholarship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = " not mandatory.")
-    private String schoolName;
+    @NotBlank(message = " is mandatory.")
+    private String scholarshipName;
     @Builder.Default
     private boolean isActive = true;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "school")
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "scholarship")
     @JsonIgnore
     private EducationalBackground educationalBackground;
 }

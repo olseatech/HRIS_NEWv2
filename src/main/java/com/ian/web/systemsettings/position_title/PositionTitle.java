@@ -50,20 +50,7 @@ public class PositionTitle {
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "position_title_salary_grade", referencedColumnName = "id")
     private SalaryGrade salaryGrade;
-
-    @NotBlank(message = " is mandatory.")
-    private String education;
-    @NotBlank(message = " is mandatory.")
-    private String training;
-    @NotBlank(message = " is mandatory.")
-    private String experience;
-    @NotBlank(message = " is mandatory.")
-    private String eligibility;
     
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "position_title_competency", referencedColumnName = "id")
-    private List<Competency> competencies;
-
     @Builder.Default
     private boolean isActive = true;
 }

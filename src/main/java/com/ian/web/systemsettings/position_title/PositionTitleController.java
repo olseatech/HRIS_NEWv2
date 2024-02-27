@@ -76,21 +76,16 @@ public class PositionTitleController {
 			return "system-settings/position-title/position-title-list";
 		}
 
-        // @SuppressWarnings("null")
-        // List<Competency> listOfCompetencies = positionTitleModel.getCompetencies().stream()
-        // .map((value)->competencyRepository.save(Competency.builder().compentencyName(value).build()))
-        // .collect(Collectors.toList());
-        PositionTitle positionTitle = positionTitleRepository.findById(positionTitleModel.getId()).orElse(new PositionTitle());
+        PositionTitle positionTitle = null;
+        if(Objects.isNull(positionTitleModel.getId())){
+            positionTitle = new PositionTitle();
+        }else { positionTitle = positionTitleRepository.findById(positionTitleModel.getId()).get(); }
+        
         positionTitle.setPositionTitleName(positionTitleModel.getPositionTitleName().toUpperCase());
         positionTitle.setDepartmentCode(positionTitleModel.getDepartmentCode().toUpperCase());
         positionTitle.setEmployeeStatus(employeeStatusRepository.save(employeeStatusRepository.findById(positionTitleModel.getEmployeeStatusId()).get()));
         positionTitle.setLevel(levelRepository.save(levelRepository.save(levelRepository.findById(positionTitleModel.getLevelId()).get())));
         positionTitle.setSalaryGrade(salaryGradeRepository.save(salaryGradeRepository.findById(positionTitleModel.getSalaryGradeId()).get()));
-        positionTitle.setEducation(positionTitleModel.getEducation().toUpperCase());
-        positionTitle.setTraining(positionTitleModel.getTraining());
-        positionTitle.setExperience(positionTitleModel.getExperience());
-        positionTitle.setEligibility(positionTitleModel.getEligibility());
-
         positionTitleRepository.save(positionTitle);
         
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));

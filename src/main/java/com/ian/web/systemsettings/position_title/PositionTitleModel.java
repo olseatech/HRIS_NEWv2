@@ -36,13 +36,4 @@ public class PositionTitleModel {
     private Long levelId;
     @NotNull(message = " is mandatory.")
     private Long salaryGradeId;
-    @NotBlank(message = " is mandatory.")
-    private String education;
-    @NotBlank(message = " is mandatory.")
-    private String training;
-    @NotBlank(message = " is mandatory.")
-    private String experience;
-    @NotBlank(message = " is mandatory.")
-    private String eligibility;
-    private List<String> competencies;
 }

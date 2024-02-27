@@ -111,39 +111,6 @@
 										</select>
 									</div>
 								</div>
-								<h3>Qualification Standard</h3>
-								<hr/>
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Education</label>
-									<div class="col-sm-8">
-										<span class="validationError text-danger" th:if="${#fields.hasErrors('education')}" th:errors="*{education}"></span>
-										<input type="text" id="education" th:field="*{education}" placeholder="Education" class="form-control">
-                                        
-									</div>
-								</div>
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Training</label>
-									<div class="col-sm-8">
-										<span class="validationError text-danger" th:if="${#fields.hasErrors('training')}" th:errors="*{training}"></span>
-										<input type="text" id="training" th:field="*{training}" placeholder="Training" class="form-control">
-                                        
-									</div>
-								</div>
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Experience</label>
-									<div class="col-sm-8">
-										<span class="validationError text-danger" th:if="${#fields.hasErrors('experience')}" th:errors="*{experience}"></span>
-										<input type="text" id="experience" th:field="*{experience}" placeholder="Experience" class="form-control">
-									</div>
-								</div>
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Eligibility</label>
-									<div class="col-sm-8">
-										<span class="validationError text-danger" th:if="${#fields.hasErrors('eligibility')}" th:errors="*{eligibility}"></span>
-										<input type="text" id="eligibility" th:field="*{eligibility}" placeholder="Eligibility" class="form-control">
-									</div>
-								</div>
-								
 							</div>
 
 							<div class="modal-footer">
@@ -201,10 +168,6 @@
 												 th:data-row-employmentType="${positionTitle.getEmployeeStatus().getEmploymentType()}"
 												 th:data-row-level="${positionTitle.getLevel().getId()}"
 												 th:data-row-salaryGrade="${positionTitle.getSalaryGrade().getId()}"
-												 th:data-row-education="${positionTitle.getEducation()}"
-												 th:data-row-training="${positionTitle.getTraining()}"
-												 th:data-row-experience="${positionTitle.getExperience()}"
-												 th:data-row-eligibility="${positionTitle.getEligibility()}"
                                                  th:data-row-id="${positionTitle.getId()}"
 												data-toggle="modal" data-target="#modal_form_vertical"
                                                 >View Record</button>
@@ -297,10 +260,6 @@
 			var employmentType = $(this).attr('data-row-employmentType');
 			var level = $(this).attr('data-row-level');
 			var salaryGrade = $(this).attr('data-row-salaryGrade');
-			var education = $(this).attr('data-row-education');
-			var training = $(this).attr('data-row-training');
-			var experience = $(this).attr('data-row-experience');
-			var eligibility = $(this).attr('data-row-eligibility');
 
 			$('input[name="employment_status"][value="' + employmentType + '"]').prop('checked', true);
 
@@ -310,11 +269,6 @@
 			$("#modal_form_vertical").find("#employeeStatusSelect").val(employmentStatus);
 			$("#modal_form_vertical").find("#levelSelect").val(level);
 			$("#modal_form_vertical").find("#salaryGradeSelect").val(salaryGrade);
-			$("#modal_form_vertical").find("#education").val(education);
-			$("#modal_form_vertical").find("#training").val(training);
-			$("#modal_form_vertical").find("#experience").val(experience);
-			$("#modal_form_vertical").find("#eligibility").val(eligibility);
-			
         });
         $(document).on("click", ".close",".btnClose", function() {
             var id = $(this).attr('data-row-id');
@@ -324,10 +278,6 @@
 			var employmentType = $(this).attr('data-row-employmentType');
 			var level = $(this).attr('data-row-level');
 			var salaryGrade = $(this).attr('data-row-salaryGrade');
-			var education = $(this).attr('data-row-education');
-			var training = $(this).attr('data-row-training');
-			var experience = $(this).attr('data-row-experience');
-			var eligibility = $(this).attr('data-row-eligibility');
 
 			$('input[name="employment_status"]').prop('checked', false);
 
@@ -337,10 +287,6 @@
 			$("#modal_form_vertical").find("#employeeStatusSelect").val("");
 			$("#modal_form_vertical").find("#levelSelect").val("");
 			$("#modal_form_vertical").find("#salaryGradeSelect").val("");
-			$("#modal_form_vertical").find("#education").val("");
-			$("#modal_form_vertical").find("#training").val("");
-			$("#modal_form_vertical").find("#experience").val("");
-			$("#modal_form_vertical").find("#eligibility").val("");
         });
         $(document).on("click", ".btnClose", function() {
             var id = $(this).attr('data-row-id');
@@ -350,10 +296,6 @@
 			var employmentType = $(this).attr('data-row-employmentType');
 			var level = $(this).attr('data-row-level');
 			var salaryGrade = $(this).attr('data-row-salaryGrade');
-			var education = $(this).attr('data-row-education');
-			var training = $(this).attr('data-row-training');
-			var experience = $(this).attr('data-row-experience');
-			var eligibility = $(this).attr('data-row-eligibility');
 
 			$('input[name="employment_status"]').prop('checked', false);
 
@@ -363,10 +305,6 @@
 			$("#modal_form_vertical").find("#employeeStatusSelect").val("");
 			$("#modal_form_vertical").find("#levelSelect").val("");
 			$("#modal_form_vertical").find("#salaryGradeSelect").val("");
-			$("#modal_form_vertical").find("#education").val("");
-			$("#modal_form_vertical").find("#training").val("");
-			$("#modal_form_vertical").find("#experience").val("");
-			$("#modal_form_vertical").find("#eligibility").val("");
         });
 	</script>
 </body>
