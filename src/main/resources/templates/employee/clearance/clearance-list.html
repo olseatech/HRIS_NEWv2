@@ -207,7 +207,7 @@
 						
 						<div class="card">
 					<div class="card-header header-elements-inline">
-						<h5 class="card-title">Employee List</h5>
+						<h5 class="card-title">Clearance Application List</h5>
 						<div class="header-elements">
 							<div class="list-icons">				                				
 				           		<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
@@ -216,7 +216,7 @@
 					</div>
 
 					<div class="card-body">
-						List of All Employee's <code>Active</code> and <code>In-Active</code>. Type to search desired employee.
+						List of All Employee's Clearance Applications. Type to search desired employee.
 					</div>
 
 					<table class="table table-bordered table-hover datatable-highlight">
@@ -224,29 +224,14 @@
 							<tr>
 								<th>Employee Name</th>
 								<th>Employee No.</th>
-								<th>Plantilla No.</th>		
-								<th>Job Title</th>
+								<th>Date Submitted</th>
 								<th>Division</th>
 								<th>Status</th>
 								<th class="text-center">Actions</th>
 							</tr>
 						</thead>
 						<tbody>
-							<th:block th:each="employee : ${employeeList}">
-								<tr>
-									<td th:text="${employee.getFullName()}">Full Name</td>
-									<td th:text="${employee.getEmpNo()}">Status</td>
-									<td th:text="${employee.getPlantillaNo()}">Status</td>
-									<td th:text="${employee.getPlantillaNo()}">Status</td>
-									<td th:text="${employee.getPlantillaNo()}">Status</td>
-									<td><span class="badge badge-success">Active</span></td>
-									<td class="text-center" width="250px;">
-												<a id="editEmployeeButton" type="button" class="showDetails btn btn-primary"
-                                                 th:href="@{/employee/1}"
-                                                >View Record</a>
-									</td>
-								</tr>
-							</th:block>		
+							
 							
 							
 						</tbody>
@@ -280,7 +265,7 @@
 			
 			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 			$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
-			$("#employeeListNav").addClass("active");
+			$("#clearanceListNav").addClass("active");
 			
 			
 			let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';

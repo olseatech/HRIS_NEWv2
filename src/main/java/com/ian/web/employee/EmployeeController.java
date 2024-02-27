@@ -32,12 +32,20 @@ public class EmployeeController {
 		return "employee/employee-list";
 	}
 	
+	@GetMapping("/clearance-list")
+	public String getAllClearance(Model model) {
+		Iterable<Employee> employeeList = employeeRepository.findAll();
+		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("employee", new Employee());
+		return "employee/clearance/clearance-list";
+	}
+	
 	@GetMapping("/employee/{employeeId}")
 	public String viewEmployee(Model model, @PathVariable long employeeId) {
 		Optional<Employee> optional = employeeRepository.findById(employeeId);
 		Employee employee = optional.orElseGet(() -> new Employee());
 		model.addAttribute("employee", employee);
-		return "employee/employee-profile";
+		return "employee/pds/personnal-info";
 	}
 	
 	@GetMapping("/employee/{employeeId}/{empHashCode}")

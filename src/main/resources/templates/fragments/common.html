@@ -246,6 +246,9 @@
 
 							<div class="media-body">
 								<div class="media-title font-weight-semibold" sec:authentication="principal.fullName">Lucas Peralta</div>
+								<div class="font-size-xs opacity-50">
+									HR ADMIN
+								</div>
 								<!--
 								<div class="font-size-xs opacity-50" sec:authentication="principal.specialization">
 									
@@ -275,7 +278,7 @@
 						<li class="nav-item nav-item-submenu" id="myAccountNav">
 							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>My Account</span></a>
 							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
-								<li class="nav-item"><a th:href="@{/degree-levels}" class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> Personal Data Sheet</a></li>
+								<li class="nav-item"><a th:href="@{/employee/1}" class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> Personal Data Sheet</a></li>
 								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="myClearanceNav"><i class="icon-paste2"></i> Clearance</a></li>								
 								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="myServiceRecordNav"><i class="icon-cabinet"></i> Service Record</a></li>						
                                                         														
@@ -286,7 +289,7 @@
 							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>Employee Management</span></a>
 							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
 								<li class="nav-item"><a th:href="@{/employee-list}" class="nav-link" id="employeeListNav"><i class="icon-user-tie"></i> Employee List</a></li>
-								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="clearanceListNav"><i class="icon-paste2"></i> Clearance List</a></li>
+								<li class="nav-item"><a th:href="@{/clearance-list}" class="nav-link" id="clearanceListNav"><i class="icon-paste2"></i> Clearance List</a></li>
 								<li class="nav-item nav-item-submenu">
 									<a href="#" class="nav-link"><i class="icon-vcard"></i> Reports</a>
 									<ul class="nav nav-group-sub">
