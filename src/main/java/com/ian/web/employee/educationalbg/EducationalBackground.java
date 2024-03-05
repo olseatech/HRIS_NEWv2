@@ -1,5 +1,6 @@
 package com.ian.web.employee.educationalbg;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -12,6 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ian.web.systemsettings.academichonors.AcademicHonors;
 import com.ian.web.systemsettings.degree_courses.DegreeCourses;
@@ -46,13 +50,8 @@ public class EducationalBackground {
 	@JoinColumn(name = "educational_background_degree_course", referencedColumnName = "id")
 	private DegreeCourses degreeCourse;
 	
-	private int startYear;
-	private int startMonth;
-	private int startDay;
-	
-	private int endYear;
-	private int endMonth;
-	private int endDay;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	
 	private boolean upToPresent;
 
@@ -68,4 +67,12 @@ public class EducationalBackground {
 	private AcademicHonors academicHonors;
 	private String remarks;
 	
+	private String attachmentUrl;
+	
+	@Transient
+	private MultipartFile attachedFile;
+
+	public String getDateToString(){
+		return startDate.getMonth()+" "+startDate.getYear()+" - "+endDate.getMonth()+" "+endDate.getYear();
+	}
 }

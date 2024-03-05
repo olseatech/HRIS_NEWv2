@@ -1,19 +1,31 @@
-package com.ian.web.employee.workexperience;
+package com.ian.web.employee.voluntary_workexperience;
 
 import java.time.LocalDate;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+
+@Entity
+@Table(name = "voluntary_work")
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
 public class VoluntaryWork {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 	
 	@NotBlank
     private String orgName;

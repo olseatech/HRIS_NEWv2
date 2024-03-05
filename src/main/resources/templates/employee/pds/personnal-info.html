@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+	<title>Dashboard</title>
+
+
+</head>
+
+<body>
+
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+
+					
+	<!-- Page content -->
+	<div class="page-content">
+	
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			  
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">							
+							
+							<div class="row">
+<div class="col-md-12">
+<div class="card">
+<div class="card-header header-elements-inline bg-primary">
+<h6 class="card-title">Personnal Information</h6>
+</div>
+<div class="card-body">
+<form action="/emr/emrpatientprofile" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
+<input type="hidden" name="doctor.id" id="doctorId" value="2">
+<input type="hidden" name="isActive" id="isActive" value="A">
+<input type="hidden" id="id" name="id" value="4940">
+<input type="hidden" id="patientPhoto" name="patientPhoto" value="/file/download/patient_2_4940.jpg">
+<div class="modal-body">
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="firstName">First name</label>
+<input id="firstName" name="firstName" placeholder="First name" type="text" class="form-control" value="IAN">
+</div>
+<div class="col-sm-6">
+<label for="lastName">Last name</label>
+<input id="lastName" name="lastName" placeholder="Last name" type="text" class="form-control" value="OROZCO">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="nickName">Nickname</label>
+<input id="nickName" name="nickName" placeholder="Nickname" type="text" class="form-control" value="">
+</div>
+<div class="col-sm-6">
+<label for="maritalStatus">Marital Status</label>
+<select class="form-control" name="maritalStatus" id="maritalStatus">
+<option value="SINGLE">SINGLE</option>
+<option value="MARRIED" selected="selected">MARRIED</option>
+<option value="WIDOWED">WIDOWED</option>
+<option value="SEPARATED">SEPARATED</option>
+</select>
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="gender">Gender</label>
+<select id="gender" name="gender" class="form-control">
+<option value="MALE" selected="selected">MALE</option>
+<option value="FEMALE" >FEMALE</option>
+</select>
+</div>
+<div class="col-sm-6">
+<label for="birthdate">Birthdate</label>
+<input type="date" class="form-control" id="birthdate" name="birthdate" placeholder="enter your birthday" title="enter your birthday" value="1987-11-09">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="contactNumber">Mobile</label>
+<input id="contactNumber" name="contactNumber" title="enter your mobile number if any." placeholder="enter mobile number" type="text" class="form-control" value="201001484896">
+</div>
+<div class="col-sm-6">
+<label for="emailAddress">Email</label>
+<input id="emailAddress" name="email" title="enter your email." placeholder="Email Address" type="email" class="form-control" value="hagarabdelhady@gmail.com">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="profession">Occupation</label>
+<input type="text" class="form-control" name="profession" id="profession" placeholder="Occupation" value="">
+</div>
+<div class="col-sm-6">
+<label for="seniorCitizenNumber">Senior Citizen Number</label>
+<input type="text" class="form-control" name="seniorCitizenNumber" id="seniorCitizenNumber" placeholder="Senior Citizen Number" value="">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="province">Province</label>
+<select class="form-control" name="province" id="province" data-province="MM" onchange="loadCities('city', this.value)">
+<option value="MM">Metro Manila</option><option value="ABR">Abra</option><option value="APA">Apayao</option><option value="BEN">Benguet</option><option value="IFU">Ifugao</option><option value="KAL">Kalinga</option><option value="MOU">Mountain Province</option><option value="ILN">Ilocos Norte</option><option value="ILS">Ilocos Sur</option><option value="LUN">La Union</option><option value="PAN">Pangasinan</option><option value="BTN">Batanes</option><option value="CAG">Cagayan</option><option value="ISA">Isabela</option><option value="NUV">Nueva Vizcaya</option><option value="QUI">Quirino</option><option value="AUR">Aurora</option><option value="BAN">Bataan</option><option value="BUL">Bulacan</option><option value="NUE">Nueva Ecija</option><option value="PAM">Pampanga</option><option value="TAR">Tarlac</option><option value="ZMB">Zambales</option><option value="BTG">Batangas</option><option value="CAV">Cavite</option><option value="LAG">Laguna</option><option value="QUE">Quezon</option><option value="RIZ">Rizal</option><option value="MAD">Marinduque</option><option value="MDC">Occidental Mindoro</option><option value="MDR">Oriental Mindoro</option><option value="PLW">Palawan</option><option value="ROM">Romblon</option><option value="ALB">Albay</option><option value="CAN">Camarines Norte</option><option value="CAS">Camarines Sur</option><option value="CAT">Catanduanes</option><option value="MAS">Masbate</option><option value="SOR">Sorsogon</option><option value="AKL">Aklan</option><option value="ANT">Antique</option><option value="CAP">Capiz</option><option value="GUI">Guimaras</option><option value="ILI">Iloilo</option><option value="NEC">Negros Occidental</option><option value="BOH">Bohol</option><option value="CEB">Cebu</option><option value="NER">Negros Oriental</option><option value="SIG">Siquijor</option><option value="BIL">Biliran</option><option value="EAS">Eastern Samar</option><option value="LEY">Leyte</option><option value="NSA">Northern Samar</option><option value="WSA">Samar</option><option value="SLE">Southern Leyte</option><option value="ZAN">Zamboanga del Norte</option><option value="ZAS">Zamboanga del Sur</option><option value="ZSI">Zamboanga Sibugay</option><option value="BUK">Bukidnon</option><option value="CAM">Camiguin</option><option value="LAN">Lanao del Norte</option><option value="MSC">Misamis Occidental</option><option value="MSR">Misamis Oriental</option><option value="COM">Compostela Valley</option><option value="DAV">Davao del Norte</option><option value="DAS">Davao del Sur</option><option value="DAC">Davao Occidental</option><option value="DAO">Davao Oriental</option><option value="NCO">Cotabato</option><option value="SAR">Sarangani</option><option value="SCO">South Cotabato</option><option value="SUK">Sultan Kudarat</option><option value="AGN">Agusan del Norte</option><option value="AGS">Agusan del Sur</option><option value="DIN">Dinagat Islands</option><option value="SUN">Surigao del Norte</option><option value="SUR">Surigao del Sur</option><option value="BAS">Basilan</option><option value="LAS">Lanao del Sur</option><option value="MAG">Maguindanao</option><option value="SLU">Sulu</option><option value="TAW">Tawi-tawi</option></select>
+</div>
+<div class="col-sm-6">
+<label for="city">City</label>
+<select class="form-control" name="city" id="city" data-city="Caloocan"><option value="Caloocan">Caloocan</option><option value="Las Pinas">Las Pinas</option><option value="Makati">Makati</option><option value="Malabon">Malabon</option><option value="Mandaluyong">Mandaluyong</option><option value="Manila">Manila</option><option value="Marikina">Marikina</option><option value="Muntinlupa">Muntinlupa</option><option value="Navotas">Navotas</option><option value="Paranaque">Paranaque</option><option value="Pasay">Pasay</option><option value="Pasig">Pasig</option><option value="Pateros">Pateros</option><option value="Quezon">Quezon</option><option value="San Juan">San Juan</option><option value="Taguig">Taguig</option><option value="Valenzuela">Valenzuela</option></select>
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-12">
+<label for="street">Street</label>
+<input id="street" name="street" placeholder="Street" type="text" class="form-control" value="">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="emergencyContactName">Emergency Contact Name</label>
+<input id="emergencyContactName" name="emergencyContactName" title="enter your emergency Contact Name if any." placeholder="Emergency Contact Name" type="text" class="form-control" value="">
+</div>
+<div class="col-sm-6">
+<label for="emergencyContactNumber">Emergency Contact Number</label>
+<input id="emergencyContactNumber" name="emergencyContactNumber" title="enter your emergency Contact Number if any." placeholder="Emergency Contact Number" type="text" class="form-control" value="">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-12">
+<label for="emergencyContactAddress">Emergency Contact Address</label>
+<input id="emergencyContactAddress" name="emergencyContactAddress" placeholder="Emergency Contact Address" type="text" class="form-control" value="">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-12">
+<label for="notes">Notes</label>
+<input id="notes" name="notes" placeholder="Notes" type="text" class="form-control" value="Her 8 year old son has dystonia which causes vocal disorder - OLD Doctor is 689">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="mothersname">Mother's Name</label>
+<input id="mothersname" name="mothersname" title="enter your Mothers Name" placeholder="Mother's Name" type="text" class="form-control" value="">
+</div>
+<div class="col-sm-6">
+<label for="mothersoccupation">Mother's Occupation</label>
+<input id="mothersoccupation" name="mothersoccupation" title="enter your Mothers Occupation" placeholder="Mother's Occupation" type="text" class="form-control" value="">
+</div>
+</div>
+</div>
+<div class="form-group">
+<div class="row">
+<div class="col-sm-6">
+<label for="fathersname">Father's Name</label>
+<input id="fathersname" name="fathersname" title="enter your Fathers Name" placeholder="Father's Name" type="text" class="form-control" value="">
+</div>
+<div class="col-sm-6">
+<label for="fathersoccupation">Father's Occupation</label>
+<input id="fathersoccupation" name="fathersoccupation" title="enter your Fathers Occupation" placeholder="Father's Occupation" type="text" class="form-control" value="">
+</div>
+</div>
+</div>
+</div>
+<div class="modal-footer">
+<button type="submit" class="btn bg-violet-400 btn-float float"><i class="icon-floppy-disk"></i><span> Save Info</span></button>
+<button type="submit" class="btn bg-teal-400 btn-float float2 scrollToTop"><i class="icon-floppy-disk"></i><span> Scroll to Top</span></button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+							
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					<!-- Right component Profile Pic -->
+					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+
+						<!-- Sidebar content -->
+						<div class="sidebar-content">
+							<input type="file" name="profilePhoto" id="profilePhoto" accept="image/*" class="inputfile" />
+							<!-- User card -->
+							<div class="card">
+								<div class="card-body text-center">
+									<div class="card-img-actions d-inline-block mb-3 ">
+										
+										<img th:src="|@{*{#authentication.principal.profilePhoto == null ? '/images/avatar.png' : #authentication.principal.profilePhoto}}|" width="170" height="170" class="rounded-circle" alt="">
+										
+										
+										<div class="card-img-actions-overlay card-img rounded-circle">
+											<button id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
+												<i class="icon-camera"></i>
+											</button>											
+										</div>
+										
+									</div>
+									<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase" sec:authentication="principal.fullName">Hanna Dorman</h6>
+										<div class="text-left mt-1">
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span>HR ADMIN</span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span>PERSONNEL</span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span>OCT 16, 2005</span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span>JAN 27, 1982 <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span>42</span></span>
+											
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span>09062794574</span>
+											
+										</div>
+									
+										    		
+						    	</div>
+					    	</div>
+					    	<!-- /user card -->
+					    	
+					    	<div class="card">
+								<div class="card-header bg-transparent header-elements-inline">
+									<span class="card-title font-weight-semibold">Personal Data Sheet</span>
+									<div class="header-elements">
+										<div class="list-icons">
+					                		<a class="list-icons-item" data-action="collapse"></a>
+				                		</div>
+			                		</div>
+								</div>
+
+								<div class="card-body p-0" style="">
+									<ul class="nav nav-sidebar my-2">
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-checkmark3 text-success"></i>
+												 Personal Information
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/educational-background}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 Educational Background
+											</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 Eligibility
+											</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-checkmark3 text-success"></i>
+												 Work Experience
+											</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-checkmark3 text-success"></i>
+												 Voluntary Work
+											</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-checkmark3 text-success"></i>
+												 Learning &amp; Development
+											</a>
+										</li>
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-checkmark3 text-success"></i>
+												 Other Information
+											</a>
+										</li>
+										
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 Other Information Questions
+											</a>
+										</li>
+										
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /sidebar content -->
+					</div>
+					<!-- /right sidebar component -->
+
+				</div>
+				<!-- /inner container -->
+
+			</div>
+			<!-- /content area -->
+						
+			
+
+		</div>
+		<!-- /main content -->
+		
+		
+
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">		
+	
+	    $(document).ready(function() {
+	    	
+	    	$('#consultation-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false, 
+				
+			});
+	    		    				
+			$(".nav-link").removeClass("active");	    	  	
+			$("#emrDashboardNav").addClass("active");
+
+	    	let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
+			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+
+	    	if(msgCode === 'ERROR'){
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+
+	    });
+
+		$(document).on("click", ".cancelConsultation", function(){
+
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to cancel the appointment?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				  //No Response
+				  console.log("will delete no");
+
+			  } else {
+			  	 console.log("will delete yes");
+				 var id = $(this).attr('data-row-id');
+				 $("#cancelConsultationForm").find("#consultationId").val(id);
+				 $("#cancelConsultationForm").submit();
+			  }
+			});
+
+		});
+
+	</script>
+
+</body>
+</html>
