@@ -37,7 +37,6 @@ public class WorkExperience {
 	
 	@NotBlank
     private String positionTitle;
-	
 	private String department;
 	private String officeName;
 	private String immediateSupervisor;
@@ -50,7 +49,4 @@ public class WorkExperience {
 	private String govtOffice;
 	
 	private String remarks;
-	
-	
-
 }

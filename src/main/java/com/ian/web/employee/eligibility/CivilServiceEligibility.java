@@ -41,23 +41,18 @@ public class CivilServiceEligibility {
     private Eligibility eligibility;
 	@NotBlank
 	private String otherEligibility;
-	
 	private String rating;
 	
 	private int examYear;
 	private int examMonth;
 	private int examDay;
-
 	private String placeOfExam;
 	
 	private String licenseNo;
-	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate licenseValidityDate;
-	
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate licenseReleaseDate;
-	
 	private String attachmentUrl;
 	
 	@Transient

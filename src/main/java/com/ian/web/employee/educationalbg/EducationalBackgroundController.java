@@ -1,7 +1,6 @@
 package com.ian.web.employee.educationalbg;
 
 import java.lang.reflect.InvocationTargetException;
-import java.time.LocalDate;
 import java.util.Objects;
 
 import javax.transaction.Transactional;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -20,7 +18,6 @@ import com.ian.web.common.model.UXMessage;
 import com.ian.web.systemsettings.academichonors.AcademicHonorsRepository;
 import com.ian.web.systemsettings.degree_courses.DegreeCoursesRepository;
 import com.ian.web.systemsettings.degreelevels.DegreeLevelRepository;
-import com.ian.web.systemsettings.position_title.PositionTitle;
 import com.ian.web.systemsettings.scholarship.ScholarshipRepository;
 import com.ian.web.systemsettings.schools.SchoolRepository;
 
