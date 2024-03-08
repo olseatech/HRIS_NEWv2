@@ -66,6 +66,9 @@ public class Employee extends Person  implements UserDetails {
     private String sssNo;
     private String tin;
     private String citizenship;
+    private String countryOfOrigin;
+    private String birthPlace;
+    private String telMo;
     
     @Email(message = "Invalid email.")
     private String email1;	
