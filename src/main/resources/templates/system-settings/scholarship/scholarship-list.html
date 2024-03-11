@@ -97,15 +97,13 @@
 								<thead>
 									<tr>
 										<th>Scholarship Name</th>
-                                        <th>Status</th>					
 										<th class="text-center">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
 									<th:block th:each="scholarship : ${listOfScholarship}">
 										<tr>
-											<td id="scholarshipName" th:text="${scholarship.getScholarshipName()}"></td>
-                                            <td id="scholarshipStatus" th:text="${scholarship.isActive() ? 'Active' : 'Inactive'}"></td>																				
+											<td id="scholarshipName" th:text="${scholarship.getScholarshipName()}"></td>																				
 											<td class="text-center" width="250px;">
 												<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
                                                  th:data-row-scholarshipName="${scholarship.getScholarshipName()}"	
@@ -184,20 +182,7 @@
             $("#modal_form_vertical").find("#id").val(id);
             $("#modal_form_vertical").find("#scholarshipName").val(scholarshipName);
         });
-        $(document).on("click", ".close",".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var scholarshipName = $(this).attr('data-row-scholarshipName');
-            
-            $("#modal_form_vertical").find("#id").val("");
-            $("#modal_form_vertical").find("#scholarshipName").val("");
-        });
-        $(document).on("click", ".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var scholarshipName = $(this).attr('data-row-scholarshipName');
-            
-            $("#modal_form_vertical").find("#id").val("");
-            $("#modal_form_vertical").find("#scholarshipName").val("");
-        });
+        
 	</script>
 </body>
 </html>

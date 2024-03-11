@@ -22,7 +22,7 @@ public class ScholarshipController {
 
     private final ScholarshipRepository scholarshipRepository;
 
-    @GetMapping("/scholarship")
+    @GetMapping("/scholarships")
     public String getData(Model model) {
         Iterable<Scholarship> listOfScholarship = scholarshipRepository.findAll();
         model.addAttribute("listOfScholarship",listOfScholarship);
@@ -46,7 +46,7 @@ public class ScholarshipController {
 		scholarshipRepository.save(scholarship);
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/scholarship";
+		return "redirect:/scholarships";
 	}
     
 }

@@ -23,7 +23,7 @@ public class DocumentTypeController {
     
     private final DocumentTypeRepository documentTypeRepository;
 
-    @GetMapping("/document-type")
+    @GetMapping("/document-types")
 	public String listAll(Model model) {
 		Iterable<DocumentType> documentTypeList = documentTypeRepository.findAll();
 		model.addAttribute("documentTypeList", documentTypeList);
@@ -51,7 +51,7 @@ public class DocumentTypeController {
 		documentTypeRepository.save(documentType);		
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/document-type";
+		return "redirect:/document-types";
 	}
 
 	@PostMapping("/update-document-type-status/{id}")
@@ -60,7 +60,7 @@ public class DocumentTypeController {
 		documentType.setActive(!documentType.isActive());
 		documentTypeRepository.save(documentType);
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully update."));
-		return "redirect:/document-type";
+		return "redirect:/document-types";
 	}
 
 }

@@ -23,7 +23,7 @@ public class SalaryGradeController {
 
     private final SalaryGradeRepository salaryGradeRepository;
 
-    @GetMapping("/salary-grade")
+    @GetMapping("/salary-grades")
     public String getData(Model model) {
         Iterable<SalaryGrade> listOfSalaryGrade = salaryGradeRepository.findAll();
         model.addAttribute("listOfSalaryGrade",listOfSalaryGrade);
@@ -53,7 +53,7 @@ public class SalaryGradeController {
 		salaryGradeRepository.save(salaryGrade);
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/salary-grade";
+		return "redirect:/salary-grades";
 	}
 
 	@PostMapping("/update-salary-grade-status/{id}")
@@ -64,7 +64,7 @@ public class SalaryGradeController {
 
 		salaryGradeRepository.save(salaryGrade);
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully update."));
-		return "redirect:/salary-grade";
+		return "redirect:/salary-grades";
 	}
     
 }

@@ -21,7 +21,7 @@ public class DivisionController {
 	private final DivisionRepository divisionRepository;
 	private final EmployeeRepository employeeRepository;
 	
-	@GetMapping("/division-list")
+	@GetMapping("/divisions")
     public String getAllDivisions(Model model) {
         Iterable<Division> divisionList = divisionRepository.findAll();
         Iterable<Employee> employeeList = employeeRepository.findAll();
@@ -48,7 +48,7 @@ public class DivisionController {
 		divisionRepository.save(division);		
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/division-list";
+		return "redirect:/divisions";
 	}
 
 }

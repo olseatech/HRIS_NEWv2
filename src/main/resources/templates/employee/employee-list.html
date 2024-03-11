@@ -43,8 +43,9 @@
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
 							</div>
 
-							<form id="addPatientForm" th:action="@{/save-employee}" method="post" th:object="${employee}" enctype="multipart/form-data">
+							<form id="employeeForm" th:action="@{/addEmployee}" method="post" th:object="${employee}" enctype="multipart/form-data">
 								<input type="hidden" th:field="*{id}" name="id" id="id">
+								<input type="hidden" name="userType" id="userType" value="ROLE_EMPLOYEE">
 								<div class="modal-body">
 									<div class="form-group">
 										<div class="row">    
@@ -72,15 +73,15 @@
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-4">
-												<label for="assumptiondate">Date Assumed</label>
-												<span class="validationError text-danger" th:if="${#fields.hasErrors('assumptiondate')}" th:errors="*{assumptiondate}"></span>
-												<input type="date" class="form-control" id="assumptiondate" name="assumptiondate" th:field="*{assumptiondate}" />
-											</div>
-											<div class="col-sm-4">
 												<label for="empNo">Employee No.</label>
 												<span class="validationError text-danger" th:if="${#fields.hasErrors('empNo')}" th:errors="*{empNo}"></span>
-												<input id="empNo" name="empNo" th:field="*{empNo}" placeholder="Employee No." type="text" class="form-control" >
+												<input id="empNo" name="empNo" th:field="*{empNo}" placeholder="Employee No." type="text" class="form-control required-field-hrisp" >
 											</div>
+											<div class="col-sm-4">
+												<label for="assumptiondate">Date Assumed</label>
+												<span class="validationError text-danger" th:if="${#fields.hasErrors('assumptiondate')}" th:errors="*{assumptiondate}"></span>
+												<input type="date" class="form-control required-field-hrisp" id="assumptiondate" name="assumptiondate" th:field="*{assumptiondate}" />
+											</div>											
 											<div class="col-sm-4">
 												<label for="plantillaNo">Plantilla No.</label>
 												<span class="validationError text-danger" th:if="${#fields.hasErrors('plantillaNo')}" th:errors="*{plantillaNo}"></span>
@@ -93,18 +94,18 @@
 											<div class="col-sm-4">
 												<label for="firstName">First Name</label>
 												<span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-												<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control" >
+												<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control required-field-hrisp" >
 											</div>							                
 							                
 											<div class="col-sm-4">
 												<label for="lastName">Last Name</label>
 												<span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
-												<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control" >
+												<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control required-field-hrisp" >
 											</div>
 											
 											<div class="col-sm-4">
 												<label for="middleName">Middle Name</label>
-												<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control" >
+												<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control required-field-hrisp" >
 											</div>
 							            </div>
 									</div>
@@ -118,12 +119,12 @@
 											
 											<div class="col-sm-4">
 												<label for="birthdate">Birthdate</label>
-												<input type="date" class="form-control" id="birthdate" name="birthdate" th:field="*{birthdate}" />
+												<input type="date" class="form-control required-field-hrisp" id="birthdate" name="birthdate" th:field="*{birthdate}" />
 											</div>
 											
 											<div class="col-sm-4">
 												<label for="birthPlace">Birth Place</label>
-												<input type="text" class="form-control" id="birthPlace" name="birthPlace" th:field="*{birthPlace}" placeholder="Birth Place"/>
+												<input type="text" class="form-control required-field-hrisp" id="birthPlace" name="birthPlace" th:field="*{birthPlace}" placeholder="Birth Place"/>
 											</div>											 
 											
 							           </div>
@@ -133,13 +134,13 @@
 										<div class="row">   
 																						
 											<div class="col-sm-4">
-												<label for="telMo">Tel No.</label>
-												<input type="text" class="form-control" id="telMo" name="telMo" th:field="*{telMo}" placeholder="Tel Mo."/>
+												<label for="telNo">Tel No.</label>
+												<input type="text" class="form-control" id="telNo" name="telNo" th:field="*{telNo}" placeholder="Tel No."/>
 											</div>
 											 
 											<div class="col-sm-4">
-												<label for="mobileno1">Mobile</label>
-												<input id="mobileno1" name="mobileno1" title="enter your mobile number" th:field="*{mobileno1}" placeholder="enter mobile number" type="text" class="form-control">
+												<label for="mobileNo1">Mobile</label>
+												<input id="mobileNo1" name="mobileno1" title="enter your mobile number" th:field="*{mobileNo1}" placeholder="enter mobile number" type="text" class="form-control">
 											</div>
 							                    
 											<div class="col-sm-4">
@@ -153,16 +154,16 @@
 										<div class="row">
 											<div class="col-sm-4">
 												<label for="gender">Gender</label>
-												<select id="gender" name="gender" class="form-control" th:field="*{gender}">
+												<select id="gender" name="gender" class="form-control required-field-hrisp" th:field="*{gender}">
 													<option value="">SELECT VALUE</option>
-													<option value="MALE">MALE</option>
-													<option value="FEMALE">FEMALE</option>
+													<option value="M">MALE</option>
+													<option value="F">FEMALE</option>
 												</select>
 											</div>							                
 							                
 											<div class="col-sm-4">
 												<label for="civilStatus">Civil Status</label>
-												<select class="form-control" name="civilStatus" id="civilStatus" th:field="*{civilStatus}">
+												<select class="form-control required-field-hrisp" name="civilStatus" id="civilStatus" th:field="*{civilStatus}">
 													<option value="">SELECT VALUE</option>
 													<option value="SINGLE">SINGLE</option>
 													<option value="MARRIED">MARRIED</option>
@@ -174,7 +175,7 @@
 							                    
 											<div class="col-sm-4">
 												<label for="citizenship">Citizenship</label>
-												<select class="form-control" name="citizenship" id="citizenship" th:field="*{citizenship}">
+												<select class="form-control required-field-hrisp" name="citizenship" id="citizenship" th:field="*{citizenship}">
 													<option value="">SELECT VALUE</option>
 													<option value="FILIPINO BY BIRTH">FILIPINO BY BIRTH</option>
 													<option value="FILIPINO BY NATURALIZATION">FILIPINO BY NATURALIZATION</option>
@@ -448,7 +449,7 @@
 																						
 											<div class="col-sm-4">
 												<label for="height">Height</label>
-												<input type="text" class="form-control" id="height" name="height" th:field="*{telMo}" placeholder="Height in m"/>
+												<input type="text" class="form-control" id="height" name="height" th:field="*{telNo}" placeholder="Height in m"/>
 											</div>
 											 
 											<div class="col-sm-4">
@@ -458,7 +459,17 @@
 							                    
 											<div class="col-sm-4">
 												<label for="bloodType">Blood Type</label>
-												<input id="bloodType" name="bloodType" th:field="*{bloodType}" placeholder="Blood Type" type="text" class="form-control" >
+												<select id="bloodType" name="bloodType" class="form-control" th:field="*{bloodType}">
+													<option value="">SELECT VALUE</option>
+													<option value="O1">O+</option>
+													<option value="O2">O-</option>
+													<option value="A1">A+</option>
+													<option value="A2">A-</option>
+													<option value="B1">B+</option>
+													<option value="B2">B-</option>
+													<option value="AB1">AB+</option>
+													<option value="AB2">AB-</option>
+												</select>
 											</div>
 							           </div>
 									</div>
@@ -485,8 +496,8 @@
 									<div class="form-group">
 										<div class="row">    
 											<div class="col-sm-4">
-												<label for="gsisIdNo">GSIS ID No.</label>
-												<input type="text" class="form-control" name="gsisIdNo" id="gsisIdNo" th:field="*{gsisIdNo}" placeholder="GSIS ID No." />
+												<label for="sssNo">SSS ID No.</label>
+												<input type="text" class="form-control" name="sssNo" id="sssNo" th:field="*{sssNo}" placeholder="SSS ID No." />
 											</div>
 							                    
 											<div class="col-sm-4">
@@ -556,7 +567,10 @@
 									<td><span class="badge badge-success">Active</span></td>
 									<td class="text-center" width="250px;">
 												<a id="editEmployeeButton" type="button" class="showDetails btn btn-primary"
-                                                 th:href="@{/employee/1}"
+												
+												th:href="@{'/employee/' + ${employee.getId()} + '/' + ${employee.getEmpHashCode()}}"
+                                                 
+                                                 
                                                 >View Record</a>
 									</td>
 								</tr>
@@ -610,14 +624,36 @@
 		            timer: 2000,
 				});
 			} else if(msgCode === 'SUCCESS'){
-				swal({
-					title: "Success!",
-					text: msgDesc,
-					icon: "success",
-					buttons: false,
-		            timer: 2000,
-				});
+				
 			}
+			
+			$('#employeeForm').submit(function(event) {
+		        var emptyFields = [];
+		        $('.required-field-hrisp').each(function() {
+		            if ($(this).val().trim() === '') {
+		                emptyFields.push($(this));
+		            }
+		        });
+		
+		        if (emptyFields.length > 0) {
+		            event.preventDefault();
+		            //var alertMessage = "Please fill out the following fields:\n";
+		            //$.each(emptyFields, function(index, field) {
+		            //    alertMessage += "- " + field.attr('name') + "\n";
+		            //});
+		            //alert(alertMessage);
+		            // Focus on the first empty field
+		            
+		            swal({
+						title: "Error!",
+						text: "Mandatory fields marked in RED are mandatory.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		            emptyFields[0].focus();
+		        }
+		    });
 			
 			
 		});

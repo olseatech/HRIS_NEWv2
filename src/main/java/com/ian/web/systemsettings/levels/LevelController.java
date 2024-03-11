@@ -23,7 +23,7 @@ public class LevelController {
     
     private final LevelRepository levelRepository;
 
-    @GetMapping("/level")
+    @GetMapping("/levels")
     public String getData(Model model) {
         Iterable<Level> listOfLevels = levelRepository.findAll();
         model.addAttribute("listOfLevels",listOfLevels);
@@ -53,7 +53,7 @@ public class LevelController {
 
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/level";
+		return "redirect:/levels";
 	}
 
 	@PostMapping("/update-level/{id}")
@@ -64,7 +64,7 @@ public class LevelController {
 
 	    levelRepository.save(level);
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully update."));
-		return "redirect:/level";
+		return "redirect:/levels";
 	}
 
 }

@@ -35,7 +35,6 @@ public class Person extends Auditable {
 	
 	
 	@NotBlank(message = " is mandatory.")
-	@Size(min = 1, max = 1)
     private String gender;
 		
 	@DateTimeFormat(pattern = "yyyy-MM-dd")

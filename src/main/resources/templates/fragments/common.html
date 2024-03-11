@@ -28,6 +28,10 @@
     
     <!-- for hiding input type file -->
     <style>
+		.required-field-hrisp {
+			border: 2px solid red;
+		}
+		
 		.tblphHeader {
 			background-color: #CACCCE; 
 			border: 1px solid black;
@@ -278,7 +282,11 @@
 						<li class="nav-item nav-item-submenu" id="myAccountNav">
 							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>My Account</span></a>
 							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
-								<li class="nav-item"><a th:href="@{/employee/1}" class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> Personal Data Sheet</a></li>
+								<li class="nav-item"><a 
+									
+									th:href="@{'/employee/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
+									class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> Personal Data Sheet</a>
+								</li>
 								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="myClearanceNav"><i class="icon-paste2"></i> Clearance</a></li>								
 								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="myServiceRecordNav"><i class="icon-cabinet"></i> Service Record</a></li>
 								<!-- <li class="nav-item">
@@ -315,15 +323,15 @@
 								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="academicHonorsNav"><i class="icon-graduation2"></i> Academic Honors</a></li>
 								<li class="nav-item"><a th:href="@{/degree-levels}" class="nav-link" id="degreeLevelNav"><i class="icon-graduation2"></i> Degree Levels</a></li>
 								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="degreeCoursesNav"><i class="icon-graduation2"></i> Degree Courses</a></li>
-								<li class="nav-item"><a th:href="@{/school}" class="nav-link" id="schoolNav"><i class="icon-graduation2"></i>School</a></li>
-								<li class="nav-item"><a th:href="@{/scholarship}" class="nav-link" id="scholarship"><i class="icon-graduation2"></i>Scholarship</a></li>
-								<li class="nav-item"><a th:href="@{/division-list}" class="nav-link" id="divisionNav"><i class="icon-wall"></i> Divisions</a></li>
-								<li class="nav-item"><a th:href="@{/document-type}" class="nav-link" id="documentTypeNav"><i class="icon-images2"></i> Document Type</a></li>
-								<li class="nav-item"><a th:href="@{/profession}" class="nav-link" id="professionNav"><i class="icon-brain"></i>Profession</a></li>
-								<li class="nav-item"><a th:href="@{/employee-status}" class="nav-link" id="schoolNav"><i class="icon-office"></i>Employee Status</a></li>
-								<li class="nav-item"><a th:href="@{/level}" class="nav-link" id="levelNav"><i class="icon-office"></i>Level</a></li>
-								<li class="nav-item"><a th:href="@{/salary-grade}" class="nav-link" id="salaryGradeNav"><i class="icon-office"></i>Salary Grade</a></li>
-								<li class="nav-item"><a th:href="@{/position-title}" class="nav-link" id="positionTitleNav"><i class="icon-office"></i>Position Title</a></li>
+								<li class="nav-item"><a th:href="@{/schools}" class="nav-link" id="schoolNav"><i class="icon-graduation2"></i>School</a></li>
+								<li class="nav-item"><a th:href="@{/scholarships}" class="nav-link" id="scholarshipNav"><i class="icon-graduation2"></i>Scholarship</a></li>
+								<li class="nav-item"><a th:href="@{/divisions}" class="nav-link" id="divisionNav"><i class="icon-wall"></i> Divisions</a></li>
+								<li class="nav-item"><a th:href="@{/document-types}" class="nav-link" id="documentTypeNav"><i class="icon-images2"></i> Document Type</a></li>
+								<li class="nav-item"><a th:href="@{/professions}" class="nav-link" id="professionNav"><i class="icon-brain"></i>Profession</a></li>
+								<li class="nav-item"><a th:href="@{/employee-status}" class="nav-link" id="employeeStatusNav"><i class="icon-office"></i>Employee Status</a></li>
+								<!--<li class="nav-item"><a th:href="@{/levels}" class="nav-link" id="levelNav"><i class="icon-office"></i>Level</a></li>
+								<li class="nav-item"><a th:href="@{/salary-grades}" class="nav-link" id="salaryGradeNav"><i class="icon-office"></i>Salary Grade</a></li>-->
+								<li class="nav-item"><a th:href="@{/position-titles}" class="nav-link" id="positionTitleNav"><i class="icon-office"></i>Position Title</a></li>
 							</ul>
 						</li>							
 						

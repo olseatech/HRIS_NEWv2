@@ -1,7 +1,5 @@
 package com.ian.web.systemsettings.position_title;
 
-import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -19,8 +17,6 @@ import com.ian.web.systemsettings.employee_status.EmployeeStatus;
 import com.ian.web.systemsettings.employee_status.EmployeeStatusRepository;
 import com.ian.web.systemsettings.levels.Level;
 import com.ian.web.systemsettings.levels.LevelRepository;
-import com.ian.web.systemsettings.position_title.competencies.Competency;
-import com.ian.web.systemsettings.position_title.competencies.CompetencyRepository;
 import com.ian.web.systemsettings.salary_grades.SalaryGrade;
 import com.ian.web.systemsettings.salary_grades.SalaryGradeRepository;
 
@@ -34,29 +30,21 @@ public class PositionTitleController {
     private final EmployeeStatusRepository employeeStatusRepository;
     private final LevelRepository levelRepository;
     private final SalaryGradeRepository salaryGradeRepository;
-    private final CompetencyRepository competencyRepository;
 
 
-    @GetMapping("/position-title")
+    @GetMapping("/position-titles")
     public String getData(Model model) {
         Iterable<PositionTitle> listOfPositionTitle = positionTitleRepository.findAll();
-        Iterable<EmployeeStatus> listOfEmployeestatus = employeeStatusRepository.findAll().stream().filter((v)->v.isActive()).collect(Collectors.toList());
-        Iterable<Level> listOfLevel = levelRepository.findAll().stream().filter((v)->v.isActive()).collect(Collectors.toList());
-        Iterable<SalaryGrade> listOfSalaryGrade = salaryGradeRepository.findAll().stream().filter((v)->v.isActive()).collect(Collectors.toList());
-
+        
         model.addAttribute("listOfPositionTitle",listOfPositionTitle);
-        model.addAttribute("listOfEmployeeStatus",listOfEmployeestatus);
-        model.addAttribute("listOfLevel",listOfLevel);
-        model.addAttribute("listOfSalaryGrade",listOfSalaryGrade);
-
-        model.addAttribute("positionTitle", new PositionTitleModel());
+        model.addAttribute("positionTitle", new PositionTitle());
         return "system-settings/position-title/position-title-list";
     }
 
     @PostMapping("/save-position-title")
 	@Transactional
 	public String getRecord(
-			@Valid PositionTitleModel positionTitleModel
+			@Valid PositionTitle positionTitle
 			,Errors errors
 			,final RedirectAttributes redirect
 			,Model model
@@ -71,24 +59,20 @@ public class PositionTitleController {
             model.addAttribute("listOfLevel",listOfLevel);
             model.addAttribute("listOfSalaryGrade",listOfSalaryGrade);
 
-            model.addAttribute("positionTitle", positionTitleModel);
+            model.addAttribute("positionTitle", positionTitle);
 			model.addAttribute("uxmessage", new UXMessage("ERROR", "Please check items marked in red."));
 			return "system-settings/position-title/position-title-list";
 		}
-
-        PositionTitle positionTitle = null;
-        if(Objects.isNull(positionTitleModel.getId())){
-            positionTitle = new PositionTitle();
-        }else { positionTitle = positionTitleRepository.findById(positionTitleModel.getId()).get(); }
+     
         
-        positionTitle.setPositionTitleName(positionTitleModel.getPositionTitleName().toUpperCase());
-        positionTitle.setDepartmentCode(positionTitleModel.getDepartmentCode().toUpperCase());
-        positionTitle.setEmployeeStatus(employeeStatusRepository.save(employeeStatusRepository.findById(positionTitleModel.getEmployeeStatusId()).get()));
-        positionTitle.setLevel(levelRepository.save(levelRepository.save(levelRepository.findById(positionTitleModel.getLevelId()).get())));
-        positionTitle.setSalaryGrade(salaryGradeRepository.save(salaryGradeRepository.findById(positionTitleModel.getSalaryGradeId()).get()));
+        positionTitle.setPositionTitleName(positionTitle.getPositionTitleName().toUpperCase());
+//        positionTitle.setDepartmentCode(positionTitleModel.getDepartmentCode().toUpperCase());
+//        positionTitle.setEmployeeStatus(employeeStatusRepository.save(employeeStatusRepository.findById(positionTitleModel.getEmployeeStatusId()).get()));
+//        positionTitle.setLevel(levelRepository.save(levelRepository.save(levelRepository.findById(positionTitleModel.getLevelId()).get())));
+//        positionTitle.setSalaryGrade(salaryGradeRepository.save(salaryGradeRepository.findById(positionTitleModel.getSalaryGradeId()).get()));
         positionTitleRepository.save(positionTitle);
         
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/position-title";
+		return "redirect:/position-titles";
 	}
 }

@@ -23,7 +23,7 @@ public class SchoolController {
     
     private final SchoolRepository schoolRepository;
 
-    @GetMapping("/school")
+    @GetMapping("/schools")
     public String getData(Model model) {
         Iterable<School> listOfSchool = schoolRepository.findAll();
         model.addAttribute("listOfSchool",listOfSchool);
@@ -52,7 +52,7 @@ public class SchoolController {
 		schoolRepository.save(school);
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/school";
+		return "redirect:/schools";
 	}
 
 	@PostMapping("/update-school-status/{id}")
@@ -63,7 +63,7 @@ public class SchoolController {
 
 		schoolRepository.save(school);
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully update."));
-		return "redirect:/school";
+		return "redirect:/schools";
 	}
 
 }

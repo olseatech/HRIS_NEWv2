@@ -97,24 +97,13 @@
 								<thead>
 									<tr>
 										<th>Profession Name</th>
-                                        <th>Status</th>					
 										<th class="text-center">Actions</th>
 									</tr>
 								</thead>
 								<tbody>
 									<th:block th:each="profession : ${listOfProfession}">
 										<tr>
-											<td id="professionName" th:text="${profession.getProfessionName()}"></td>
-
-                                            <td id="professionStatus">
-												<form th:action="@{/update-profession-status/{id}(id=${profession.id})}" method="post">
-													<input type="hidden" name="_method" value="put" />
-													<a href="#" onclick="event.preventDefault(); this.closest('form').submit();" >
-														<span th:text="${profession.isActive() ? 'Active' : 'Inactive'}" 
-														  th:class="${profession.isActive() ? 'text-success' : 'text-danger'}"></span>
-													</a>
-												</form>
-											</td>																				
+											<td id="professionName" th:text="${profession.getProfessionName()}"></td>                                            																	
 											<td class="text-center" width="250px;">
 												<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
                                                  th:data-row-professionName="${profession.getProfessionName()}"	
@@ -193,20 +182,7 @@
             $("#modal_form_vertical").find("#id").val(id);
             $("#modal_form_vertical").find("#professionName").val(professionName);
         });
-        $(document).on("click", ".close",".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var professionName = $(this).attr('data-row-professionName');
-            
-            $("#modal_form_vertical").find("#id").val(id);
-            $("#modal_form_vertical").find("#professionName").val(professionName);
-        });
-        $(document).on("click", ".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var professionName = $(this).attr('data-row-professionName');
-            
-            $("#modal_form_vertical").find("#id").val(id);
-            $("#modal_form_vertical").find("#professionName").val(professionName);
-        });
+        
 	</script>
 </body>
 </html>

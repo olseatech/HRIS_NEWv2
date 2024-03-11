@@ -24,7 +24,7 @@ public class ProfessionController {
 
     private final ProfessionRepository professionRepository;
 
-    @GetMapping("/profession")
+    @GetMapping("/professions")
     public String getData(Model model) {
         Iterable<Profession> listOfProfession = professionRepository.findAll();
         model.addAttribute("listOfProfession",listOfProfession);
@@ -53,7 +53,7 @@ public class ProfessionController {
 		professionRepository.save(profession);
 
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/profession";
+		return "redirect:/professions";
 	}
 
 	@PostMapping("/update-profession-status/{id}")
@@ -64,6 +64,6 @@ public class ProfessionController {
 
 		professionRepository.save(profession);
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully update."));
-		return "redirect:/profession";
+		return "redirect:/professions";
 	}
 }

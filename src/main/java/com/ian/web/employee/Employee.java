@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -22,6 +23,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import com.ian.web.common.model.Person;
 import com.ian.web.systemsettings.division.Division;
+import com.ian.web.systemsettings.employee_status.EmployeeStatus;
+import com.ian.web.systemsettings.position_title.PositionTitle;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -68,21 +72,29 @@ public class Employee extends Person  implements UserDetails {
     private String citizenship;
     private String countryOfOrigin;
     private String birthPlace;
-    private String telMo;
+    private String telNo;
     
     @Email(message = "Invalid email.")
     private String email1;	
     @Email(message = "Invalid email.")
     private String email2;
     
-    private String mobileno1;
-    private String mobileno2;
+    private String mobileNo1;
+    private String mobileNo2;
 	
     private String status = "ACTIVE";
     
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "division_id")
     private Division division;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_status_id")
+    private EmployeeStatus employeeStatus;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "position_title_id")
+    private PositionTitle positionTitle;
     
     @NotBlank
     private String userType;

@@ -55,8 +55,7 @@
 						<form th:action="@{/save-position-title}" method="post" class="form-horizontal" th:object="${positionTitle}">
 							<input type="hidden" th:field="*{id}" id="id"/>
 							<div class="modal-body">
-								<h3>Position Title Details</h3>
-								<hr/>
+								
 								<div class="form-group row">									
 									<label class="col-form-label col-sm-4">Position Title Name</label>
 									<div class="col-sm-8">
@@ -64,53 +63,7 @@
 										<input type="text" id="positionTitleName" th:field="*{positionTitleName}" placeholder="Position Title Name" class="form-control">
                                         
 									</div>
-								</div>
-
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Department Code</label>
-									<div class="col-sm-8">
-										<span class="validationError text-danger" th:if="${#fields.hasErrors('departmentCode')}" th:errors="*{departmentCode}"></span>
-										<input type="text" id="departmentCode" th:field="*{departmentCode}" placeholder="Department Code" class="form-control">
-									</div>
-								</div>
-
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Employee Type</label>
-									<div class="col-sm-8">
-										<label><input type="radio" name="employment_status" value="PLANTILLA" onclick="filterEmployeeStatus() "> PLANTILLA</label><br/>
-										<label><input type="radio" name="employment_status" value="NON-PLANTILLA" onclick="filterEmployeeStatus() "> NON-PLANTILLA</label>
-									</div>
-								</div>
-
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Employee Status</label>
-									<div class="col-sm-8">
-										<select class="form-control" id="employeeStatusSelect" name="employeeStatus" th:field="*{employeeStatusId}">
-											<option value="" disabled selected>--Select option--</option>
-    										<option th:each="employeeStatus : ${listOfEmployeeStatus}" th:value="${employeeStatus.id}" th:text="${employeeStatus.employeeStatusName}" th:data-row-type="${employeeStatus.employmentType}"></option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4" >Level</label>
-									<div class="col-sm-8" >
-										<select class="form-control" id="levelSelect" name="level" th:field="*{levelId}">
-											<option value="" disabled selected>--Select option--</option>
-    										<option th:each="level : ${listOfLevel}" th:value="${level.id}" th:text="${level.levelName}"></option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group row">									
-									<label class="col-form-label col-sm-4">Salary Grade</label>
-									<div class="col-sm-8">
-										<select class="form-control" id="salaryGradeSelect" name="salaryGrade" th:field="*{salaryGradeId}">
-											<option value="" disabled selected>--Select option--</option>
-    										<option th:each="salaryGrade : ${listOfSalaryGrade}" th:value="${salaryGrade.id}" th:text="${salaryGrade.salaryGradeGroup}"></option>
-										</select>
-									</div>
-								</div>
+								</div>								
 							</div>
 
 							<div class="modal-footer">
@@ -145,9 +98,6 @@
 								<thead>
 									<tr>
 										<th>Position Title Name</th>
-										<th>Employment Status</th>
-                                        <th>Total Item Per Plantilla</th>	
-										<th>Status</th>				
 										<th class="text-center">Actions</th>
 									</tr>
 								</thead>
@@ -155,19 +105,9 @@
 									<th:block th:each="positionTitle : ${listOfPositionTitle}">
 										<tr>
 											<td id="positionTitleName" th:text="${positionTitle.getPositionTitleName()}"></td>
-											<td id="employmentStatus" th:text="${positionTitle.getEmployeeStatus().getEmployeeStatusName()}"></td>
-											<td id="payrollBehavior" th:text="${positionTitle.getEmployeeStatus().getPayrollBehavior()}"></td>
-                                            <td id="positionTitleStatus" th:text="${positionTitle.isActive() ? 'Active' : 'Inactive'}">
-											</td>
-
 											<td class="text-center" width="250px;">
 												<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
-                                                 th:data-row-positionTitleName="${positionTitle.getPositionTitleName()}"
-												 th:data-row-departmentCode="${positionTitle.getDepartmentCode()}"
-												 th:data-row-employmentStatus="${positionTitle.getEmployeeStatus().getId()}"
-												 th:data-row-employmentType="${positionTitle.getEmployeeStatus().getEmploymentType()}"
-												 th:data-row-level="${positionTitle.getLevel().getId()}"
-												 th:data-row-salaryGrade="${positionTitle.getSalaryGrade().getId()}"
+                                                 th:data-row-positionTitleName="${positionTitle.getPositionTitleName()}"												 
                                                  th:data-row-id="${positionTitle.getId()}"
 												data-toggle="modal" data-target="#modal_form_vertical"
                                                 >View Record</button>
@@ -214,13 +154,10 @@
 			}
 	
 		$(document).ready(function() {
-			//$(".nav-link").removeClass("active");
-			//$("#academicHonorsNav").addClass("active");
 			
 			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 			$("#systemSettingsNav").addClass("nav-item-expanded nav-item-open");
-			$("#positionTitleNav").addClass("active");
-			
+			$("#positionTitleNav").addClass("active");			
 			
 			let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
 			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
@@ -254,58 +191,12 @@
 		
 		$(document).on("click", ".showDetails", function() {
             var id = $(this).attr('data-row-id');
-            var positionTitleName = $(this).attr('data-row-positionTitleName');
-			var departmentCode = $(this).attr('data-row-departmentCode');
-			var employmentStatus = $(this).attr('data-row-employmentStatus');
-			var employmentType = $(this).attr('data-row-employmentType');
-			var level = $(this).attr('data-row-level');
-			var salaryGrade = $(this).attr('data-row-salaryGrade');
-
-			$('input[name="employment_status"][value="' + employmentType + '"]').prop('checked', true);
+            var positionTitleName = $(this).attr('data-row-positionTitleName');			
 
             $("#modal_form_vertical").find("#id").val(id);
             $("#modal_form_vertical").find("#positionTitleName").val(positionTitleName);
-			$("#modal_form_vertical").find("#departmentCode").val(departmentCode);
-			$("#modal_form_vertical").find("#employeeStatusSelect").val(employmentStatus);
-			$("#modal_form_vertical").find("#levelSelect").val(level);
-			$("#modal_form_vertical").find("#salaryGradeSelect").val(salaryGrade);
         });
-        $(document).on("click", ".close",".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var positionTitleName = $(this).attr('data-row-positionTitleName');
-			var departmentCode = $(this).attr('data-row-departmentCode');
-			var employmentStatus = $(this).attr('data-row-employmentStatus');
-			var employmentType = $(this).attr('data-row-employmentType');
-			var level = $(this).attr('data-row-level');
-			var salaryGrade = $(this).attr('data-row-salaryGrade');
-
-			$('input[name="employment_status"]').prop('checked', false);
-
-            $("#modal_form_vertical").find("#id").val("");
-            $("#modal_form_vertical").find("#positionTitleName").val("");
-			$("#modal_form_vertical").find("#departmentCode").val("");
-			$("#modal_form_vertical").find("#employeeStatusSelect").val("");
-			$("#modal_form_vertical").find("#levelSelect").val("");
-			$("#modal_form_vertical").find("#salaryGradeSelect").val("");
-        });
-        $(document).on("click", ".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var positionTitleName = $(this).attr('data-row-positionTitleName');
-			var departmentCode = $(this).attr('data-row-departmentCode');
-			var employmentStatus = $(this).attr('data-row-employmentStatus');
-			var employmentType = $(this).attr('data-row-employmentType');
-			var level = $(this).attr('data-row-level');
-			var salaryGrade = $(this).attr('data-row-salaryGrade');
-
-			$('input[name="employment_status"]').prop('checked', false);
-
-            $("#modal_form_vertical").find("#id").val("");
-            $("#modal_form_vertical").find("#positionTitleName").val("");
-			$("#modal_form_vertical").find("#departmentCode").val("");
-			$("#modal_form_vertical").find("#employeeStatusSelect").val("");
-			$("#modal_form_vertical").find("#levelSelect").val("");
-			$("#modal_form_vertical").find("#salaryGradeSelect").val("");
-        });
+        
 	</script>
 </body>
 </html>
