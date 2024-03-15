@@ -3,7 +3,10 @@ package com.ian.web.employee;
 import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
@@ -22,6 +26,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import com.ian.web.common.model.Person;
+import com.ian.web.employee.educationalbg.EducationalBackground;
+import com.ian.web.employee.voluntary_workexperience.VoluntaryWork;
+import com.ian.web.employee.workexperience.WorkExperience;
 import com.ian.web.systemsettings.division.Division;
 import com.ian.web.systemsettings.employee_status.EmployeeStatus;
 import com.ian.web.systemsettings.position_title.PositionTitle;
@@ -105,6 +112,18 @@ public class Employee extends Person  implements UserDetails {
 		
 	@Transient
 	private MultipartFile photoFile;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_educational_background", referencedColumnName = "id")
+    private List<EducationalBackground> educationalBackgrounds;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_work_experience", referencedColumnName = "id")
+    private List<WorkExperience> workExperiences;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_voluntary_experience", referencedColumnName = "id")
+    private List<VoluntaryWork> voluntaryWorks;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

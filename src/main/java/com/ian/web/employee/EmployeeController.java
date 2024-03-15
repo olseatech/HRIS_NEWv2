@@ -63,8 +63,8 @@ public class EmployeeController {
 	
 	@GetMapping("/employee/{employeeId}")
 	public String viewEmployee(Model model, @PathVariable long employeeId) {
-		Optional<Employee> optional = employeeRepository.findById(employeeId);
-		Employee employee = optional.orElseGet(() -> new Employee());
+		Employee employee = employeeRepository.findById(employeeId).orElseGet(()->new Employee());
+		System.out.println("\n\n\n\n\n"+employee.getEducationalBackgrounds()+"\n\n\n\n\n");
 		model.addAttribute("employee", employee);
 		return "employee/pds/personnal-info";
 	}

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface EmployeeRepository  extends JpaRepository<Employee, Long> {
 	Optional<Employee> findByUsername(String username);
 	Optional<Employee> findByIdAndEmpHashCode(long id, String empHashCode);
-	
+	Optional<Employee> findById(long id);
+
 	List<Employee> findByFirstNameAndLastNameAndBirthdate(String firstName, String lastName, LocalDate birthDate);
 }

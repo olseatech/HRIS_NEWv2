@@ -35,8 +35,4 @@ public class DegreeCourses {
     private boolean isLawDegree;
     @Builder.Default
     private boolean isActive = true;
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "degreeCourse")
-    @JsonIgnore
-    private EducationalBackground educationalBackground;
 }

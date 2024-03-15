@@ -49,7 +49,7 @@
 										<h6 class="card-title">Educational Background</h6>
 										</div>
 										<div class="card-body">
-											<form th:action="@{/save-educational-background}" th:object="${educationalBackground}" method="post" class="form-horizontal"  >
+											<form th:action="@{/save-educational-background/{id}(id=${employee.getId()})}" th:object="${educationalBackground}" method="post" class="form-horizontal"  >
 												<input type="text" th:field="*{id}" id="id" hidden>
 												<!-- START EDUCATION DETAILS -->
 												<div class="row">
@@ -297,44 +297,44 @@
 								<div class="card-body p-0" style="">
 									<ul class="nav nav-sidebar my-2">
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
 												<i class="icon-checkmark3 text-success"></i>
 												 Personal Information
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/educational-background}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Educational Background
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/eligibility/1}" class="nav-link">
 												<i class="icon-cross2 text-danger-400"></i>
 												 Eligibility
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Work Experience
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
+												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Voluntary Work
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/learning-development/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
 												 Learning &amp; Development
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/other-info/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
 												 Other Information
 											</a>
 										</li>
@@ -345,7 +345,18 @@
 												 Other Information Questions
 											</a>
 										</li>
-										
+										<li class="nav-item">
+											<a th:href="@{/references/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 References
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/government-issuedId/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 Government Issued Id
+											</a>
+										</li>
 									</ul>
 								</div>
 							</div>

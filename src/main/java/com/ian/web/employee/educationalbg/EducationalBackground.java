@@ -1,7 +1,6 @@
 package com.ian.web.employee.educationalbg;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -10,13 +9,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ian.web.employee.Employee;
 import com.ian.web.systemsettings.academichonors.AcademicHonors;
 import com.ian.web.systemsettings.degree_courses.DegreeCourses;
 import com.ian.web.systemsettings.degreelevels.DegreeLevel;
@@ -71,6 +73,10 @@ public class EducationalBackground {
 	
 	@Transient
 	private MultipartFile attachedFile;
+
+	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JsonIgnoreProperties
+	private Employee employee;
 
 	public String getDateToString(){
 		return startDate.getMonth()+" "+startDate.getYear()+" - "+endDate.getMonth()+" "+endDate.getYear();

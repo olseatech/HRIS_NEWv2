@@ -25,6 +25,7 @@
 				<div class="d-flex align-items-start flex-column flex-md-row">
 					<!-- Left content -->
 					<div class="tab-content w-100 order-2 order-md-1">
+						<!-- START FORM TAB -->
 						<div class="tab-pane fade active show" id="activity">	
 							<div class="row">
                                 <div class="col-md-12">
@@ -33,7 +34,7 @@
                                             <h6 class="card-title">Work Experience</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/emr/emrpatientprofile" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
+                                            <form th:action="@{/save-work-experience/{id}(id=${employee.getId()})}" th:object="${workExperience}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
                                                 <input type="hidden" name="doctor.id" id="doctorId" value="2">
                                                 <input type="hidden" name="isActive" id="isActive" value="A">
                                                 <input type="hidden" id="id" name="id" value="4940">
@@ -48,11 +49,11 @@
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label for="dateFrom">From</label>
-                                                                <input id="dateFrom" name="dateFrom" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{dateFrom}" id="dateFrom" name="dateFrom" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label for="dateTo">To</label>
-                                                                <input id="dateTo" name="dateTo" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{dateTo}" id="dateTo" name="dateTo" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                             <div class="col-sm-12 mt-2 align-items-center">
                                                                 <input id="upToPresent" name="upToPresent" placeholder="N/A" type="checkbox"> 
@@ -67,31 +68,31 @@
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="positionTitle">Position Title</label>
-                                                                <input type="text" class="form-control" id="positionTitle" name="positionTitle" placeholder="N/A">
+                                                                <input th:field="*{positionTitle}" type="text" class="form-control" id="positionTitle" name="positionTitle" placeholder="N/A">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="department">Department / Agency / Office / Company</label>
-                                                                <input type="text" class="form-control" id="department" name="department" placeholder="N/A">
+                                                                <input th:field="*{department}" type="text" class="form-control" id="department" name="department" placeholder="N/A">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="officeName">Name of Office / Unit</label>
-                                                                <input type="text" class="form-control" id="officeName" name="officeName" placeholder="N/A">
+                                                                <input th:field="*{officeName}" type="text" class="form-control" id="officeName" name="officeName" placeholder="N/A">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="immediateSupervisor">Immediate Supervisor</label>
-                                                                <input type="text" class="form-control" id="immediateSupervisor" name="immediateSupervisor" placeholder="N/A">
+                                                                <input th:field="*{immediateSupervisor}" type="text" class="form-control" id="immediateSupervisor" name="immediateSupervisor" placeholder="N/A">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="jobDescription">Job Summary / Description</label>
-                                                                <textarea name="jobDescription" id="jobDescription" class="form-control" style="resize: none;"></textarea>
+                                                                <textarea th:field="*{jobDescription}" name="jobDescription" id="jobDescription" class="form-control" style="resize: none;"></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -102,29 +103,45 @@
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label for="salary">Salary</label>
-                                                                <input id="salary" name="salary" placeholder="N/A" type="number" class="form-control">
+                                                                <input th:field="*{salary}" id="salary" name="salary" placeholder="N/A" type="number" class="form-control">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label for="dateTo">Salary Grade</label>
-                                                                <input id="dateTo" name="dateTo" placeholder="N/A" type="number" class="form-control">
+                                                                <input th:field="*{salaryGrade}" id="salaryGrade" name="salaryGrade" placeholder="N/A" type="number" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label for="stepNo">Step Number</label>
-                                                                <input id="stepNo" name="stepNo" placeholder="N/A" type="number" class="form-control">
+                                                                <input th:field="*{stepNo}" id="stepNo" name="stepNo" placeholder="N/A" type="number" class="form-control">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label for="appointmentStatus">Status of Appointment</label>
-                                                                <select name="appointmentStatus" id="appointmentStatus" class="form-control">
-                                                                    <option disabled selected>--Select Option--</option>
-                                                                </select>
-                                                            </div>
+                                                                <select th:field="*{appointmentStatus}" name="appointmentStatus" id="appointmentStatus" class="form-control">
+                                                                    <option value="" disabled selected>--Select Option--</option>
+																	<option  value="CASUAL">CASUAL</option>
+																	<option value="CONTRACTUAL">CONTRACTUAL</option>
+																	<option value="COTERMINOUS">COTERMINOUS</option>
+																	<option value="ELECTED OFFICIAL">ELECTED OFFICIAL</option>
+																	<option value="EMERGENCY">EMERGENCY</option>
+																	<option value="JOB ORDER">JOB ORDER</option>
+																	<option value="ORIGINAL">ORIGINAL</option>
+																	<option value="OUTSOURCED">OUTSOURCED</option>
+																	<option value="PART TIME">PART TIME</option>
+																	<option value="PERMANENT">PERMANENT</option>
+																	<option value="PRESIDENTIAL APPOINTEE">PRESIDENTIAL APPOINTEE</option>
+																	<option value="PROBATIONARY">PROBATIONARY</option>
+																	<option value="SECONDMENT">SECONDMENT</option>
+																	<option value="SUBSTITUTION">SUBSTITUTION</option>
+																	<option value="TEMPORARY">TEMPORARY</option>
+																	<option value="TRANSFERRED ">TRANSFERRED TO OTHER AGENCY</option>	
+																</select>		
+															</div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="govtOffice">Gov't Service</label>
-                                                                <select name="govtOffice" id="govtOffice" class="form-control">
+                                                                <select th:field="*{govtOffice}" name="govtOffice" id="govtOffice" class="form-control">
                                                                     <option value="" disabled selected>--Select Option--</option>
                                                                     <option value="YES">YES</option>
                                                                     <option value="NO">NO</option>
@@ -132,7 +149,7 @@
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <label for="remarks">Status of Appointment</label>
-                                                                <textarea name="remarks" id="remarks" class="form-control" style="resize: none;"></textarea>
+                                                                <textarea th:field="*{remarks}" name="remarks" id="remarks" class="form-control" style="resize: none;"></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -151,9 +168,51 @@
                                     </div>
                                 </div>
                             </div>
-					    </div>			    
+					    </div>
+						<!-- END FORM TAB -->
+						<!-- START FORM TABLE -->
+						<div class="tab-pane fade active show">	
+							<div class="row">
+                                <div class="col-md-12">
+									<table class="table table-basic table-responsive col-12">
+										<thead class="bg-dark">
+											<tr>
+												<th class="text-uppercase">Inclusive Dates</th>
+												<th class="text-uppercase">employment detail</th>
+												<th class="text-uppercase">department / agency / office / company</th>
+												<th class="text-uppercase">salary</th>
+												<th class="text-uppercase">salary grade</th>
+												<th class="text-uppercase">status of appointment</th>
+												<th class="text-uppercase">gov't service</th>
+												<th class="text-uppercase">separation cause / remarks</th>
+												<th class="text-uppercase">actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="experience: ${listOfWorkExperience}">
+												<tr>
+													<td th:text="${experience.getInclusiveDates()}"></td>
+													<td th:text="${experience.getPositionTitle()}"></td>
+													<td th:text="${experience.getDepartment()}"></td>
+													<td th:text="${'Php.'+experience.getSalary()}"></td>
+													<td th:text="${experience.getSalaryGrade()}"></td>
+													<td th:text="${experience.getAppointmentStatus()}"></td>
+													<td th:text="${experience.getGovtOffice()}"></td>
+													<td th:text="${experience.getRemarks()}"></td>
+													<td>
+														<button class="btn btn-primary">Update</button>
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+                                </div>
+                            </div>
+					    </div>	
+						<!-- END FORM TABLE -->		    
 					</div>
 					<!-- /left content -->
+
 					<!-- Right component Profile Pic -->
 					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
 
@@ -204,44 +263,44 @@
 								<div class="card-body p-0" style="">
 									<ul class="nav nav-sidebar my-2">
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
 												<i class="icon-checkmark3 text-success"></i>
 												 Personal Information
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/educational-background}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Educational Background
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/eligibility/1}" class="nav-link">
 												<i class="icon-cross2 text-danger-400"></i>
 												 Eligibility
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Work Experience
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
+												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Voluntary Work
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/learning-development/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
 												 Learning &amp; Development
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/other-info/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
 												 Other Information
 											</a>
 										</li>
@@ -252,7 +311,18 @@
 												 Other Information Questions
 											</a>
 										</li>
-										
+										<li class="nav-item">
+											<a th:href="@{/references/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 References
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/government-issuedId/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 Government Issued Id
+											</a>
+										</li>
 									</ul>
 								</div>
 							</div>

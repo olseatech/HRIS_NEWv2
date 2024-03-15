@@ -2,22 +2,9 @@ package com.ian.web.employee.educationalbg;
 
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.ian.web.systemsettings.academichonors.AcademicHonors;
-import com.ian.web.systemsettings.degree_courses.DegreeCourses;
-import com.ian.web.systemsettings.degreelevels.DegreeLevel;
-import com.ian.web.systemsettings.scholarship.Scholarship;
-import com.ian.web.systemsettings.schools.School;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 public class EducationalBackgroundModel {

@@ -26,8 +26,4 @@ public class AcademicHonors {
 	
 	@NotBlank(message = " is mandatory.")
     private String academicHonorsName;	
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "academicHonors")
-    @JsonIgnore
-    private EducationalBackground educationalBackground;
 }
