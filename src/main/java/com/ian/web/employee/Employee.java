@@ -27,6 +27,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import com.ian.web.common.model.Person;
 import com.ian.web.employee.educationalbg.EducationalBackground;
+import com.ian.web.employee.govermentid.GovermentIssuedId;
+import com.ian.web.employee.otherinfo.OtherInfo;
+import com.ian.web.employee.references.EmpReferences;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWork;
 import com.ian.web.employee.workexperience.WorkExperience;
 import com.ian.web.systemsettings.division.Division;
@@ -124,6 +127,18 @@ public class Employee extends Person  implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_voluntary_experience", referencedColumnName = "id")
     private List<VoluntaryWork> voluntaryWorks;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "employee_other_info", referencedColumnName = "id")
+    private List<OtherInfo> otherInfos;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_references", referencedColumnName = "id")
+    private List<EmpReferences> empReferences;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_government_id", referencedColumnName = "id")
+    private List<GovermentIssuedId> govermentIssuedIds;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

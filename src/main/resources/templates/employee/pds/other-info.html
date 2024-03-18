@@ -33,7 +33,7 @@
                                             <h6 class="card-title">Other Info</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/emr/emrpatientprofile" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
+                                            <form th:action="@{/save-other-info/{id}(id=${employee.getId()})}" th:object="${otherInfo}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
                                                 <input type="hidden" name="doctor.id" id="doctorId" value="2">
                                                 <input type="hidden" name="isActive" id="isActive" value="A">
                                                 <input type="hidden" id="id" name="id" value="4940">
@@ -48,15 +48,15 @@
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="specialSkill">Special Skill And Hobby</label>
-                                                                <input id="specialSkill" name="specialSkill" placeholder="N/A" type="text" class="form-control" >
+                                                                <input th:field="*{specialSkill}" id="specialSkill" name="specialSkill" placeholder="N/A" type="text" class="form-control" >
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <label for="nonAcademic">Non Academic Distinction / Recognition</label>
-                                                                <input id="nonAcademic" name="nonAcademic" placeholder="N/A" type="text" class="form-control" >
+                                                                <input th:field="*{nonAcademic}" id="nonAcademic" name="nonAcademic" placeholder="N/A" type="text" class="form-control" >
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <label for="membershipInAssociation">Membership in Association / Organization</label>
-                                                                <input id="membershipInAssociation" name="membershipInAssociation" placeholder="N/A" type="text" class="form-control" value="">
+                                                                <input th:field="*{membershipInAssociation}" id="membershipInAssociation" name="membershipInAssociation" placeholder="N/A" type="text" class="form-control" value="">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -77,7 +77,37 @@
                                     </div>
                                 </div>
                             </div>
-					    </div>			    
+					    </div>
+						<!--Start of table-->
+						<div class="tab-pane fade active show">	
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-basic table-responsive col-12">
+										<thead class="bg-dark">
+											<tr>
+												<th class="text-uppercase">Special Skill</th>
+												<th class="text-uppercase">non-Academic</th>
+												<th class="text-uppercase">Member in Association</th>
+												<th class="text-uppercase">actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="info: ${listOfOtherInfo}">
+												<tr>
+													<td th:text="${info.getSpecialSkill()}"></td>
+													<td th:text="${info.getNonAcademic()}"></td>
+													<td th:text="${info.getMembershipInAssociation()}"></td>
+													<td>
+														<button class="btn btn-primary">Update</button>
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--End of table-->				    
 					</div>
 					<!-- /left content -->
 					<!-- Right component Profile Pic -->
@@ -130,14 +160,14 @@
 								<div class="card-body p-0" style="">
 									<ul class="nav nav-sidebar my-2">
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
 												<i class="icon-checkmark3 text-success"></i>
 												 Personal Information
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/educational-background}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Educational Background
 											</a>
 										</li>
@@ -148,27 +178,27 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/work-experience/1}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Work Experience
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
+												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Voluntary Work
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/learning-development/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
 												 Learning &amp; Development
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/other-info/1}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
-												 Other Information
+											<a th:href="@{/other-info/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getOtherInfos().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Other Info
 											</a>
 										</li>
 										
@@ -179,12 +209,17 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/references/1}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/references/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEmpReferences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 References
 											</a>
 										</li>
-										
+										<li class="nav-item">
+											<a th:href="@{/government-issuedId/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getGovermentIssuedIds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Government Issued Id
+											</a>
+										</li>
 									</ul>
 								</div>
 							</div>

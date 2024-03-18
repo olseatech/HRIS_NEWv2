@@ -333,9 +333,9 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/other-info/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
-												 Other Information
+											<a th:href="@{/other-info/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getOtherInfos().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Other Info
 											</a>
 										</li>
 										
@@ -346,14 +346,14 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/references/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/references/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEmpReferences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 References
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/government-issuedId/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/government-issuedId/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getGovermentIssuedIds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Government Issued Id
 											</a>
 										</li>

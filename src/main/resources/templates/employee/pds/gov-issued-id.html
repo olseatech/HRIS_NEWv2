@@ -33,7 +33,7 @@
                                             <h6 class="card-title">Government Issued Id</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/emr/emrpatientprofile" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
+                                            <form th:action="@{/save-government-issuedId/{id}(id=${employee.getId()})}" th:object="${governmentIssuedId}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
                                                 <input type="hidden" name="doctor.id" id="doctorId" value="2">
                                                 <input type="hidden" name="isActive" id="isActive" value="A">
                                                 <input type="hidden" id="id" name="id" value="4940">
@@ -47,25 +47,25 @@
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="govermentIssuedId">Government Issued Id</label>
-                                                                <input id="govermentIssuedId" name="govermentIssuedId" placeholder="N/A" type="text" class="form-control">
+                                                                <input th:field="*{govermentIssuedName}" id="govermentIssuedName" name="govermentIssuedName" placeholder="N/A" type="text" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="idNo">ID/License/Passport No.</label>
-                                                                <input id="idNo" name="idNo" placeholder="N/A" type="text" class="form-control">
+                                                                <input th:field="*{idNo}" id="idNo" name="idNo" placeholder="N/A" type="text" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="placeOfIssuance">Date of Issuance</label>
-                                                                <input id="placeOfIssuance" name="placeOfIssuance" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{issuanceDate}" id="issuanceDate" name="issuanceDate" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="issuanceDate">Place of Issuance</label>
-                                                                <input id="issuanceDate" name="issuanceDate" placeholder="N/A" type="text" class="form-control">
+                                                                <input th:field="*{placeOfIssuance}" id="placeOfIssuance" name="placeOfIssuance" placeholder="N/A" type="text" class="form-control">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -84,9 +84,42 @@
                                     </div>
                                 </div>
                             </div>
-					    </div>			    
+					    </div>
+						<!--Start of table-->
+						<div class="tab-pane fade active show">	
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-basic table-responsive col-12">
+										<thead class="bg-dark">
+											<tr>
+												<th class="text-uppercase">Government Issued Id</th>
+												<th class="text-uppercase">ID Number</th>
+												<th class="text-uppercase">Date of Issuance</th>
+												<th class="text-uppercase">Place of Issuance</th>
+												<th class="text-uppercase">actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="government: ${listOfGovernmentIssuedId}">
+												<tr>
+													<td th:text="${government.getGovermentIssuedName()}"></td>
+													<td th:text="${government.getIdNo()}"></td>
+													<td th:text="${government.getIssuanceDate()}"></td>
+													<td th:text="${government.getPlaceOfIssuance()}"></td>
+													<td>
+														<button class="btn btn-primary">Update</button>
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<!--End of table-->			    
 					</div>
 					<!-- /left content -->
+					
 					<!-- Right component Profile Pic -->
 					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
 
@@ -137,14 +170,14 @@
 								<div class="card-body p-0" style="">
 									<ul class="nav nav-sidebar my-2">
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
 												<i class="icon-checkmark3 text-success"></i>
 												 Personal Information
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/educational-background}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Educational Background
 											</a>
 										</li>
@@ -155,27 +188,27 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/work-experience/1}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Work Experience
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
+												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Voluntary Work
 											</a>
 										</li>
 										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/learning-development/1}" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
 												 Learning &amp; Development
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/other-info/1}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
-												 Other Information
+											<a th:href="@{/other-info/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getOtherInfos().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Other Info
 											</a>
 										</li>
 										
@@ -186,12 +219,17 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/references/1}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
+											<a th:href="@{/references/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEmpReferences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 References
 											</a>
 										</li>
-										
+										<li class="nav-item">
+											<a th:href="@{/government-issuedId/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getGovermentIssuedIds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Government Issued Id
+											</a>
+										</li>
 									</ul>
 								</div>
 							</div>
