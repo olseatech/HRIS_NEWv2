@@ -27,7 +27,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 import com.ian.web.common.model.Person;
 import com.ian.web.employee.educationalbg.EducationalBackground;
+import com.ian.web.employee.eligibility.CivilServiceEligibility;
 import com.ian.web.employee.govermentid.GovermentIssuedId;
+import com.ian.web.employee.learning.LearningAndDevelopment;
 import com.ian.web.employee.otherinfo.OtherInfo;
 import com.ian.web.employee.references.EmpReferences;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWork;
@@ -135,6 +137,14 @@ public class Employee extends Person  implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_references", referencedColumnName = "id")
     private List<EmpReferences> empReferences;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_eligibility", referencedColumnName = "id")
+    private List<CivilServiceEligibility> civilServiceEligibilities;
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "employee_learning_development", referencedColumnName = "id")
+    private List<LearningAndDevelopment> learningAndDevelopments;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_government_id", referencedColumnName = "id")

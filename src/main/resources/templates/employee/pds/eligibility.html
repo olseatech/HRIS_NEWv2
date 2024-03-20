@@ -33,7 +33,7 @@
                                             <h6 class="card-title">Eligibility</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/emr/emrpatientprofile" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
+                                            <form th:action="@{/save-eligibility/{id}(id=${employee.getId()})}" th:object="${eligibility}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
                                                 <input type="hidden" name="doctor.id" id="doctorId" value="2">
                                                 <input type="hidden" name="isActive" id="isActive" value="A">
                                                 <input type="hidden" id="id" name="id" value="4940">
@@ -49,19 +49,20 @@
                                                             <!-- START OF NAME OF ELIGIBILITY -->
                                                             <div class="col-sm-6">
                                                                 <label for="firstName">Name of Eligibility</label>
-                                                                <select class="form-control">
+                                                                <select class="form-control" th:field="*{eligibilityId}">
                                                                     <option value="">--Select Option--</option>
+																	<option th:each="model: ${listOfEligibility}" th:value="${model.getId()}" th:text="${model.getEligibilityName()}"></option>
                                                                 </select>
                                                             </div>
                                                             <!-- END OF NAME OF ELIGIBILITY -->
                                                             <div class="col-sm-6">
                                                                 <label for="otherEligibility">If Other, Please Specify</label>
-                                                                <input id="otherEligibility" name="otherEligibility" placeholder="N/A" type="text" class="form-control" value="N/A" disabled>
+                                                                <input th:field="*{otherEligibility}" id="otherEligibility" name="otherEligibility" placeholder="N/A" type="text" class="form-control" value="N/A" disabled>
                                                                 </div>
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <label for="rating">Rating (If Applicable)</label>
-                                                                <input id="rating" name="rating" placeholder="N/A" type="text" class="form-control" value="">
+                                                                <input th:field="*{rating}" id="rating" name="rating" placeholder="N/A" type="text" class="form-control" value="">
                                                             </div>
                                                     </div>
                                                     <!-- END OF ELIGIBILITY -->
@@ -72,33 +73,33 @@
                                                         <div class="row">
                                                             <div class="col-sm-4">
                                                                 <label for="month">Month</label>
-                                                                <select id="month" name="month" class="form-control">
+                                                                <select id="month" name="month" class="form-control" th:field="*{examMonth}">
                                                                     <option value="" selected="selected">--Select Option--</option>
-                                                                    <option value="JANUARY" >JANUARY</option>
-                                                                    <option value="FEBRUARY" >FEBRUARY</option>
-                                                                    <option value="MARCH" >MARCH</option>
-                                                                    <option value="APRIL" >APRIL</option>
-                                                                    <option value="MAY" >MAY</option>
-                                                                    <option value="JUNE" >JUNE</option>
-                                                                    <option value="JULY" >JULY</option>
-                                                                    <option value="AUGUST" >AUGUST</option>
-                                                                    <option value="SEPTEMBER" >SEPTEMBER</option>
-                                                                    <option value="OCTOBER" >OCTOBER</option>
-                                                                    <option value="NOVEMBER" >NOVEMBER</option>
-                                                                    <option value="DECEMBER" >DECEMBER</option>
+                                                                    <option value=1 >JANUARY</option>
+                                                                    <option value=2 >FEBRUARY</option>
+                                                                    <option value=3 >MARCH</option>
+                                                                    <option value=4 >APRIL</option>
+                                                                    <option value=5 >MAY</option>
+                                                                    <option value=6 >JUNE</option>
+                                                                    <option value=7 >JULY</option>
+                                                                    <option value=8 >AUGUST</option>
+                                                                    <option value=9 >SEPTEMBER</option>
+                                                                    <option value=10 >OCTOBER</option>
+                                                                    <option value=11 >NOVEMBER</option>
+                                                                    <option value=12 >DECEMBER</option>
                                                                 </select>
                                                             </div>
                                                             <div class="col-sm-4">
                                                                 <label for="day">Day</label>
-                                                                <input type="number" class="form-control" id="day" name="day" placeholder="N/A">
+                                                                <input th:field="*{examDay}" type="number" class="form-control" id="day" name="day" placeholder="N/A">
                                                             </div>
                                                             <div class="col-sm-4">
-                                                                <label for="month">Month</label>
-                                                                <input type="number" class="form-control" id="month" name="month" placeholder="N/A">
+                                                                <label for="month">Year</label>
+                                                                <input th:field="*{examYear}" type="number" class="form-control" id="year" name="year" placeholder="N/A">
                                                             </div>
                                                             <div class="col-sm-12">
                                                                 <label for="placeOfExam">Place of Examination / Conferment</label>
-                                                                <input id="placeOfExam" name="placeOfExam" placeholder="N/A" type="text" class="form-control">
+                                                                <input th:field="*{placeOfExam}" id="placeOfExam" name="placeOfExam" placeholder="N/A" type="text" class="form-control">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -110,23 +111,23 @@
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="number">Number</label>
-                                                                <input id="number" name="number" placeholder="N/A" type="text" class="form-control">
+                                                                <input th:field="*{licenseNo}" id="number" name="number" placeholder="N/A" type="text" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label for="licenseValidityDate">Date of Validity</label>
-                                                                <input id="licenseValidityDate" name="licenseValidityDate" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{licenseValidityDate}" id="licenseValidityDate" name="licenseValidityDate" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label for="licenseReleaseDate">Date of Release</label>
-                                                                <input id="licenseReleaseDate" name="licenseReleaseDate" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{licenseReleaseDate}" id="licenseReleaseDate" name="licenseReleaseDate" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="attachmentFile">File Path</label>
-                                                                <input id="attachmentFile" name="attachmentFile" placeholder="N/A" type="text" class="form-control">
+                                                                <input th:field="*{attachmentUrl}" id="attachmentFile" name="attachmentFile" placeholder="N/A" type="text" class="form-control">
                                                             </div>
                                                         </div>
                                                     </div>
@@ -145,7 +146,39 @@
                                     </div>
                                 </div>
                             </div>
-					    </div>			    
+					    </div>	
+						<!--Start of table-->
+						<!-- <div class="tab-pane fade active show">	
+							<div class="row">
+								<div class="col-md-12">
+									<table class="table table-basic table-responsive col-12">
+										<thead class="bg-dark">
+											<tr>
+												<th class="text-uppercase">Government Issued Id</th>
+												<th class="text-uppercase">ID Number</th>
+												<th class="text-uppercase">Date of Issuance</th>
+												<th class="text-uppercase">Place of Issuance</th>
+												<th class="text-uppercase">actions</th>
+											</tr>
+										</thead>
+										<tbody>
+											<th:block th:each="government: ${listOfGovernmentIssuedId}">
+												<tr>
+													<td th:text="${government.getGovermentIssuedName()}"></td>
+													<td th:text="${government.getIdNo()}"></td>
+													<td th:text="${government.getIssuanceDate()}"></td>
+													<td th:text="${government.getPlaceOfIssuance()}"></td>
+													<td>
+														<button class="btn btn-primary">Update</button>
+													</td>
+												</tr>
+											</th:block>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div> -->
+						<!--End of table-->			    
 					</div>
 					<!-- /left content -->
 					<!-- Right component Profile Pic -->
@@ -210,8 +243,8 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/eligibility/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/eligibility/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getCivilServiceEligibilities().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Eligibility
 											</a>
 										</li>
@@ -228,9 +261,9 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/learning-development/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
-												 Learning &amp; Development
+											<a th:href="@{/learning-development/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getLearningAndDevelopments().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												Learning &amp; Development
 											</a>
 										</li>
 										<li class="nav-item">

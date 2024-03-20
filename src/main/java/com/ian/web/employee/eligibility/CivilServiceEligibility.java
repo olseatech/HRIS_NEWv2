@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -17,6 +18,8 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.ian.web.employee.Employee;
 import com.ian.web.systemsettings.eligibility.Eligibility;
 
 import lombok.AllArgsConstructor;
@@ -35,11 +38,10 @@ public class CivilServiceEligibility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@NonNull
 	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "fk_civil_service_eligibility", referencedColumnName = "id")
     private Eligibility eligibility;
-	@NotBlank
+	
 	private String otherEligibility;
 	private String rating;
 	
@@ -57,5 +59,9 @@ public class CivilServiceEligibility {
 	
 	@Transient
 	private MultipartFile attachedFile;
+
+	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JsonIgnoreProperties
+	private Employee employee;
 	
 }

@@ -33,7 +33,7 @@
                                             <h6 class="card-title">Learning Development</h6>
                                         </div>
                                         <div class="card-body">
-                                            <form action="/emr/emrpatientprofile" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
+                                            <form th:action="@{/save-learning-development/{id}(id=${employee.getId()})}" th:object="${learningDevelopmentModel}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
                                                 <input type="hidden" name="doctor.id" id="doctorId" value="2">
                                                 <input type="hidden" name="isActive" id="isActive" value="A">
                                                 <input type="hidden" id="id" name="id" value="4940">
@@ -47,24 +47,24 @@
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="positionTitle">Title of Seminar/ Conference/ Workshop/ Short Course</label>
-                                                                <textarea name="titleOfSeminar" id="titleOfSeminar" cols="30" rows="10" class="form-control" style="resize: none; height: 70px;" placeholder="Title of Learning and Development"></textarea>
+                                                                <textarea th:field="*{titleOfSeminar}" name="titleOfSeminar" id="titleOfSeminar" cols="30" rows="10" class="form-control" style="resize: none; height: 70px;" placeholder="Title of Learning and Development"></textarea>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="positionTitle">Training Course, Description and Objectives</label>
-                                                                <textarea name="trainingCourseDesc" id="trainingCourseDesc" cols="30" rows="10" class="form-control" style="resize: none; height: 70px;" placeholder="Course Description Objective"></textarea>
+                                                                <textarea th:field="*{trainingCourseDesc}" name="trainingCourseDesc" id="trainingCourseDesc" cols="30" rows="10" class="form-control" style="resize: none; height: 70px;" placeholder="Course Description Objective"></textarea>
                                                             </div>
                                                         </div>
                                                         <h3>Inclusive Dates</h3>
                                                         <div class="row">
                                                             <div class="col-sm-6">
                                                                 <label for="dateFrom">From</label>
-                                                                <input id="dateFrom" name="dateFrom" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{dateFrom}" id="dateFrom" name="dateFrom" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                             <div class="col-sm-6">
                                                                 <label for="dateTo">To</label>
-                                                                <input id="dateTo" name="dateTo" placeholder="N/A" type="date" class="form-control">
+                                                                <input th:field="*{dateTo}" id="dateTo" name="dateTo" placeholder="N/A" type="date" class="form-control">
                                                             </div>
                                                             <div class="col-sm-12 mt-2 align-items-center">
                                                                 <input id="upToPresent" name="upToPresent" placeholder="N/A" type="checkbox"> 
@@ -74,21 +74,22 @@
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="positionTitle">Number Of Hours</label>
-                                                                <input type="text" class="form-control" id="noHours" name="noHours" placeholder="N/A">
+                                                                <input th:field="*{noHours}" type="number" class="form-control" id="noHours" name="noHours" placeholder="N/A">
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="positionTitle">Type of L&D</label>
-                                                                <select name="learningType" id="learningType" class="form-control">
+                                                                <select th:field="*{learningTypeId}" name="learningType" id="learningType" class="form-control">
                                                                     <option value="">--Select Option--</option>
+																	<option th:each="learningType: ${listOfLearningType}" th:value="${learningType.getId()}" th:text="${learningType.getTypeName()}"></option>
                                                                 </select>
                                                             </div>
                                                         </div>
                                                         <div class="row">
                                                             <div class="col-sm-12">
                                                                 <label for="positionTitle">Providers</label>
-                                                                <select name="providers" id="providers" class="form-control">
+                                                                <select th:field="*{providers}" name="providers" id="providers" class="form-control">
                                                                     <option value="">--Select Option--</option>
                                                                     <option value="CIVIL SERVICE COMMISSION">Civil Service Commission (CSC)</option>
                                                                     <option value="DEVELOPMENT OF HEALTH">Development Of Health (DOH)</option>
@@ -177,8 +178,8 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/eligibility/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
+											<a th:href="@{/eligibility/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getCivilServiceEligibilities().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 												 Eligibility
 											</a>
 										</li>
@@ -195,9 +196,9 @@
 											</a>
 										</li>
 										<li class="nav-item">
-											<a th:href="@{/learning-development/1}" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
-												 Learning &amp; Development
+											<a th:href="@{/learning-development/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getLearningAndDevelopments().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												Learning &amp; Development
 											</a>
 										</li>
 										<li class="nav-item">
