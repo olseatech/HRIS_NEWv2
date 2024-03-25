@@ -279,7 +279,7 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a th:href="@{'/profile/work-experience/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
 							<i th:class="${session.actorObj.getWorkExperienceCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 							 Work Experience
 						</a>
@@ -394,8 +394,8 @@
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
-							<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a th:href="@{'/profile/familybg/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 							 Family Background
 						</a>
 					</li>

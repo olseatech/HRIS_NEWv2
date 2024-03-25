@@ -20,320 +20,242 @@
 
 		<!-- Main content -->
 		<div class="content-wrapper">
+
+			<!-- Vertical form modal -->
+			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title">Employee Information</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<form id="employeeForm" method="post" th:action="@{/addWorkExperience}" th:object="${workExperience}">
+							<input type="hidden" th:field="*{id}" name="id" id="id">
+							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
+							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
+							<!-- <input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value=""> -->
+							<div class="modal-body">
+								
+								<div class="form-group">
+
+									<div class="row">
+										<div class="col-sm-6">
+											<label for="firstName">Date From</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('dateFrom')}" th:errors="*{dateFrom}"></span>
+											<input id="dateFrom" name="dateFrom" th:field="*{dateFrom}" type="date" class="form-control required-field-hrisp" >
+										</div>	
+										<div class="col-sm-6">
+											<label for="firstName">Date To</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('dateTo')}" th:errors="*{dateTo}"></span>
+											<input id="dateTo" name="dateTo" th:field="*{dateTo}" type="date" class="form-control required-field-hrisp" >
+										</div>	
+										<div class="col-sm-12 mt-2 align-items-center">
+											<input th:field="*{upToPresent}" id="upToPresent" name="upToPresent" placeholder="N/A" type="checkbox"> 
+											<label for="dateTo">isPresent</label>
+										</div>
+									</div>
+
+									<div class="row">
+										<div class="col-sm-4">
+											<label for="positionTitle">Position Title</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('positionTitle')}" th:errors="*{positionTitle}"></span>
+											<input id="positionTitle" name="positionTitle" th:field="*{positionTitle}" placeholder="Position Title" type="text" class="form-control required-field-hrisp" >
+										</div>
+										<div class="col-sm-4">
+											<label for="department">Department</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('department')}" th:errors="*{department}"></span>
+											<input id="department" name="department" th:field="*{department}" placeholder="Department" type="text" class="form-control required-field-hrisp" >
+										</div>
+										<div class="col-sm-4">
+											<label for="officeName">Office Name</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('officeName')}" th:errors="*{officeName}"></span>
+											<input id="officeName" name="officeName" th:field="*{officeName}" placeholder="Office Name" type="text" class="form-control required-field-hrisp" >
+										</div>		
+									</div>
+
+									<div class="row">
+										<div class="col-sm-6">
+											<label for="immediateSupervisor">Immediate Supervisor</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('immediateSupervisor')}" th:errors="*{immediateSupervisor}"></span>
+											<input id="immediateSupervisor" name="immediateSupervisor" th:field="*{immediateSupervisor}" placeholder="Immediate Supervisor" type="text" class="form-control required-field-hrisp" >
+										</div>
+										<div class="col-sm-6">
+											<label for="jobDescription">Job Description</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('jobDescription')}" th:errors="*{jobDescription}"></span>
+											<textarea id="jobDescription" name="jobDescription" th:field="*{jobDescription}" class="form-control" style="resize: none;"></textarea>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-4">
+											<label for="salary">Salary</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
+											<input id="salary" name="salary" th:field="*{salary}" placeholder="Salary" type="number" class="form-control required-field-hrisp" >
+										</div>
+										<div class="col-sm-4">
+											<label for="salaryGrade">Salary Grade</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('salaryGrade')}" th:errors="*{salaryGrade}"></span>
+											<input id="salaryGrade" name="salaryGrade" th:field="*{salaryGrade}" placeholder="Salary" type="number" class="form-control required-field-hrisp" >
+										</div>
+										<div class="col-sm-4">
+											<label for="salaryGrade">Step Number</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('stepNo')}" th:errors="*{stepNo}"></span>
+											<input id="stepNo" name="stepNo" th:field="*{stepNo}" placeholder="Salary" type="number" class="form-control required-field-hrisp" >
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-6">
+											<label for="appointmentStatus">Appointment Status</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('appointmentStatus')}" th:errors="*{appointmentStatus}"></span>
+											<select name="appointmentStatus" id="appointmentStatus" th:field="*{appointmentStatus}" class="form-control">
+												<option value="CASUAL">CASUAL</option>
+												<option value="CONTRACTUAL">CONTRACTUAL</option>
+											</select>
+										</div>
+										<div class="col-sm-6">
+											<label for="govtOffice">Gov't Service</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('govtOffice')}" th:errors="*{govtOffice}"></span>
+											<select name="govtOffice" id="govtOffice" th:field="*{govtOffice}" class="form-control">
+												<option value="YES">YES</option>
+												<option value="NO">NO</option>
+											</select>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-sm-12">
+											<label for="remarks">Remarks</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('remarks')}" th:errors="*{remarks}"></span>
+											<textarea id="remarks" name="remarks" th:field="*{remarks}" class="form-control" style="resize: none;"></textarea>
+										</div>
+									</div>
+
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn bg-primary">Save Info</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		    <!-- /Vertical form modal -->
+
 			<div class="content">
+
 				<!-- Inner container -->
 				<div class="d-flex align-items-start flex-column flex-md-row">
+
 					<!-- Left content -->
 					<div class="tab-content w-100 order-2 order-md-1">
-						<!-- START FORM TAB -->
-						<div class="tab-pane fade active show" id="activity">	
-							<div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header header-elements-inline bg-primary">
-                                            <h6 class="card-title">Work Experience</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <form th:action="@{/save-work-experience/{id}(id=${employee.getId()})}" th:object="${workExperience}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
-                                                <input type="hidden" name="doctor.id" id="doctorId" value="2">
-                                                <input type="hidden" name="isActive" id="isActive" value="A">
-                                                <input type="hidden" id="id" name="id" value="4940">
-                                                <input type="hidden" id="patientPhoto" name="patientPhoto" value="/file/download/patient_2_4940.jpg">
-
-                                                <!-- START MODAL BODY -->
-                                                <div class="modal-body">
-
-                                                    <!-- START OF DATE -->
-                                                    <div class="form-group">
-                                                        <h3>Inclusive Dates</h3>
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <label for="dateFrom">From</label>
-                                                                <input th:field="*{dateFrom}" id="dateFrom" name="dateFrom" placeholder="N/A" type="date" class="form-control">
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <label for="dateTo">To</label>
-                                                                <input th:field="*{dateTo}" id="dateTo" name="dateTo" placeholder="N/A" type="date" class="form-control">
-                                                            </div>
-                                                            <div class="col-sm-12 mt-2 align-items-center">
-                                                                <input id="upToPresent" name="upToPresent" placeholder="N/A" type="checkbox"> 
-                                                                <label for="dateTo">isPresent</label>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- END OF DATE -->
-
-                                                    <!-- START OF POSITION -->
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="positionTitle">Position Title</label>
-                                                                <input th:field="*{positionTitle}" type="text" class="form-control" id="positionTitle" name="positionTitle" placeholder="N/A">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="department">Department / Agency / Office / Company</label>
-                                                                <input th:field="*{department}" type="text" class="form-control" id="department" name="department" placeholder="N/A">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="officeName">Name of Office / Unit</label>
-                                                                <input th:field="*{officeName}" type="text" class="form-control" id="officeName" name="officeName" placeholder="N/A">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="immediateSupervisor">Immediate Supervisor</label>
-                                                                <input th:field="*{immediateSupervisor}" type="text" class="form-control" id="immediateSupervisor" name="immediateSupervisor" placeholder="N/A">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="jobDescription">Job Summary / Description</label>
-                                                                <textarea th:field="*{jobDescription}" name="jobDescription" id="jobDescription" class="form-control" style="resize: none;"></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- END OF POSITION -->
-
-                                                    <!-- START OF SALARY -->
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <label for="salary">Salary</label>
-                                                                <input th:field="*{salary}" id="salary" name="salary" placeholder="N/A" type="number" class="form-control">
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <label for="dateTo">Salary Grade</label>
-                                                                <input th:field="*{salaryGrade}" id="salaryGrade" name="salaryGrade" placeholder="N/A" type="number" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-6">
-                                                                <label for="stepNo">Step Number</label>
-                                                                <input th:field="*{stepNo}" id="stepNo" name="stepNo" placeholder="N/A" type="number" class="form-control">
-                                                            </div>
-                                                            <div class="col-sm-6">
-                                                                <label for="appointmentStatus">Status of Appointment</label>
-                                                                <select th:field="*{appointmentStatus}" name="appointmentStatus" id="appointmentStatus" class="form-control">
-                                                                    <option value="" disabled selected>--Select Option--</option>
-																	<option  value="CASUAL">CASUAL</option>
-																	<option value="CONTRACTUAL">CONTRACTUAL</option>
-																	<option value="COTERMINOUS">COTERMINOUS</option>
-																	<option value="ELECTED OFFICIAL">ELECTED OFFICIAL</option>
-																	<option value="EMERGENCY">EMERGENCY</option>
-																	<option value="JOB ORDER">JOB ORDER</option>
-																	<option value="ORIGINAL">ORIGINAL</option>
-																	<option value="OUTSOURCED">OUTSOURCED</option>
-																	<option value="PART TIME">PART TIME</option>
-																	<option value="PERMANENT">PERMANENT</option>
-																	<option value="PRESIDENTIAL APPOINTEE">PRESIDENTIAL APPOINTEE</option>
-																	<option value="PROBATIONARY">PROBATIONARY</option>
-																	<option value="SECONDMENT">SECONDMENT</option>
-																	<option value="SUBSTITUTION">SUBSTITUTION</option>
-																	<option value="TEMPORARY">TEMPORARY</option>
-																	<option value="TRANSFERRED ">TRANSFERRED TO OTHER AGENCY</option>	
-																</select>		
-															</div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="govtOffice">Gov't Service</label>
-                                                                <select th:field="*{govtOffice}" name="govtOffice" id="govtOffice" class="form-control">
-                                                                    <option value="" disabled selected>--Select Option--</option>
-                                                                    <option value="YES">YES</option>
-                                                                    <option value="NO">NO</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="col-sm-12">
-                                                                <label for="remarks">Status of Appointment</label>
-                                                                <textarea th:field="*{remarks}" name="remarks" id="remarks" class="form-control" style="resize: none;"></textarea>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- END OF SALARY -->
-                                                </div>
-                                                <!-- END MODAL BODY -->
-
-                                                <!-- START FOOTER -->
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn bg-violet-400 btn-float float"><i class="icon-floppy-disk"></i><span> Save Info</span></button>
-                                                    <button type="submit" class="btn bg-teal-400 btn-float float2 scrollToTop"><i class="icon-floppy-disk"></i><span> Scroll to Top</span></button>
-                                                </div>
-                                                <!-- END FOOTER -->
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-					    </div>
-						<!-- END FORM TAB -->
-						<!-- START FORM TABLE -->
-						<div class="tab-pane fade active show">	
-							<div class="row">
-                                <div class="col-md-12">
-									<table class="table table-basic table-responsive col-12">
-										<thead class="bg-dark">
-											<tr>
-												<th class="text-uppercase">Inclusive Dates</th>
-												<th class="text-uppercase">employment detail</th>
-												<th class="text-uppercase">department / agency / office / company</th>
-												<th class="text-uppercase">salary</th>
-												<th class="text-uppercase">salary grade</th>
-												<th class="text-uppercase">status of appointment</th>
-												<th class="text-uppercase">gov't service</th>
-												<th class="text-uppercase">separation cause / remarks</th>
-												<th class="text-uppercase">actions</th>
-											</tr>
-										</thead>
-										<tbody>
-											<th:block th:each="experience: ${listOfWorkExperience}">
+						<div class="tab-pane fade active show" id="activity">
+							
+							
+							
+							<!-- Dashboard content -->
+							<div class="row mt-3">
+								<div class="col-xl-12">
+									
+									
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Family Background Information</h5>
+											<div class="header-elements">
+												<div class="list-icons">				                				
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Relative Information</button>
+									           	</div>
+											</div>
+										</div>
+					
+										<div class="card-body">
+											List of All Family Members. Type to search desired family member.
+										</div>
+					
+										<table class="table table-bordered table-hover datatable-highlight">
+											<thead>
 												<tr>
-													<td th:text="${experience.getInclusiveDates()}"></td>
-													<td th:text="${experience.getPositionTitle()}"></td>
-													<td th:text="${experience.getDepartment()}"></td>
-													<td th:text="${'Php.'+experience.getSalary()}"></td>
-													<td th:text="${experience.getSalaryGrade()}"></td>
-													<td th:text="${experience.getAppointmentStatus()}"></td>
-													<td th:text="${experience.getGovtOffice()}"></td>
-													<td th:text="${experience.getRemarks()}"></td>
-													<td>
-														<button class="btn btn-primary">Update</button>
-													</td>
+													<th width="150px;">&nbsp;</th>
+													<th>Position Title</th>
+													<th>Department</th>
+													<th>Office</th>		
+													<th>Date</th>
+													<th>Supervisor</th>		
+													<th>Salary</th>			
+													<th>Appointment Status</th>	
+													<th>Gov't Service</th>											
 												</tr>
-											</th:block>
-										</tbody>
-									</table>
-                                </div>
-                            </div>
-					    </div>	
-						<!-- END FORM TABLE -->		    
+											</thead>
+											<tbody>
+												<th:block th:each="experience: ${workExperienceList}">
+													<tr>
+														
+														<td class="text-center">
+															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
+															 th:data-row-dateFrom="${experience.getDateFrom()}"
+															 th:data-row-dateTo="${experience.getDateTo()}"
+															 th:data-row-upToPresent="${experience.isUpToPresent()}"
+			                                                 th:data-row-positionTitle="${experience.getPositionTitle()}"	
+			                                                 th:data-row-department="${experience.getDepartment()}"
+			                                                 th:data-row-officeName="${experience.getOfficeName()}"
+			                                                 th:data-row-immediateSupervisor="${experience.getImmediateSupervisor()}"
+			                                                 th:data-row-jobDescription="${experience.getJobDescription()}"
+			                                                 th:data-row-salary="${experience.getSalary()}"
+			                                                 th:data-row-salaryGrade="${experience.getSalaryGrade()}"
+			                                                 th:data-row-stepNo="${experience.getStepNo()}"
+			                                                 th:data-row-appointmentStatus="${experience.getAppointmentStatus()}"
+			                                                 th:data-row-govtOffice="${experience.getGovtOffice()}"
+			                                                 th:data-row-remarks="${experience.getRemarks()}"
+			                                                 th:data-row-id="${experience.getId()}"												 
+															data-toggle="modal" data-target="#modal_form_vertical"
+			                                                >View Record</button>
+														</td>														
+														
+														<td th:text="${experience.getPositionTitle()}"></td>
+														<td th:text="${experience.getDepartment()}"></td>
+														<td th:text="${experience.getOfficeName()}"></td>
+														<td th:text="${experience.getInclusiveDates()}"></td>
+														<td th:text="${experience.getImmediateSupervisor()}"></td>
+														<td th:text="${experience.getSalary()}"></td>
+														<td th:text="${experience.getAppointmentStatus()}"></td>
+														<td th:text="${experience.getGovtOffice()}"></td>
+														
+													</tr>
+												</th:block>		
+												
+												
+											</tbody>
+										</table>
+									</div>
+									
+									
+											
+								</div>
+							</div>
+							<!-- /dashboard content -->
+							
+														
+					    </div>			    
 					</div>
 					<!-- /left content -->
+
 
 					<!-- Right component Profile Pic -->
 					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
 
-						<!-- Sidebar content -->
-						<div class="sidebar-content">
-							<input type="file" name="profilePhoto" id="profilePhoto" accept="image/*" class="inputfile" />
-							<!-- User card -->
-							<div class="card">
-								<div class="card-body text-center">
-									<div class="card-img-actions d-inline-block mb-3 ">
-										
-										<img th:src="|@{*{#authentication.principal.profilePhoto == null ? '/images/avatar.png' : #authentication.principal.profilePhoto}}|" width="170" height="170" class="rounded-circle" alt="">
-										
-										
-										<div class="card-img-actions-overlay card-img rounded-circle">
-											<button id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
-												<i class="icon-camera"></i>
-											</button>											
-										</div>
-										
-									</div>
-									<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase" sec:authentication="principal.fullName">Hanna Dorman</h6>
-										<div class="text-left mt-1">
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span>HR ADMIN</span>
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span>PERSONNEL</span>
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span>OCT 16, 2005</span>
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span>JAN 27, 1982 <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span>42</span></span>
-											
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span>09062794574</span>
-											
-										</div>
-									
-										    		
-						    	</div>
-					    	</div>
-					    	<!-- /user card -->
-					    	
-					    	<div class="card">
-								<div class="card-header bg-transparent header-elements-inline">
-									<span class="card-title font-weight-semibold">Personal Data Sheet</span>
-									<div class="header-elements">
-										<div class="list-icons">
-					                		<a class="list-icons-item" data-action="collapse"></a>
-				                		</div>
-			                		</div>
-								</div>
-
-								<div class="card-body p-0" style="">
-									<ul class="nav nav-sidebar my-2">
-										<li class="nav-item">
-											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
-												 Personal Information
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Educational Background
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/eligibility/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getCivilServiceEligibilities().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Eligibility
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Work Experience
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
-												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Voluntary Work
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/learning-development/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getLearningAndDevelopments().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												Learning &amp; Development
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/other-info/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getOtherInfos().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Other Info
-											</a>
-										</li>
-										
-										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
-												 Other Information Questions
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/references/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getEmpReferences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 References
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/government-issuedId/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getGovermentIssuedIds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Government Issued Id
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<!-- /sidebar content -->
+						<!-- Main sidebar -->
+						<div th:replace="fragments/common::right-profile-content"></div>
+						<!-- /Main sidebar -->
+		
 					</div>
 					<!-- /right sidebar component -->
+
 				</div>
 				<!-- /inner container -->
+
 			</div>
 			<!-- /content area -->
+		
 		</div>
 		<!-- /main content -->
 	</div>
@@ -345,21 +267,204 @@
 	
 	<script th:inline="javascript">		
 	
-	    $(document).ready(function() {
+	$(document).ready(function() {
+			
+			$('#addButton').click(function(){
+				let empHashCode = $('#empHashCode').val();
+				let employeeId = $('#employeeId').val();
+				
+		        $('#employeeForm')[0].reset();
+		        
+		        $('#empHashCode').val(empHashCode);
+		        $('#employeeId').val(employeeId);
+		        $(".spouseField").show();
+		    });
+			
+			$(document).on("click", ".showDetails", function() {
+
+				var id = $(this).attr('data-row-id');
+	            var positionTitle = $(this).attr('data-row-positionTitle');
+				var dateFrom = $(this).attr('data-row-dateFrom');
+				var dateTo = $(this).attr('data-row-dateTo');
+				var upToPresent = $(this).attr('data-row-upToPresent');
+	            var department = $(this).attr('data-row-department'); 
+	            var officeName = $(this).attr('data-row-officeName');
+	            var immediateSupervisor = $(this).attr('data-row-immediateSupervisor');
+	            var jobDescription = $(this).attr('data-row-jobDescription');
+	            var salary = $(this).attr('data-row-salary');
+	            var salaryGrade = $(this).attr('data-row-salaryGrade');
+	            var stepNo = $(this).attr('data-row-stepNo');
+	            var appointmentStatus = $(this).attr('data-row-appointmentStatus');
+	            var govtOffice = $(this).attr('data-row-govtOffice');
+	            var remarks = $(this).attr('data-row-remarks');
+	                    
+	            $("#modal_form_vertical").find("#id").val(id);
+				$("#modal_form_vertical").find("#dateFrom").val(dateFrom);
+				$("#modal_form_vertical").find("#dateTo").val(dateTo);
+				$("#modal_form_vertical").find("#upToPresent").prop("checked", upToPresent);
+	            $("#modal_form_vertical").find("#positionTitle").val(positionTitle);
+	            $("#modal_form_vertical").find("#department").val(department);
+	            $("#modal_form_vertical").find("#officeName").val(officeName);
+	            $("#modal_form_vertical").find("#immediateSupervisor").val(immediateSupervisor);
+	            $("#modal_form_vertical").find("#jobDescription").val(jobDescription);
+	            $("#modal_form_vertical").find("#salary").val(salary);
+	            $("#modal_form_vertical").find("#salaryGrade").val(salaryGrade);
+	            $("#modal_form_vertical").find("#stepNo").val(stepNo);
+	            $("#modal_form_vertical").find("#appointmentStatus").val(appointmentStatus);
+	            $("#modal_form_vertical").find("#govtOffice").val(govtOffice);
+	            $("#modal_form_vertical").find("#remarks").val(remarks);
+	            
+	            if(relationship === 'SPOUSE'){
+					$(".spouseField").show();
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);					
+					
+				} else if(relationship === 'MOTHER'){
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else if(relationship === 'FATHER'){
+					
+					$("#gender").val("MALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else {					
+					
+					$("#gender").prop("disabled", false);	
+					$(".spouseField").hide();
+				}
+	            
+	        });
+			
+			$("#relationship").change(function() {
+		        var selectedValue = $(this).val();
+		        //console("Selected value: " + selectedValue);
+		        
+		        if(selectedValue === 'SPOUSE'){
+					$(".spouseField").show();
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);					
+					
+				} else if(selectedValue === 'MOTHER'){
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else if(selectedValue === 'FATHER'){
+					
+					$("#gender").val("MALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else {					
+					
+					$("#gender").prop("disabled", false);	
+					$(".spouseField").hide();
+				}
+		        
+		        // You can perform any action based on the selected value here
+		    });
+			
+			// start update profile photo
+			const fileSelect = document.getElementById('fileSelect');
+		    const profilePhoto = document.getElementById('profilePhoto');
+			fileSelect.addEventListener('click', (e) => {
+	        	if (profilePhoto) {
+	        		profilePhoto.click();
+	        	}
+	        }, false);
+		    profilePhoto.addEventListener('change', previewImage, false);
+		    
+        	let uploadUrl = /*[[${#request.getContextPath() + '/file/upload/profilePhoto'}]]*/'';
+        	let fileUploadForm = document.getElementById('fileUploadForm');
+		    fileUploadForm.onsubmit = async (e) => {
+		    	e.preventDefault();
+		    	let fd = new FormData(fileUploadForm);
+		    	
+		    	let response = await fetch(uploadUrl, {
+		    		method: 'POST',
+		    		body: fd
+		    	});
+		    	
+		    	if(response.ok){
+		    		swal({
+						title: "Success!",
+						text: "Profile Photo successfully saved.",
+						icon: "success",
+						buttons: false,
+			            timer: 2000,
+					}).then(() => window.location.reload());
+		    	} else {
+		    		swal({
+						title: "Upload Failure!",
+						text: "Profile Photo not uploaded successfully.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		    	}
+		    };
+		    
+		    function previewImage() {
+				let input = document.getElementById('profilePhoto');
+				let img = document.getElementById('photoPreview');
+				if (input.files && input.files[0]) {
+	        		var reader = new FileReader();
+	        		reader.onload = function(e) {
+	        			img.src = e.target.result;
+	        		}
+	        		reader.readAsDataURL(input.files[0]);
+	        	}
+			}
+			// end update profile photo
 	    	
 	    	$('#consultation-list').DataTable({
 				"lengthMenu": [10, 25, 50],
 				"ordering": false, 
 				
 			});
+			
+			let showMode = /*[[${showMode == null ? '' : showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+				
+				//$("#empNo").prop("readOnly", true);
+				//$("#assumptiondate").prop("readOnly", true);
+				//$("#plantillaNo").prop("readOnly", true);
+				
+				$("#saveMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#saveMode").val("HRADMIN");
+			}
 	    		    				
-			$(".nav-link").removeClass("active");	    	  	
-			$("#emrDashboardNav").addClass("active");
+			
 
-	    	let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
-			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+			
+			if(msgCode === 'EMP-NOT-FOUND'){
+				swal({
+					title: "Employee not found!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 3000,
+				})
+				.then((value) => {
+					let contextPath = /*[[${#request.getContextPath()}]]*/'';
+					window.location.href = contextPath + "/dashboard";
+				});
 
-	    	if(msgCode === 'ERROR'){
+	    	} else if(msgCode === 'ERROR'){
 				swal({
 					title: "Error!",
 					text: msgDesc,
@@ -375,33 +480,49 @@
 					buttons: false,
 		            timer: 2000,
 				});
+			} else if(msgCode === 'EDIT-SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
 			}
+			
+			$('#employeeForm').submit(function(event) {
+		        var emptyFields = [];
+		        $('.required-field-hrisp').each(function() {
+		            if ($(this).val().trim() === '') {
+		                emptyFields.push($(this));
+		            }
+		        });
+		
+		        if (emptyFields.length > 0) {
+		            event.preventDefault();
+		            //var alertMessage = "Please fill out the following fields:\n";
+		            //$.each(emptyFields, function(index, field) {
+		            //    alertMessage += "- " + field.attr('name') + "\n";
+		            //});
+		            //alert(alertMessage);
+		            // Focus on the first empty field
+		            
+		            swal({
+						title: "Error!",
+						text: "Mandatory fields marked in RED are mandatory.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		            emptyFields[0].focus();
+		        } else {
+					$("#gender").prop("disabled", false);	
+				}
+		    });
+		    
+		    
 
 	    });
-
-		$(document).on("click", ".cancelConsultation", function(){
-
-			swal({
-			  title: "Confirmation?",
-			  text: "Are you sure you want to cancel the appointment?",
-			  icon: "info",
-			  buttons: ["Yes", "No"],
-			  dangerMode: false,
-			})
-			.then((willDelete) => {
-			  if (willDelete) {
-				  //No Response
-				  console.log("will delete no");
-
-			  } else {
-			  	 console.log("will delete yes");
-				 var id = $(this).attr('data-row-id');
-				 $("#cancelConsultationForm").find("#consultationId").val(id);
-				 $("#cancelConsultationForm").submit();
-			  }
-			});
-
-		});
 
 	</script>
 

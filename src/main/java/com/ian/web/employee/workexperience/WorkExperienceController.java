@@ -3,7 +3,9 @@ package com.ian.web.employee.workexperience;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
+import com.ian.web.employee.familybg.FamilyBg;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,47 +31,86 @@ public class WorkExperienceController {
     private final WorkExperienceRepository workExperienceRepository;
     private final EmployeeRepository employeeRepository;
 
-     @GetMapping("/work-experience/{employeeId}")
-    public String getRecord(Model model, @PathVariable("employeeId") Long id){
-        if(!employeeRepository.findById(id).isPresent()){
-            model.addAttribute("uxmessage", new UXMessage("ERROR", "Employee doesn't exist"));
-			return "redirect:/dashboard";
-        }
-        Employee employee = employeeRepository.findById(id).get();
-        model.addAttribute("employee", employee);
-        model.addAttribute("listOfWorkExperience", workExperienceRepository.findAllByEmployee(employee));
-        model.addAttribute("workExperience", new WorkExperience());
-
-        return "employee/pds/work-experience";
-    }
-
-    @PostMapping("/save-work-experience/{employeeId}")
-    @Transactional
-	public String getRecord(
-			@Valid WorkExperience workExperience,
-            @PathVariable("employeeId") Long id
+    @GetMapping({"/profile/work-experience/{employeeId}/{empHashCode}", "/employee/work-experience/{employeeId}/{empHashCode}"})
+	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String empHashCode, HttpServletRequest request) {
+		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
+		UXMessage msg = new UXMessage();
+        System.out.println("\n\n\n\n"+employeeId+"\n\n\n\n\n");
+		if(optional.isPresent()) {		
+			
+			Employee employee = optional.orElseGet(() -> new Employee());
+			model.addAttribute("employee", employee);
+			
+			List<WorkExperience> workExperienceList = workExperienceRepository.findByEmployeeId(employeeId);
+			model.addAttribute("workExperienceList", workExperienceList);
+			
+			WorkExperience workExperience = new WorkExperience();
+			workExperience.setEmployee(employee);
+			model.addAttribute("workExperience", workExperience );
+			
+			if (request.getServletPath().startsWith("/profile")) {
+				model.addAttribute("showMode", "PROFILE");
+			} else {
+				model.addAttribute("showMode", "HRADMIN");
+			}
+			
+			
+		} else {
+			msg.setCode("EMP-NOT-FOUND");
+			msg.setMessage("Employee Not Found. You will be redirected to the dashboard.");
+			model.addAttribute("msg", msg);
+		}		
+		
+		return "employee/pds/work-experience";
+		
+	}
+	
+	@PostMapping({"/addWorkExperience", "/editWorkExperience"})
+	public String saveFamilyBg(
+			@Valid WorkExperience workExperience
 			,Errors errors
 			,final RedirectAttributes redirect
 			,Model model
-			) throws IllegalAccessException, InvocationTargetException {
+			,HttpServletRequest request
+			) {
+	    
+	    String uxMessageText = "Record added successfully.";	    
+	    
 		if (errors.hasErrors()) {
-            Employee employee = employeeRepository.findById(id).get();
-            model.addAttribute("employee", employee);
-            model.addAttribute("listOfWorkExperience", workExperienceRepository.findAll());
-            model.addAttribute("workExperience", workExperience);
+			model.addAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
+			model.addAttribute("workExperienceList", workExperienceRepository.findByEmployeeId(workExperience.getEmployee().getId()));
+			return "employee/pds/work-experience";
+		} 
+        // else {
+		// 	if(familyBg.getId() == 0 && !"CHILDREN".equalsIgnoreCase(familyBg.getRelationship())) {
+		// 		FamilyBg recordMatch = familyBgRepository.findByEmployeeIdAndRelationship(familyBg.getEmployee().getId(), familyBg.getRelationship());
+		// 		if (recordMatch != null) {
+		// 			model.addAttribute("msg", new UXMessage("ERROR", "You already have a record for your " + familyBg.getRelationship()));
+		// 			model.addAttribute("familyBgList", familyBgRepository.findByEmployeeId(familyBg.getEmployee().getId()));
+		// 			return "employee/pds/family-background";
+		// 		} else {
+		// 		    redirect.addFlashAttribute("msg", new UXMessage("SUCCESS", uxMessageText));			    
+		// 		}
+		// 	}
+		// }		
+		workExperience = workExperienceRepository.save(workExperience);
 
-            return "employee/pds/work-experience";
+		if (request.getServletPath().equalsIgnoreCase("/addWorkExperience")) {
+			redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
+			return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
+		} else if (request.getServletPath().equalsIgnoreCase("/editWorkExperience")) {
+			// if(workExperience.getSaveMode().equalsIgnoreCase("PROFILE")) {
+			// 	redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
+			// 	return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
+			// } else {
+			// 	redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
+			// 	return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
+			// }			
+            redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
+			return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
+		} else {
+			return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
 		}
-
-        Employee employee = employeeRepository.findById(id).get();
-        workExperience.setEmployee(employee);
-
-//        List<WorkExperience> listOfWorkExperience = employee.getWorkExperiences();
-//        listOfWorkExperience.add(workExperience);
-//        employee.setWorkExperiences(listOfWorkExperience);
-//        employeeRepository.save(employee);
-
-		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/work-experience/"+id;
 	}
+
 }

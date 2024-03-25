@@ -11,5 +11,5 @@ import com.ian.web.employee.educationalbg.EducationalBackground;
 
 @Repository
 public interface WorkExperienceRepository extends JpaRepository<WorkExperience, Long> {
-    List<WorkExperience> findAllByEmployee(Employee employee);
+    List<WorkExperience> findByEmployeeId(Long id);
 }
