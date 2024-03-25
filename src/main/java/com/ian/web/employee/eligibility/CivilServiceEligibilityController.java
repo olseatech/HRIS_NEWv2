@@ -69,13 +69,13 @@ public class CivilServiceEligibilityController {
 
 		CivilServiceEligibility civilServiceEligibility = new CivilServiceEligibility();
 		BeanUtils.copyProperties(civilServiceEligibilityModel, civilServiceEligibility);
-		civilServiceEligibility.setEligibility(eligibilityRepository.findById(civilServiceEligibilityModel.getEligibilityId()).get());
+//		civilServiceEligibility.setEligibility(eligibilityRepository.findById(civilServiceEligibilityModel.getEligibilityId()).get());
 		civilServiceEligibility.setEmployee(employee);
 		civilServiceEligibilityRepository.save(civilServiceEligibility);
-
-		List<CivilServiceEligibility> listOfEligibility = employee.getCivilServiceEligibilities();
-		listOfEligibility.add(civilServiceEligibility);
-		employee.setCivilServiceEligibilities(listOfEligibility);
+//
+//		List<CivilServiceEligibility> listOfEligibility = employee.getCivilServiceEligibilities();
+//		listOfEligibility.add(civilServiceEligibility);
+//		employee.setCivilServiceEligibilities(listOfEligibility);
 		employeeRepository.save(employee);
 		
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));

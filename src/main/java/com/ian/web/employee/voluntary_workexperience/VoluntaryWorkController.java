@@ -61,10 +61,10 @@ public class VoluntaryWorkController {
         Employee employee = employeeRepository.findById(id).get();
         voluntaryWork.setEmployee(employee);
         
-        List<VoluntaryWork> voluntaryWorks = employee.getVoluntaryWorks();
-        voluntaryWorks.add(voluntaryWork);
-        employee.setVoluntaryWorks(voluntaryWorks);
-        employeeRepository.save(employee);
+//        List<VoluntaryWork> voluntaryWorks = employee.getVoluntaryWorks();
+//        voluntaryWorks.add(voluntaryWork);
+//        employee.setVoluntaryWorks(voluntaryWorks);
+//        employeeRepository.save(employee);
         
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
 		return "redirect:/voluntary-work/"+id;

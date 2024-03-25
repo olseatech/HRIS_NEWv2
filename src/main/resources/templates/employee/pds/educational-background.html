@@ -212,19 +212,23 @@
 											<thead>
 												<tr>
 													<th width="150px;">&nbsp;</th>
-													<th>Name</th>
-													<th>Relationship</th>
-													<th>Birthday</th>		
-													<th>Age</th>												
+													<th>Level</th>
+													<th>Name of School</th>
+													<th>Degree/Course</th>		
+													<th>Period of Attendance</th>
+													<th>Highest Level / Units Earned</th>
+													<th>Year Graduated</th>			
+													<th>Scholarship</th>
+													<th>Academic Honors Received</th>															
 												</tr>
 											</thead>
 											<tbody>
-												<th:block th:each="familyBg : ${familyBgList}">
+												<th:block th:each="educationalBg : ${educationalBgList}">
 													<tr>
 														
 														<td class="text-center">
 															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
-			                                                 th:data-row-relationship="${familyBg.getRelationship()}"	
+			                                                 th:data-row-relationship="${educationalBg.getLevel().getLevelName()}"	
 			                                                 th:data-row-tin="${familyBg.getTin()}"
 			                                                 th:data-row-occupation="${familyBg.getOccupation()}"
 			                                                 th:data-row-employer="${familyBg.getEmployer()}"

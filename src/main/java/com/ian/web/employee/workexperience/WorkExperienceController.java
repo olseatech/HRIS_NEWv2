@@ -63,10 +63,10 @@ public class WorkExperienceController {
         Employee employee = employeeRepository.findById(id).get();
         workExperience.setEmployee(employee);
 
-        List<WorkExperience> listOfWorkExperience = employee.getWorkExperiences();
-        listOfWorkExperience.add(workExperience);
-        employee.setWorkExperiences(listOfWorkExperience);
-        employeeRepository.save(employee);
+//        List<WorkExperience> listOfWorkExperience = employee.getWorkExperiences();
+//        listOfWorkExperience.add(workExperience);
+//        employee.setWorkExperiences(listOfWorkExperience);
+//        employeeRepository.save(employee);
 
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
 		return "redirect:/work-experience/"+id;

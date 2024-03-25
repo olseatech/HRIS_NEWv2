@@ -37,7 +37,6 @@ public class EmployeeController {
 	private final PositionTitleRepository positionTitleRepository;
 	private final EmployeeStatusRepository employeeStatusRepository;
 	private final DivisionRepository divisionRepository;
-	private final StorageService storageService;
 	
 	@GetMapping("/employee/datalist")
     public ResponseEntity<FlexDatalistResult> doctorsFlexDatalist() {
@@ -61,24 +60,24 @@ public class EmployeeController {
 		return "employee/clearance/clearance-list";
 	}
 	
-	@GetMapping("/employee/{employeeId}")
-	public String viewEmployee(Model model, @PathVariable long employeeId) {
-		Employee employee = employeeRepository.findById(employeeId).orElseGet(()->new Employee());
-		System.out.println("\n\n\n\n\n"+employee.getEducationalBackgrounds()+"\n\n\n\n\n");
-		model.addAttribute("employee", employee);
-		return "employee/pds/personnal-info";
-	}
+//	@GetMapping("/employee/{employeeId}")
+//	public String viewEmployee(Model model, @PathVariable long employeeId) {
+//		Employee employee = employeeRepository.findById(employeeId).orElseGet(()->new Employee());
+//		System.out.println("\n\n\n\n\n"+employee.getEducationalBackgrounds()+"\n\n\n\n\n");
+//		model.addAttribute("employee", employee);
+//		return "employee/pds/personnal-info";
+//	}
 	
-	@GetMapping("/employee/{employeeId}/{empHashCode}")
-	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String empHashCode) {
+	@GetMapping({"/profile/{employeeId}/{empHashCode}", "/employee/{employeeId}/{empHashCode}"})
+	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String empHashCode, HttpServletRequest request) {
 		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
 		UXMessage msg = new UXMessage();
 		if(optional.isPresent()) {			
-			msg.setCode("EMP-FOUND");
-			msg.setMessage("Employee Found.");
+			
 		} else {
 			msg.setCode("EMP-NOT-FOUND");
-			msg.setMessage("Employee Not Found. You will be redirected to the dashboard.");			
+			msg.setMessage("Employee Not Found. You will be redirected to the dashboard.");
+			model.addAttribute("msg", msg);
 		}
 		
 		Employee employee = optional.orElseGet(() -> new Employee());
@@ -86,7 +85,13 @@ public class EmployeeController {
 		model.addAttribute("divisionList", divisionRepository.findAll());
 		model.addAttribute("positionTitleList", positionTitleRepository.findAll());
 		model.addAttribute("employee", employee);
-		model.addAttribute("msg", msg);
+		
+		if (request.getServletPath().startsWith("/profile")) {
+			model.addAttribute("showMode", "PROFILE");
+		} else if (request.getServletPath().equalsIgnoreCase("/editEmployee")) {
+			model.addAttribute("showMode", "HRADMIN");
+		}
+		
 		return "employee/pds/personnal-info";
 		
 	}
@@ -111,6 +116,13 @@ public class EmployeeController {
 			employee.setEmpHashCode(employeeOldRecord.getEmpHashCode());
 			employee.setUsername(employeeOldRecord.getUsername());
 	    	employee.setPassword(employeeOldRecord.getPassword());
+	    	if(employee.getProfilePhoto() != null && employee.getProfilePhoto().length() > 0) {
+	    		
+	    	} else {
+	    		if(employeeOldRecord.getProfilePhoto() != null && employeeOldRecord.getProfilePhoto().length() > 0) {
+	    			employee.setProfilePhoto(employeeOldRecord.getProfilePhoto());
+	    		}
+	    	}
 	    	uxMessageText = "Employee edited successfully.";
 	    	editMode = true;
 	    } else {
@@ -157,11 +169,7 @@ public class EmployeeController {
 		if(!editMode) {
 			employee.setEmpHashCode(generateAlphanumericHash());
 		}
-		
-		if(employeeOldRecord != null) {
-			
-		}
-		
+				
 		if(employee.getEmpHashCode() != null && employee.getEmpHashCode().length() > 0) {
 			
 		} else {
@@ -173,7 +181,13 @@ public class EmployeeController {
 		if (request.getServletPath().equalsIgnoreCase("/addEmployee")) {
 			return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
 		} else if (request.getServletPath().equalsIgnoreCase("/editEmployee")) {
-			return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
+			if(employee.getSaveMode().equalsIgnoreCase("PROFILE")) {
+				redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Employee Record Successfully Updated."));
+				return "redirect:/profile/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
+			} else {
+				redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Employee Record Successfully Updated."));
+				return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
+			}			
 		} else {
 			return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
 		}

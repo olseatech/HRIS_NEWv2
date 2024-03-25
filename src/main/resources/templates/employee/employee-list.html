@@ -47,29 +47,7 @@
 								<input type="hidden" th:field="*{id}" name="id" id="id">
 								<input type="hidden" name="userType" id="userType" value="ROLE_EMPLOYEE">
 								<div class="modal-body">
-									<div class="form-group">
-										<div class="row">    
-											<div class="col-sm-4">&nbsp;</div>
-							                <div class="col-sm-4">
-							                     <div class="card" th:object="${employee}">
-													<div class="card card-body text-center">
-														<div class="card-img-actions d-inline-block mb-3 ">									
-															<img id="photoPreview" class="img-fluid rounded-circle card-img-top" th:src="|@{*{profilePhoto == null ? '/images/avatar.png' : profilePhoto}}|" width="150" height="150" alt="">
-															<div class="card-img-actions-overlay card-img rounded-circle">
-																<button type="button" id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
-																	<i class="icon-camera"></i>
-																</button>											
-															</div>									
-														</div>									
-														<div>
-														    <input type="file" name="photoFile" id="photoFile" accept="image/*" class="inputfile" />
-														</div>
-													</div>
-												</div>
-							                </div>
-							                <div class="col-sm-4">&nbsp;</div>
-							           </div>
-									</div>
+									
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-4">
@@ -547,32 +525,43 @@
 					<table class="table table-bordered table-hover datatable-highlight">
 						<thead>
 							<tr>
+								<th width="5px;">&nbsp;</th>
 								<th>Employee Name</th>
 								<th>Employee No.</th>
 								<th>Plantilla No.</th>		
-								<th>Job Title</th>
+								<th>Position</th>
 								<th>Division</th>
 								<th>Status</th>
-								<th class="text-center">Actions</th>
+								
 							</tr>
 						</thead>
 						<tbody>
 							<th:block th:each="employee : ${employeeList}">
 								<tr>
+									
+									
+									<td class="text-center">
+										<div class="list-icons">
+											<div class="dropdown">
+												<a href="#" class="list-icons-item" data-toggle="dropdown">
+													<i class="icon-menu9"></i>
+												</a>
+
+												<div class="dropdown-menu dropdown-menu-right">
+													<a th:href="@{'/employee/' + ${employee.getId()} + '/' + ${employee.getEmpHashCode()}}" class="dropdown-item"><i class="icon-search4"></i> View Record</a>
+													<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> View PDS Report</a>														
+												</div>
+											</div>
+										</div>
+									</td>
+									
 									<td th:text="${employee.getFullName()}">Full Name</td>
 									<td th:text="${employee.getEmpNo()}">Status</td>
 									<td th:text="${employee.getPlantillaNo()}">Status</td>
-									<td th:text="${employee.getPlantillaNo()}">Status</td>
-									<td th:text="${employee.getPlantillaNo()}">Status</td>
-									<td><span class="badge badge-success">Active</span></td>
-									<td class="text-center" width="250px;">
-												<a id="editEmployeeButton" type="button" class="showDetails btn btn-primary"
-												
-												th:href="@{'/employee/' + ${employee.getId()} + '/' + ${employee.getEmpHashCode()}}"
-                                                 
-                                                 
-                                                >View Record</a>
-									</td>
+									<td th:text="${employee.getPositionTitle().getPositionTitleName()}">Status</td>
+									<td th:text="${employee.getDivision().getDivisionName()}">Status</td>
+									<td><span class="badge badge-success" th:text="${employee.getStatus()}">Active</span></td>
+									
 								</tr>
 							</th:block>		
 							

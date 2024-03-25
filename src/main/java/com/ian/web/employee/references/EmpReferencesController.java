@@ -64,10 +64,10 @@ public class EmpReferencesController {
 
         System.out.println("\n\n\n\n\nstart\n\n\n\n\n");
 
-        List<EmpReferences> listOfReference = employee.getEmpReferences();
-        listOfReference.add(empReferences);
-        employee.setEmpReferences(listOfReference);
-        employeeRepository.save(employee);
+//        List<EmpReferences> listOfReference = employee.getEmpReferences();
+//        listOfReference.add(empReferences);
+//        employee.setEmpReferences(listOfReference);
+//        employeeRepository.save(employee);
 
         System.out.println("\n\n\n\n\nsave\n\n\n\n\n");
 

@@ -57,6 +57,9 @@ public class EducationalBackground {
 	
 	private boolean upToPresent;
 
+	@Transient
+	private String saveMode;
+	
 	private String unitsEarned;
 	private int yearGraduated;
 	

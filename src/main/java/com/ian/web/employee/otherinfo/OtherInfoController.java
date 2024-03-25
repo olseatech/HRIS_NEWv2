@@ -63,10 +63,10 @@ public class OtherInfoController {
         Employee employee = employeeRepository.findById(id).get();
         otherInfo.setEmployee(employee);
 
-        List<OtherInfo> listOfOtherInfos = employee.getOtherInfos();
-        listOfOtherInfos.add(otherInfo);
-        employee.setOtherInfos(listOfOtherInfos);
-        employeeRepository.save(employee);
+//        List<OtherInfo> listOfOtherInfos = employee.getOtherInfos();
+//        listOfOtherInfos.add(otherInfo);
+//        employee.setOtherInfos(listOfOtherInfos);
+//        employeeRepository.save(employee);
 
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
 		return "redirect:/other-info/"+id;

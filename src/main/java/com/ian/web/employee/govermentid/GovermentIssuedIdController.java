@@ -64,10 +64,10 @@ public class GovermentIssuedIdController {
         
         govermentIssuedId.setEmployee(employee);
         
-        List<GovermentIssuedId> listOfGovernmentId = employee.getGovermentIssuedIds();
-        listOfGovernmentId.add(govermentIssuedId);
-        employee.setGovermentIssuedIds(listOfGovernmentId);
-        employeeRepository.save(employee);
+//        List<GovermentIssuedId> listOfGovernmentId = employee.getGovermentIssuedIds();
+//        listOfGovernmentId.add(govermentIssuedId);
+//        employee.setGovermentIssuedIds(listOfGovernmentId);
+//        employeeRepository.save(employee);
 
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
 		return "redirect:/government-issuedId/"+id;

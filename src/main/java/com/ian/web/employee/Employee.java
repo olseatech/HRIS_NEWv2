@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -14,26 +13,20 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.ian.web.common.model.Person;
-import com.ian.web.employee.educationalbg.EducationalBackground;
-import com.ian.web.employee.eligibility.CivilServiceEligibility;
-import com.ian.web.employee.govermentid.GovermentIssuedId;
-import com.ian.web.employee.learning.LearningAndDevelopment;
-import com.ian.web.employee.otherinfo.OtherInfo;
-import com.ian.web.employee.references.EmpReferences;
-import com.ian.web.employee.voluntary_workexperience.VoluntaryWork;
-import com.ian.web.employee.workexperience.WorkExperience;
+import com.ian.web.employee.familybg.FamilyBg;
 import com.ian.web.systemsettings.division.Division;
 import com.ian.web.systemsettings.employee_status.EmployeeStatus;
 import com.ian.web.systemsettings.position_title.PositionTitle;
@@ -58,6 +51,9 @@ public class Employee extends Person  implements UserDetails {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+	
+	@Transient
+	private String saveMode;
 	
 	private String empHashCode;
 	private String empNo;
@@ -117,38 +113,57 @@ public class Employee extends Person  implements UserDetails {
 		
 	@Transient
 	private MultipartFile photoFile;
+	
+	@Transient
+	private List<FamilyBg> familyBgList;
+	
+	@Transient
+	private int familyBgCount;
+	
+	@Transient
+	private int educationalBgCount;
+	
+	@Transient
+	private int eligibilityCount;
+	
+	@Transient
+	private int workExperienceCount;
+	
+	@Transient
+	private int voluntaryWorkCount;
+	
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_educational_background", referencedColumnName = "id")
-    private List<EducationalBackground> educationalBackgrounds;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_work_experience", referencedColumnName = "id")
-    private List<WorkExperience> workExperiences;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_voluntary_experience", referencedColumnName = "id")
-    private List<VoluntaryWork> voluntaryWorks;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "employee_other_info", referencedColumnName = "id")
-    private List<OtherInfo> otherInfos;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_references", referencedColumnName = "id")
-    private List<EmpReferences> empReferences;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_eligibility", referencedColumnName = "id")
-    private List<CivilServiceEligibility> civilServiceEligibilities;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_learning_development", referencedColumnName = "id")
-    private List<LearningAndDevelopment> learningAndDevelopments;
-
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "employee_government_id", referencedColumnName = "id")
-    private List<GovermentIssuedId> govermentIssuedIds;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_educational_background", referencedColumnName = "id")
+//    private List<EducationalBackground> educationalBackgrounds;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_work_experience", referencedColumnName = "id")
+//    private List<WorkExperience> workExperiences;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_voluntary_experience", referencedColumnName = "id")
+//    private List<VoluntaryWork> voluntaryWorks;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "employee_other_info", referencedColumnName = "id")
+//    private List<OtherInfo> otherInfos;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_references", referencedColumnName = "id")
+//    private List<EmpReferences> empReferences;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_eligibility", referencedColumnName = "id")
+//    private List<CivilServiceEligibility> civilServiceEligibilities;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_learning_development", referencedColumnName = "id")
+//    private List<LearningAndDevelopment> learningAndDevelopments;
+//
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "employee_government_id", referencedColumnName = "id")
+//    private List<GovermentIssuedId> govermentIssuedIds;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

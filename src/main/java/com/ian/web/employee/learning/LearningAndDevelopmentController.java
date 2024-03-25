@@ -69,10 +69,10 @@ public class LearningAndDevelopmentController {
         learningAndDevelopment.setLearningType(learningTypeRepository.findById(learningDevelopmentModel.getLearningTypeId()).get());
         learningAndDevelopmentRepository.save(learningAndDevelopment);
         
-        List<LearningAndDevelopment> listOfLearningDevelopment = employee.getLearningAndDevelopments();
-        listOfLearningDevelopment.add(learningAndDevelopment);
-        employee.setLearningAndDevelopments(listOfLearningDevelopment);
-        employeeRepository.save(employee);
+//        List<LearningAndDevelopment> listOfLearningDevelopment = employee.getLearningAndDevelopments();
+//        listOfLearningDevelopment.add(learningAndDevelopment);
+//        employee.setLearningAndDevelopments(listOfLearningDevelopment);
+//        employeeRepository.save(employee);
 
 		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
 		return "redirect:/learning-development/"+id;
