@@ -540,8 +540,15 @@
 					<!-- Right component Profile Pic -->
 					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
 
+						
 						<!-- Main sidebar -->
-						<div th:replace="fragments/common::right-profile-content"></div>
+						<div th:if="${showMode == 'PROFILE'}">
+						   <div th:replace="fragments/common::right-profile-content"></div>
+						</div>
+						
+						<div th:if="${showMode == 'HRADMIN'}">
+						   <div th:replace="fragments/common::right-employee-content"></div>
+						</div>
 						<!-- /Main sidebar -->
 		
 					</div>
@@ -648,9 +655,16 @@
 				$("#empNo").prop("readOnly", true);
 				$("#assumptiondate").prop("readOnly", true);
 				$("#plantillaNo").prop("readOnly", true);
+				$("#firstName").prop("readOnly", true);
+				$("#lastName").prop("readOnly", true);
+				$("#middleName").prop("readOnly", true);
+				
 				$("#empNo").removeClass("required-field-hrisp");
 				$("#assumptiondate").removeClass("required-field-hrisp");
 				$("#plantillaNo").removeClass("required-field-hrisp");
+				$("#firstName").removeClass("required-field-hrisp");
+				$("#lastName").removeClass("required-field-hrisp");
+				$("#middleName").removeClass("required-field-hrisp");
 				
 				$("#saveMode").val("PROFILE");
 			} else {

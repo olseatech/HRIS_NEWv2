@@ -29,7 +29,7 @@ public class DegreeCourses {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotBlank(message = " is mandatory.")
-    private String degreeCourse;
+    private String degreeCourseName;
     @NotBlank(message = " is mandatory.")
     private String abbreviation;
     private boolean isLawDegree;

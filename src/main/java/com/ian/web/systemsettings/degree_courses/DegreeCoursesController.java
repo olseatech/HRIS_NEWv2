@@ -52,7 +52,7 @@ public class DegreeCoursesController {
 			degreeCourses.setLawDegree(degreeCoursesModel.isLawDegree());
 			degreeCourses.setActive(degreeCoursesModel.isActive());
 		}
-		degreeCourses.setDegreeCourse(degreeCourses.getDegreeCourse().toUpperCase());
+		degreeCourses.setDegreeCourseName(degreeCourses.getDegreeCourseName().toUpperCase());
 		degreeCourses.setAbbreviation(degreeCourses.getAbbreviation().toUpperCase());
 		degreeCoursesRepository.save(degreeCourses);
 		

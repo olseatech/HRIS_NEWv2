@@ -14,6 +14,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,46 +41,47 @@ public class EducationalBackground {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "education_background_degree_level", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "degree_level_id")
 	private DegreeLevel degreeLevel;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "educational_background_school", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "school_id")
 	private School school;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "educational_background_degree_course", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "degree_course_id")
 	private DegreeCourses degreeCourse;
 	
-	private LocalDate startDate;
-	private LocalDate endDate;
-	
-	private boolean upToPresent;
-
-	@Transient
-	private String saveMode;
-	
-	private String unitsEarned;
-	private int yearGraduated;
-	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "educational_background_scholarship", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "scholarship_id")
 	private Scholarship scholarship;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "educational_background_academic_honors", referencedColumnName = "id")
+	@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "academic_honors_id")
 	private AcademicHonors academicHonors;
-	private String remarks;
 	
-	private String attachmentUrl;
-	
-	@Transient
-	private MultipartFile attachedFile;
-
-	@ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JsonIgnoreProperties
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate startDate;
+	
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate endDate;	
+	
+	private boolean upToPresent;
+	private String unitsEarned;
+	private int yearGraduated;	
+	private String remarks;	
+
+	@Transient
+	private String saveMode;	
+	
+	private String attachmentUrl;	
+	@Transient
+	private MultipartFile attachedFile;	
 
 	public String getDateToString(){
 		return startDate.getMonth()+" "+startDate.getYear()+" - "+endDate.getMonth()+" "+endDate.getYear();

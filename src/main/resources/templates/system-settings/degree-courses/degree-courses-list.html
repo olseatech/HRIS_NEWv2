@@ -59,8 +59,8 @@
 								<div class="form-group row">									
 									<label class="col-form-label col-sm-4">Degree Course</label>
 									<div class="col-sm-8">
-										<span class="validationError text-danger" th:if="${#fields.hasErrors('degreeCourse')}" th:errors="*{degreeCourse}"></span>
-										<input type="text" id="degreeCourse" th:field="*{degreeCourse}" placeholder="ex. Bachelor of Science in Computer Science" class="form-control">
+										<span class="validationError text-danger" th:if="${#fields.hasErrors('degreeCourseName')}" th:errors="*{degreeCourseName}"></span>
+										<input type="text" id="degreeCourseName" th:field="*{degreeCourseName}" placeholder="ex. Bachelor of Science in Computer Science" class="form-control">
 									</div>
 								</div>
                                 <div class="form-group row">									
@@ -119,12 +119,12 @@
 								<tbody>
 									<th:block th:each="degreeCourse : ${listOfDegreeCourses}">
 										<tr>
-											<td id="degreeCourse" th:text="${degreeCourse.getDegreeCourse()}">Degree Course</td>
+											<td id="degreeCourse" th:text="${degreeCourse.getDegreeCourseName()}">Degree Course</td>
                                             <td id="abbreviation" th:text="${degreeCourse.getAbbreviation()}">Abbreviation</td>											
 
 											<td class="text-center" width="250px;">
 												<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
-                                                 th:data-row-degreeCourse="${degreeCourse.getDegreeCourse()}"
+                                                 th:data-row-degreeCourse="${degreeCourse.getDegreeCourseName()}"
                                                  th:data-row-abbreviation="${degreeCourse.getAbbreviation()}"
                                                  th:data-row-id="${degreeCourse.getId()}"
 												data-toggle="modal" data-target="#modal_form_vertical"
@@ -197,11 +197,11 @@
 		
 		$(document).on("click", ".showDetails", function() {
             var id = $(this).attr('data-row-id');
-            var degreeCourse = $(this).attr('data-row-degreeCourse');
+            var degreeCourseName = $(this).attr('data-row-degreeCourseName');
             var abbreviation = $(this).attr('data-row-abbreviation');            
             
             $("#modal_form_vertical").find("#id").val(id);
-            $("#modal_form_vertical").find("#degreeCourse").val(degreeCourse);
+            $("#modal_form_vertical").find("#degreeCourseName").val(degreeCourseName);
             $("#modal_form_vertical").find("#abbreviation").val(abbreviation);
         });
 

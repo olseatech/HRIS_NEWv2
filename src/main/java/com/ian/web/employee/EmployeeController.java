@@ -88,7 +88,7 @@ public class EmployeeController {
 		
 		if (request.getServletPath().startsWith("/profile")) {
 			model.addAttribute("showMode", "PROFILE");
-		} else if (request.getServletPath().equalsIgnoreCase("/editEmployee")) {
+		} else {
 			model.addAttribute("showMode", "HRADMIN");
 		}
 		

@@ -17,7 +17,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
+import com.ian.web.systemsettings.academichonors.AcademicHonors;
 import com.ian.web.systemsettings.academichonors.AcademicHonorsRepository;
+import com.ian.web.systemsettings.degree_courses.DegreeCourses;
 import com.ian.web.systemsettings.degree_courses.DegreeCoursesRepository;
 import com.ian.web.systemsettings.degreelevels.DegreeLevelRepository;
 import com.ian.web.systemsettings.scholarship.ScholarshipRepository;
@@ -48,6 +50,15 @@ public class EducationalBackgroundController {
 			
 			List<EducationalBackground> educationalBgList = educationalBackgroundRepository.findByEmployeeId(employeeId);
 			model.addAttribute("educationalBgList", educationalBgList);
+			
+			model.addAttribute("degreeLevelList", degreeLevelRepository.findAll());
+			model.addAttribute("schoolList", schoolRepository.findAll());
+			model.addAttribute("degreeCourseList", degreeCoursesRepository.findAll());
+			model.addAttribute("scholarshipList", scholarshipRepository.findAll());
+			
+			List<DegreeCourses> x = degreeCoursesRepository.findAll();
+			
+			model.addAttribute("academicHonorsList", academicHonorsRepository.findAll());
 			
 			EducationalBackground educationalBg = new EducationalBackground();
 			educationalBg.setEmployee(employee);

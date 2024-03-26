@@ -40,7 +40,7 @@
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
 							</div>
 
-							<form id="employeeForm" th:action="@{/addFamilyBg}" method="post" th:object="${familyBg}">
+							<form id="employeeForm" th:action="@{/addEducationalBg}" method="post" th:object="${educationalBg}">
 								<input type="hidden" th:field="*{id}" name="id" id="id">
 								<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 								<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
@@ -50,120 +50,80 @@
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-4">
-												<select class="form-control" name="relationship" id="relationship" th:field="*{relationship}">
-													<option value="">SELECT VALUE</option>
-													<option value="SPOUSE">SPOUSE</option>
-													<option value="FATHER">FATHER</option>
-													<option value="MOTHER">MOTHER</option>
-													<option value="CHILDREN">CHILDREN</option>
-												</select>
+												<label for="degreeLevel">Level</label>
+												<select th:field="*{degreeLevel.id}" id="degreeLevel" class="form-control required-field-hrisp">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="degreeLevel : ${degreeLevelList}" th:value="${degreeLevel.id}" th:text="${degreeLevel.degreeName}">degreeLevel</option>
+										   		</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="school">School</label>
+												<select th:field="*{school.id}" id="school" class="form-control required-field-hrisp">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="school : ${schoolList}" th:value="${school.id}" th:text="${school.schoolName}">schoolName</option>
+										   		</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="degreeCourse">Degree/Course</label>
+												<select th:field="*{degreeCourse.id}" id="degreeCourse" class="form-control required-field-hrisp">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="degreeCourse : ${degreeCourseList}" th:value="${degreeCourse.id}" th:text="${degreeCourse.degreeCourseName}">degreeCourseName</option>
+										   		</select>
 											</div>	
 										</div>
-									</div>
+									</div>								
 									
 									<div class="form-group">
 										<div class="row">
 											<div class="col-sm-4">
-												<label for="firstName">First Name</label>
-												<span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-												<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control required-field-hrisp" >
-											</div>							                
-										               
-											<div class="col-sm-4">
-												<label for="lastName">Last Name</label>
-												<span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
-												<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control required-field-hrisp" >
+												<label for="startDate">Start Period</label>
+												<input type="date" class="form-control required-field-hrisp" id="startDate" name="startDate" th:field="*{startDate}" />
 											</div>
-															
 											<div class="col-sm-4">
-												<label for="middleName">Middle Name</label>
-												<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control required-field-hrisp" >
+												<label for="endDate">End Period</label>
+												<input type="date" class="form-control required-field-hrisp" id="endDate" name="endDate" th:field="*{endDate}" />
 											</div>
+											<div class="col-sm-4">
+												<label for="unitsEarned">Units Earned</label>
+												<input type="text" class="form-control" id="unitsEarned" name="unitsEarned" th:field="*{unitsEarned}" placeholder="Units Earned"/>
+											</div>															
+											
 										</div>
 									</div>
 													
 									<div class="form-group">
 										<div class="row">   
-											<div class="col-sm-2">
-												<label for="suffix">Suffix</label>
-												<input type="text" class="form-control" id="suffix" name="suffix" th:field="*{suffix}" placeholder="Sample Jr. Sr."/>
-											</div>
-															
 											<div class="col-sm-4">
-												<label for="birthdate">Birthdate</label>
-												<input type="date" class="form-control required-field-hrisp" id="birthdate" name="birthdate" th:field="*{birthdate}" />
+												<label for="yearGraduated">Year Graduated</label>
+												<input type="number" class="form-control" id="yearGraduated" name="yearGraduated" th:field="*{yearGraduated}" />
 											</div>
-											
-											<div class="col-sm-2">
-												<label for="age">Age</label>
-												<input type="text" class="form-control" id="age" placeholder="Age" readonly/>
-											</div>
-															
 											<div class="col-sm-4">
-												<label for="gender">Gender</label>
-												<select id="gender" name="gender" class="form-control" th:field="*{gender}">
-													<option value="">SELECT VALUE</option>
-													<option value="MALE">MALE</option>
-													<option value="FEMALE">FEMALE</option>
-												</select>
-											</div>											 
-															
+												<label for="scholarship">Scholarship</label>
+												<select th:field="*{scholarship.id}" id="scholarship" class="form-control">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="scholarship : ${scholarshipList}" th:value="${scholarship.id}" th:text="${scholarship.scholarshipName}">scholarshipName</option>
+										   		</select>
+											</div>
+											<div class="col-sm-4">
+												<label for="academicHonors">Academic Honors</label>
+												<select th:field="*{academicHonors.id}" id="academicHonors" class="form-control">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="academicHonors : ${academicHonorsList}" th:value="${academicHonors.id}" th:text="${academicHonors.academicHonorsName}">academicHonorsName</option>
+										   		</select>
+											</div>										
 										</div>
 									</div>
 													
 									<div class="form-group spouseField">
-										<div class="row">   
-																									
-											<div class="col-sm-4">
-												<label for="tin">TIN</label>
-												<input type="text" class="form-control" id="tin" name="tin" th:field="*{tin}" placeholder="TIN"/>
-											</div>
-															 
-											<div class="col-sm-4">
-												<label for="occupation">Occupation</label>
-												<input id="occupation" name="occupation" title="Occupation" th:field="*{occupation}" placeholder="Occupation" type="text" class="form-control">
-											</div>
-											                    
-											<div class="col-sm-4">
-												<label for="employer">Employer/Business Name</label>
-												<input id="employer" name="employer" title="enter your email." th:field="*{employer}" placeholder="Employer/Business Name" type="text" class="form-control" >
-											</div>
-										</div>
-									</div>
-													
-									<div class="form-group spouseField">
-										<div class="row">
-											<div class="col-sm-4">
-												<label for="telNo">Telephone (Office)</label>
-												<input type="text" class="form-control" id="telNo" name="telNo" th:field="*{telNo}" placeholder="Telephone (Office)"/>
-											</div>							                
-											                
-											<div class="col-sm-4">
-												<label for="employmentStatus">Employment Status</label>
-												<select class="form-control" name="employmentStatus" id="employmentStatus" th:field="*{employmentStatus}">
-													<option value="">SELECT VALUE</option>
-													<option value="UNEMPLOYED">UNEMPLOYED</option>
-													<option value="EMPLOYED LOCALLY">EMPLOYED LOCALLY</option>
-													<option value="EMPLOYED ABROAD">EMPLOYED ABROAD</option>
-													<option value="BUSINESS OWNER">BUSINESS OWNER</option>
-												</select>
-											</div>
-											                    
-											<div class="col-sm-4">
-												<label for="mobileNo">Contact Number (Personal)</label>
-												<input type="text" class="form-control" id="mobileNo" th:field="*{mobileNo}" name="mobileNo" placeholder="Contact Number (Personal)"/>
-											</div>
-										</div>
-									</div>
-													
-									<div class="form-group spouseField">
-										<div class="row">   
+										<div class="row">  																									
 											<div class="col-sm-12">
-												<label for="businessAdd">Business Address</label>
-												<input type="text" class="form-control" id="businessAdd" name="businessAdd" th:field="*{businessAdd}" placeholder="Business Address"/>
+												<label for="remarks">Remarks</label>
+												<textarea th:field="*{remarks}" name="remarks" class="form-control" placeholder="Remarks" cols="30" rows="6" id="remarks"></textarea>
 											</div>
 										</div>
-									</div>						
+									</div>
+													
+													
 									
 								</div>
 
@@ -196,16 +156,16 @@
 									
 									<div class="card">
 										<div class="card-header header-elements-inline">
-											<h5 class="card-title">Family Background Information</h5>
+											<h5 class="card-title">Educational Background Information</h5>
 											<div class="header-elements">
 												<div class="list-icons">				                				
-									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Relative Information</button>
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
 									           	</div>
 											</div>
 										</div>
 					
 										<div class="card-body">
-											List of All Family Members. Type to search desired family member.
+											List of All Educational Background. Type to search desired record.
 										</div>
 					
 										<table class="table table-bordered table-hover datatable-highlight">
@@ -228,29 +188,21 @@
 														
 														<td class="text-center">
 															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
-			                                                 th:data-row-relationship="${educationalBg.getLevel().getLevelName()}"	
-			                                                 th:data-row-tin="${familyBg.getTin()}"
-			                                                 th:data-row-occupation="${familyBg.getOccupation()}"
-			                                                 th:data-row-employer="${familyBg.getEmployer()}"
-			                                                 th:data-row-telNo="${familyBg.getTelNo()}"
-			                                                 th:data-row-businessAdd="${familyBg.getBusinessAdd()}"
-			                                                 th:data-row-mobileNo="${familyBg.getMobileNo()}"
-			                                                 th:data-row-employmentStatus="${familyBg.getEmploymentStatus()}"
-			                                                 th:data-row-firstName="${familyBg.getFirstName()}"
-			                                                 th:data-row-lastName="${familyBg.getLastName()}"
-			                                                 th:data-row-middleName="${familyBg.getMiddleName()}"
-			                                                 th:data-row-birthdate="${familyBg.getBirthdate()}"
-			                                                 th:data-row-suffix="${familyBg.getSuffix()}"
-			                                                 th:data-row-gender="${familyBg.getGender()}"
-			                                                 th:data-row-id="${familyBg.getId()}"												 
+			                                                 th:data-row-relationship="${educationalBg.getDegreeLevel().getDegreeName()}"	
+			                                                 th:data-row-tin="${educationalBg.getSchool().getSchoolName()}"
+			                                                 th:data-row-id="${educationalBg.getId()}"												 
 															data-toggle="modal" data-target="#modal_form_vertical"
 			                                                >View Record</button>
 														</td>														
 														
-														<td th:text="${familyBg.getFullName()}">Full Name</td>
-														<td th:text="${familyBg.getRelationship()}">Relationship</td>
-														<td th:text="${familyBg.getBirthdate()}">Birthday</td>
-														<td th:text="${familyBg.getAge()}">Age</td>
+														<td th:text="${educationalBg.getDegreeLevel().getDegreeName()}">Full Name</td>
+														<td th:text="${educationalBg.getSchool().getSchoolName()}">Relationship</td>
+														<td th:text="${educationalBg.getDegreeCourse().getDegreeCourseName()}">Birthday</td>
+														<td th:text="${educationalBg.getDateToString()}">Age</td>
+														<td th:text="${educationalBg.getUnitsEarned()}">Age</td>
+														<td th:text="${educationalBg.getYearGraduated()}">Age</td>
+														<td th:text="${educationalBg.getScholarship().getScholarshipName()}">Age</td>
+														<td th:text="${educationalBg.getAcademicHonors().getAcademicHonorsName()}">Age</td>
 														
 													</tr>
 												</th:block>		

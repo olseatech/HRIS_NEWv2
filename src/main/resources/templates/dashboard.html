@@ -41,7 +41,7 @@
 					<!-- Left content -->
 					<div class="tab-content w-100 order-2 order-md-1">
 						<div class="tab-pane fade active show" id="activity">							
-							
+							<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
 							<div class="row">			
 								<div class="col-lg-12 offset-lg-0">
 									
@@ -102,6 +102,7 @@
 			
 								</div>		
 							</div>
+							</th:block>
 							<!-- /row -->
 							<div class="row">			
 								<div class="col-lg-12 offset-lg-0">
