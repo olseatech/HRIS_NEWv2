@@ -20,225 +20,150 @@
 
 		<!-- Main content -->
 		<div class="content-wrapper">
-			<div class="content">
-				<!-- Inner container -->
-				<div class="d-flex align-items-start flex-column flex-md-row">
-					<!-- Left content -->
-					<div class="tab-content w-100 order-2 order-md-1">
-						<div class="tab-pane fade active show" id="activity">	
-							<div class="row">
-                                <div class="col-md-12">
-                                    <div class="card">
-                                        <div class="card-header header-elements-inline bg-primary">
-                                            <h6 class="card-title">Government Issued Id</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <form th:action="@{/save-government-issuedId/{id}(id=${employee.getId()})}" th:object="${governmentIssuedId}" method="post"><input type="hidden" name="_csrf" value="30019a4c-4be0-43b5-a9b6-c70d068f6332">
-                                                <input type="hidden" name="doctor.id" id="doctorId" value="2">
-                                                <input type="hidden" name="isActive" id="isActive" value="A">
-                                                <input type="hidden" id="id" name="id" value="4940">
-                                                <input type="hidden" id="patientPhoto" name="patientPhoto" value="/file/download/patient_2_4940.jpg">
+			<!-- Vertical form modal -->
+			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title">Voluntary Work Information</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
 
-                                                <!-- START MODAL BODY -->
-                                                <div class="modal-body">
-
-                                                    <!-- START OF POSITION -->
-                                                    <div class="form-group">
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="govermentIssuedId">Government Issued Id</label>
-                                                                <input th:field="*{govermentIssuedName}" id="govermentIssuedName" name="govermentIssuedName" placeholder="N/A" type="text" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="idNo">ID/License/Passport No.</label>
-                                                                <input th:field="*{idNo}" id="idNo" name="idNo" placeholder="N/A" type="text" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="placeOfIssuance">Date of Issuance</label>
-                                                                <input th:field="*{issuanceDate}" id="issuanceDate" name="issuanceDate" placeholder="N/A" type="date" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col-sm-12">
-                                                                <label for="issuanceDate">Place of Issuance</label>
-                                                                <input th:field="*{placeOfIssuance}" id="placeOfIssuance" name="placeOfIssuance" placeholder="N/A" type="text" class="form-control">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- END OF POSITION -->
-                                                </div>
-                                                <!-- END MODAL BODY -->
-
-                                                <!-- START FOOTER -->
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn bg-violet-400 btn-float float"><i class="icon-floppy-disk"></i><span> Save Info</span></button>
-                                                    <button type="submit" class="btn bg-teal-400 btn-float float2 scrollToTop"><i class="icon-floppy-disk"></i><span> Scroll to Top</span></button>
-                                                </div>
-                                                <!-- END FOOTER -->
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-					    </div>
-						<!--Start of table-->
-						<div class="tab-pane fade active show">	
-							<div class="row">
-								<div class="col-md-12">
-									<table class="table table-basic table-responsive col-12">
-										<thead class="bg-dark">
-											<tr>
-												<th class="text-uppercase">Government Issued Id</th>
-												<th class="text-uppercase">ID Number</th>
-												<th class="text-uppercase">Date of Issuance</th>
-												<th class="text-uppercase">Place of Issuance</th>
-												<th class="text-uppercase">actions</th>
-											</tr>
-										</thead>
-										<tbody>
-											<th:block th:each="government: ${listOfGovernmentIssuedId}">
-												<tr>
-													<td th:text="${government.getGovermentIssuedName()}"></td>
-													<td th:text="${government.getIdNo()}"></td>
-													<td th:text="${government.getIssuanceDate()}"></td>
-													<td th:text="${government.getPlaceOfIssuance()}"></td>
-													<td>
-														<button class="btn btn-primary">Update</button>
-													</td>
-												</tr>
-											</th:block>
-										</tbody>
-									</table>
+						<form id="employeeForm" method="post" th:action="@{/addGovernmentId}" th:object="${govermentIssuedId}">
+							<input type="hidden" th:field="*{id}" name="id" id="id">
+							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
+							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
+							<!-- <input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value=""> -->
+							<div class="modal-body">
+								
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-6">
+											<label for="govermentIssuedName">Government Issued Id</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('govermentIssuedName')}" th:errors="*{govermentIssuedName}"></span>
+											<input id="govermentIssuedName" name="govermentIssuedName" th:field="*{govermentIssuedName}" placeholder="Government Issued Id" type="text" class="form-control required-field-hrisp" >
+										</div>	
+										<div class="col-sm-6">
+											<label for="idNo">ID/License/Passport No.</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('idNo')}" th:errors="*{idNo}"></span>
+											<input id="idNo" name="idNo" th:field="*{idNo}" placeholder="ID/License/Passport No." type="text" class="form-control required-field-hrisp" >
+										</div>	
+										<div class="col-sm-6">
+											<label for="issuanceDate">Date of issuance</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('issuanceDate')}" th:errors="*{issuanceDate}"></span>
+											<input id="issuanceDate" name="issuanceDate" th:field="*{issuanceDate}" placeholder="Date of issuance" type="date" class="form-control required-field-hrisp" >
+										</div>
+										<div class="col-sm-6">
+											<label for="placeOfIssuance">Place of Issuance</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('placeOfIssuance')}" th:errors="*{placeOfIssuance}"></span>
+											<input id="placeOfIssuance" name="placeOfIssuance" th:field="*{placeOfIssuance}" placeholder="Place of Issuance" type="text" class="form-control required-field-hrisp" >
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-						<!--End of table-->			    
+
+							<div class="modal-footer">
+								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+								<button type="submit" class="btn bg-primary">Save Info</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		    <!-- /Vertical form modal -->
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">
+							
+							
+							
+							<!-- Dashboard content -->
+							<div class="row mt-3">
+								<div class="col-xl-12">
+									
+									
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Government Issued Id Information</h5>
+											<div class="header-elements">
+												<div class="list-icons">				                				
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Government Id</button>
+									           	</div>
+											</div>
+										</div>
+					
+										<div class="card-body">
+											List of All Government Issued Id. Type to search desired government issued id.
+										</div>
+					
+										<table class="table table-bordered table-hover datatable-highlight">
+											<thead>
+												<tr>
+													<th width="150px;">&nbsp;</th>
+													<th>Government Issued Id</th>
+													<th>ID/License/Passport No.</th>
+													<th>Date of issuance</th>		
+													<th>Place of issuance</th>
+												</tr>
+											</thead>
+											<tbody>
+												<th:block th:each="government: ${governmentIdList}">
+													<tr>
+														
+														<td class="text-center">
+															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
+															th:data-row-govermentIssuedName="${government.getGovermentIssuedName()}"
+															th:data-row-idNo="${government.getIdNo()}"
+															th:data-row-issuanceDate="${government.getIssuanceDate()}"
+															th:data-row-placeOfIssuance="${government.getPlaceOfIssuance()}"
+															th:data-row-id="${government.getId()}"
+															data-toggle="modal" data-target="#modal_form_vertical"
+			                                                >View Record</button>
+														</td>														
+														
+														<td th:text="${government.getGovermentIssuedName()}"></td>
+														<td th:text="${government.getIdNo()}"></td>
+														<td th:text="${government.getIssuanceDate()}"></td>
+														<td th:text="${government.getPlaceOfIssuance()}"></td>
+
+													</tr>
+												</th:block>		
+
+											</tbody>
+										</table>
+									</div>
+									
+									
+											
+								</div>
+							</div>
+							<!-- /dashboard content -->
+							
+														
+					    </div>			    
 					</div>
 					<!-- /left content -->
-					
+
+
 					<!-- Right component Profile Pic -->
 					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
 
-						<!-- Sidebar content -->
-						<div class="sidebar-content">
-							<input type="file" name="profilePhoto" id="profilePhoto" accept="image/*" class="inputfile" />
-							<!-- User card -->
-							<div class="card">
-								<div class="card-body text-center">
-									<div class="card-img-actions d-inline-block mb-3 ">
-										
-										<img th:src="|@{*{#authentication.principal.profilePhoto == null ? '/images/avatar.png' : #authentication.principal.profilePhoto}}|" width="170" height="170" class="rounded-circle" alt="">
-										
-										
-										<div class="card-img-actions-overlay card-img rounded-circle">
-											<button id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
-												<i class="icon-camera"></i>
-											</button>											
-										</div>
-										
-									</div>
-									<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase" sec:authentication="principal.fullName">Hanna Dorman</h6>
-										<div class="text-left mt-1">
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span>HR ADMIN</span>
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span>PERSONNEL</span>
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span>OCT 16, 2005</span>
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span>JAN 27, 1982 <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span>42</span></span>
-											
-											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span>09062794574</span>
-											
-										</div>
-									
-										    		
-						    	</div>
-					    	</div>
-					    	<!-- /user card -->
-					    	
-					    	<div class="card">
-								<div class="card-header bg-transparent header-elements-inline">
-									<span class="card-title font-weight-semibold">Personal Data Sheet</span>
-									<div class="header-elements">
-										<div class="list-icons">
-					                		<a class="list-icons-item" data-action="collapse"></a>
-				                		</div>
-			                		</div>
-								</div>
-
-								<div class="card-body p-0" style="">
-									<ul class="nav nav-sidebar my-2">
-										<li class="nav-item">
-											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
-												<i class="icon-checkmark3 text-success"></i>
-												 Personal Information
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Educational Background
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/eligibility/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getCivilServiceEligibilities().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Eligibility
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Work Experience
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
-												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Voluntary Work
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/learning-development/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getLearningAndDevelopments().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												Learning &amp; Development
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/other-info/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getOtherInfos().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Other Info
-											</a>
-										</li>
-										
-										<li class="nav-item">
-											<a href="#" class="nav-link">
-												<i class="icon-cross2 text-danger-400"></i>
-												 Other Information Questions
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/references/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getEmpReferences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 References
-											</a>
-										</li>
-										<li class="nav-item">
-											<a th:href="@{/government-issuedId/{id}(id=${employee.getId()})}" class="nav-link">
-												<i th:class="${employee.getGovermentIssuedIds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
-												 Government Issued Id
-											</a>
-										</li>
-									</ul>
-								</div>
-							</div>
-						</div>
-						<!-- /sidebar content -->
+						<!-- Main sidebar -->
+						<div th:replace="fragments/common::right-profile-content"></div>
+						<!-- /Main sidebar -->
+		
 					</div>
 					<!-- /right sidebar component -->
+
 				</div>
 				<!-- /inner container -->
+
 			</div>
 			<!-- /content area -->
 		</div>
@@ -285,6 +210,23 @@
 			}
 
 	    });
+
+		$(document).on("click", ".showDetails", function() {
+
+			var id = $(this).attr('data-row-id');
+			var govermentIssuedName = $(this).attr('data-row-govermentIssuedName');
+			var idNo = $(this).attr('data-row-idNo');
+			var issuanceDate = $(this).attr('data-row-issuanceDate');
+			var placeOfIssuance = $(this).attr('data-row-placeOfIssuance');
+			
+					
+			$("#modal_form_vertical").find("#id").val(id);
+			$("#modal_form_vertical").find("#govermentIssuedName").val(govermentIssuedName);
+			$("#modal_form_vertical").find("#idNo").val(idNo);
+			$("#modal_form_vertical").find("#issuanceDate").val(issuanceDate);
+			$("#modal_form_vertical").find("#placeOfIssuance").val(placeOfIssuance); 
+		});
+
 
 		$(document).on("click", ".cancelConsultation", function(){
 

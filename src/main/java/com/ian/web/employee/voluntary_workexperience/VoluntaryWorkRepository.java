@@ -9,5 +9,5 @@ import com.ian.web.employee.Employee;
 
 @Repository
 public interface VoluntaryWorkRepository extends JpaRepository<VoluntaryWork, Long>{
-    List<VoluntaryWork> findAllByEmployee(Employee employee);
+    List<VoluntaryWork> findByEmployeeId(Long id);
 }

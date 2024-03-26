@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -61,6 +62,9 @@ public class WorkExperience {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id")
 	private Employee employee;
+
+	@Transient
+	private String saveMode;
 
 	public String getInclusiveDates(){
 		return this.dateFrom +" - "+this.dateTo;

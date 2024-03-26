@@ -1,6 +1,7 @@
 package com.ian.web.employee.voluntary_workexperience;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -50,12 +52,13 @@ public class VoluntaryWork {
 	
 	private String address;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnoreProperties
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
 
 	public String getInclusiveDates(){
-		return this.dateFrom +" - "+this.dateTo;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM yyyy");
+		return formatter.format(this.dateFrom) +" - "+formatter.format(this.dateTo);
 	}
 	
 }

@@ -2,18 +2,18 @@ package com.ian.web.employee.govermentid;
 
 import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ian.web.employee.Employee;
 
 import lombok.AllArgsConstructor;
@@ -40,7 +40,10 @@ public class GovermentIssuedId {
 	
 	private String placeOfIssuance;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnoreProperties
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
+	
+	@Transient
+	private String saveMode;
 }

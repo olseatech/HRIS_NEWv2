@@ -1,8 +1,8 @@
 package com.ian.web.employee.eligibility;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,22 +10,17 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ian.web.employee.Employee;
-import com.ian.web.systemsettings.eligibility.Eligibility;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
@@ -38,10 +33,7 @@ public class CivilServiceEligibility {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "fk_civil_service_eligibility", referencedColumnName = "id")
-    private Eligibility eligibility;
-	
+    private String eligibility;
 	private String otherEligibility;
 	private String rating;
 	
@@ -55,13 +47,23 @@ public class CivilServiceEligibility {
 	private LocalDate licenseValidityDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate licenseReleaseDate;
+	
 	private String attachmentUrl;
 	
 	@Transient
 	private MultipartFile attachedFile;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnoreProperties
+	@Transient
+	private String saveMode;
+
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
 	
+	@Transient
+	public String getExamDate(){
+		LocalDate date = LocalDate.of(examYear, examMonth, examDay);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+        return formatter.format(date);
+	}
 }
