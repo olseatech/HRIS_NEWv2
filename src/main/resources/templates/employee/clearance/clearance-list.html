@@ -6,9 +6,10 @@
 
     <!-- common import of css & js goes here -->
     <th:block th:replace="fragments/common::header-import-css"></th:block>
+    
     <th:block th:replace="fragments/common::header-import-js"></th:block>
     
-	<title>Human Resource Information System</title>
+	<title>Dashboard</title>
 
 
 </head>
@@ -21,311 +22,525 @@
 
 					
 	<!-- Page content -->
-	<div class="page-content">	
-		
+	<div class="page-content">
+	
 		<!-- Main sidebar -->
 		<div th:replace="fragments/common::main-sidebarnav"></div>
 		<!-- /Main sidebar -->
 
-
 		<!-- Main content -->
 		<div class="content-wrapper">
 
+			  
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">							
+							
+							<!-- /row -->
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">
 			
+										<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">New Clearance Application List</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+								                		<a class="list-icons-item" data-action="collapse"></a>
+								                		<a class="list-icons-item" data-action="reload"></a>
+								                		<a class="list-icons-item" data-action="remove"></a>
+								                	</div>
+							                	</div>
+											</div>
+
+											<div class="card-body">
+												List of all new clearance applications.
+											</div>
+
+								<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
+						
+						
+											
+									<div class="datatable-scroll">
+										
+										<table class="table table-bordered table-hover datatable-highlight dataTable no-footer" id="clearancesTable1" role="grid" aria-describedby="DataTables_Table_2_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">Employee Name</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Submission Date</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Effectivity Data</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Job Title: activate to sort column ascending">Purpose</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+													
+													<th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
+													
+												</tr>
+											</thead>
+											<tbody>							
+												
+											</tbody>
+										</table>
+										
+									</div>
+									</div>
+				</div>
 			
-			
-			<!-- Vertical form modal -->
-			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
-					<div class="modal-dialog modal-lg">
-						<div class="modal-content">
-							<div class="modal-header bg-primary">
-								<h5 class="modal-title">Employee Information</h5>
-								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								</div>		
 							</div>
-
-							<form id="addPatientForm" th:action="@{/save-employee}" method="post" th:object="${employee}" enctype="multipart/form-data">
-								<input type="hidden" th:field="*{id}" name="id" id="id">
-								<div class="modal-body">
-									<div class="form-group">
-										<div class="row">    
-											<div class="col-sm-4">&nbsp;</div>
-							                <div class="col-sm-4">
-							                     <div class="card" th:object="${employee}">
-													<div class="card card-body text-center">
-														<div class="card-img-actions d-inline-block mb-3 ">									
-															<img id="photoPreview" class="img-fluid rounded-circle card-img-top" th:src="|@{*{profilePhoto == null ? '/images/avatar.png' : profilePhoto}}|" width="150" height="150" alt="">
-															<div class="card-img-actions-overlay card-img rounded-circle">
-																<button type="button" id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
-																	<i class="icon-camera"></i>
-																</button>											
-															</div>									
-														</div>									
-														<div>
-														    <input type="file" name="photoFile" id="photoFile" accept="image/*" class="inputfile" />
-														</div>
-													</div>
-												</div>
-							                </div>
-							                <div class="col-sm-4">&nbsp;</div>
-							           </div>
-									</div>
-									<div class="form-group">
-										<div class="row">
-											<div class="col-sm-6">
-							                        <label for="empNo">Employee No.</label>
-							                        <span class="validationError text-danger" th:if="${#fields.hasErrors('empNo')}" th:errors="*{empNo}"></span>
-							                        <input id="empNo" name="empNo" th:field="*{empNo}" placeholder="Employee No." type="text" class="form-control" >
-							                    </div>
-							                
-							                
-							                    <div class="col-sm-6">
-							                        <label for="plantillaNo">Plantilla No.</label>
-							                        <span class="validationError text-danger" th:if="${#fields.hasErrors('plantillaNo')}" th:errors="*{plantillaNo}"></span>
-							                        <input id="plantillaNo" name="plantillaNo" th:field="*{plantillaNo}" placeholder="Plantilla No." type="text" class="form-control" >
-							                    </div>
-							            </div>
-									</div>
-									<div class="form-group">
-										<div class="row">
-											<div class="col-sm-6">
-							                        <label for="firstName">First Name</label>
-							                        <span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
-							                        <input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control" >
-							                    </div>
-							                
-							                
-							                    <div class="col-sm-6">
-							                        <label for="lastName">Last Name</label>
-							                        <span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
-							                        <input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control" >
-							                    </div>
-							            </div>
-									</div>
-									
-									<div class="form-group">
-										<div class="row">
-											<div class="col-sm-6">
-							                        <label for="middleName">Middle Name</label>
-							                        <input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control" >
-							                    </div>
-							                
-							                
-							                    <div class="col-sm-6">
-							                        <label for="civilStatus">Civil Status</label>
-							                        <select class="form-control" name="civilStatus" id="civilStatus" th:field="*{civilStatus}">
-														<option value="SINGLE">SINGLE</option>
-														<option value="MARRIED">MARRIED</option>
-														<option value="WIDOWED">WIDOWED</option>
-														<option value="SEPARATED">SEPARATED</option>
-													</select>
-							                    </div>
-							            </div>
-									</div>
-									
-									<div class="form-group">
-										<div class="row">       
-							                    <div class="col-sm-6">
-							                        <label for="gender">Gender</label>
-							                        <select id="gender" name="gender" class="form-control" th:field="*{gender}">
-							                            <option value="MALE" selected="selected">MALE</option>
-							                            <option value="FEMALE">FEMALE</option>
-							                        </select>
-							                    </div>
-							                    
-							                
-							                    <div class="col-sm-6">
-							                        <label for="birthdate">Birthdate</label>
-							                        <input type="date" class="form-control" id="birthdate" name="birthdate" th:field="*{birthdate}" placeholder="enter your birthday" title="enter your birthday" />
-							                    </div>
-							            </div>
-									</div>
-
-									<div class="form-group">
-										<div class="row">    
-							                    <div class="col-sm-6">
-							                        <label for="mobileno1">Mobile</label>
-							                        <input id="mobileno1" name="mobileno1" title="enter your mobile number if any." th:field="*{mobileno1}" placeholder="enter mobile number" type="text" class="form-control">
-							                    </div>
-							                    
-							                    <div class="col-sm-6">
-							                        <label for="email1">Email</label>
-							                        <input id="email1" name="email1" title="enter your email." th:field="*{email1}" placeholder="Email Address" type="email" class="form-control" >
-							                    </div>
-							           </div>
-									</div>
-									
-									<div class="form-group">
-										<div class="row">    
-							                    <div class="col-sm-6">
-							                        <label for="pagibigNo">Pagibig No.</label>
-							                        <input type="text" class="form-control" name="pagibigNo" th:field="*{pagibigNo}" id="pagibigNo" placeholder="Pagibig No." />
-							                    </div>
-							                    
-							                    <div class="col-sm-6">
-							                        <label for="philhealthNo">Philhealth No.</label>
-							                        <input type="text" class="form-control" name="philhealthNo" id="philhealthNo" th:field="*{philhealthNo}" placeholder="Philhealth No." />
-							                    </div>
-							           </div>
-									</div>
-									
-									<div class="form-group">
-										<div class="row">    
-							                    <div class="col-sm-6">
-							                        <label for="gsisIdNo">GSIS ID No.</label>
-							                        <input type="text" class="form-control" name="gsisIdNo" id="gsisIdNo" th:field="*{gsisIdNo}" placeholder="GSIS ID No." />
-							                    </div>
-							                    
-							                    <div class="col-sm-6">
-							                        <label for="tin">TIN</label>
-							                        <input type="text" class="form-control" name="tin" id="tin" th:field="*{tin}" placeholder="TIN" />
-							                    </div>
-							           </div>
-									</div>
-									
-									
-									
-									
-								</div>
-
-								<div class="modal-footer">
-									<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-									<button type="submit" class="btn bg-primary">Save Info</button>
-								</div>
-							</form>
-						</div>
-					</div>
-				</div>
-			<!-- /Vertical form modal -->
-
-			<!-- Content area -->
-			<div class="content pt-0">
-
-				<!-- Dashboard content -->
-				<div class="row mt-3">
-					<div class="col-xl-12">
-						
-						
-						<div class="card">
-					<div class="card-header header-elements-inline">
-						<h5 class="card-title">Clearance Application List</h5>
-						<div class="header-elements">
-							<div class="list-icons">				                				
-				           		<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
-				           	</div>
-						</div>
-					</div>
-
-					<div class="card-body">
-						List of All Employee's Clearance Applications. Type to search desired employee.
-					</div>
-
-					<table class="table table-bordered table-hover datatable-highlight">
-						<thead>
-							<tr>
-								<th>Employee Name</th>
-								<th>Employee No.</th>
-								<th>Date Submitted</th>
-								<th>Division</th>
-								<th>Status</th>
-								<th class="text-center">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
+							<!-- /row -->
 							
-							
-							
-						</tbody>
-					</table>
+							<!-- /row -->
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">
+			
+										<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">Approved Clearance Application List</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+								                		<a class="list-icons-item" data-action="collapse"></a>
+								                		<a class="list-icons-item" data-action="reload"></a>
+								                		<a class="list-icons-item" data-action="remove"></a>
+								                	</div>
+							                	</div>
+											</div>
+
+											<div class="card-body">
+												List of all approved clearance applications.
+											</div>
+
+								<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
+						
+						
+											
+									<div class="datatable-scroll">
+										
+										<table class="table table-bordered table-hover datatable-highlight dataTable no-footer" id="clearancesTable2" role="grid" aria-describedby="DataTables_Table_2_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">Employee Name</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Submission Date</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Effectivity Data</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Job Title: activate to sort column ascending">Purpose</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+																										
+												</tr>
+											</thead>
+											<tbody>							
+												
+											</tbody>
+										</table>
+										
+									</div>
+									</div>
 				</div>
+			
+								</div>		
+							</div>
+							<!-- /row -->
+							
+							<!-- /row -->
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">
+			
+										<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">Disapproved Clearance Application List</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+								                		<a class="list-icons-item" data-action="collapse"></a>
+								                		<a class="list-icons-item" data-action="reload"></a>
+								                		<a class="list-icons-item" data-action="remove"></a>
+								                	</div>
+							                	</div>
+											</div>
+
+											<div class="card-body">
+												List of all disapproved clearance applications.
+											</div>
+
+								<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
 						
 						
-								
+											
+									<div class="datatable-scroll">
+										
+										<table class="table table-bordered table-hover datatable-highlight dataTable no-footer" id="clearancesTable3" role="grid" aria-describedby="DataTables_Table_2_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">Employee Name</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Submission Date</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Effectivity Data</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Job Title: activate to sort column ascending">Purpose</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+													
+													<th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
+													
+												</tr>
+											</thead>
+											<tbody>							
+												<tr role="row" class="odd">
+														<td class="sorting_1">Ian Alfred Orozco</td>
+														<td class="">Accounting</td>
+														<td class="">Business Services Sales Representative</td>
+														<td class="">19 Apr 2023</td>
+														<td class=""><span class="badge badge-primary">New</span></td>
+														<td class="text-center">
+															<div class="list-icons">
+																<div class="dropdown">
+																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
+																		<i class="icon-menu9"></i>
+																	</a>
+						
+																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
+																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
+																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
+																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
+																	</div>
+																</div>
+															</div>
+														</td>
+												</tr>
+												<tr role="row" class="even">
+														<td class="sorting_1">Ethan Espina</td>
+														<td class="">Engineering</td>
+														<td class="">Civil Engineer</td>
+														<td class="">19 March 2023</td>
+														<td class=""><span class="badge badge-primary">New</span></td>
+														<td class="text-center">
+															<div class="list-icons">
+																<div class="dropdown">
+																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
+																		<i class="icon-menu9"></i>
+																	</a>
+						
+																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
+																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
+																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
+																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
+																	</div>
+																</div>
+															</div>
+														</td>
+												</tr>
+												<tr role="row" class="odd">
+														<td class="sorting_1">Nicole Ayala</td>
+														<td class="">Legal</td>
+														<td class="">Legal Officer IV</td>
+														<td class="">19 Jan 2023</td>
+														<td class=""><span class="badge badge-primary">New</span></td>
+														<td class="text-center">
+															<div class="list-icons">
+																<div class="dropdown">
+																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
+																		<i class="icon-menu9"></i>
+																	</a>
+						
+																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
+																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
+																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
+																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
+																	</div>
+																</div>
+															</div>
+														</td>
+												</tr>
+											</tbody>
+										</table>
+										
+									</div>
+									</div>
+				</div>
+			
+								</div>		
+							</div>
+							<!-- /row -->
+							
+					    </div>			    
 					</div>
+					<!-- /left content -->
+
+
+					
+
 				</div>
-				<!-- /dashboard content -->
+				<!-- /inner container -->
 
 			</div>
 			<!-- /content area -->
-
-			<!-- Footer -->
-			<div th:replace="fragments/common::footer"></div>
-			<!-- /Footer -->    
+						
+			
 
 		</div>
 		<!-- /main content -->
+		
+		
 
 	</div>
 	<!-- /page content -->
-
-	<script th:inline="javascript">
 	
-		$(document).ready(function() {
-			//$(".nav-link").removeClass("active");
-			//$("#academicHonorsNav").addClass("active");
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">		
+		
+		let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+	
+	    $(document).ready(function() {			
 			
-			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
-			$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
-			$("#clearanceListNav").addClass("active");
+			getNewClerances();		
+			getApprovedClerances();
+			getDisApprovedClerances();
 			
-			
-			let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
-			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
-			
-			if(msgCode === 'ERROR'){
-				$('#modal_form_vertical').modal('show');
-				swal({
-					title: "Error!",
-					text: msgDesc,
-					icon: "error",
-					buttons: false,
-		            timer: 2000,
-				});
-			} else if(msgCode === 'SUCCESS'){
-				swal({
-					title: "Success!",
-					text: msgDesc,
-					icon: "success",
-					buttons: false,
-		            timer: 2000,
+			function getNewClerances(){
+				console.log("Getting list of clearances.");
+				
+				let clearanceUrl = contextRoot + '/clearance-list/SUBMITTED';
+				
+				$.ajax({
+					type: "GET",
+					url: clearanceUrl,
+					dataType: "json",
+					success: function(clearances) {
+						//console.log("Clearances by status:", clearances);
+						var count = clearances.length;
+	                	//console.log("Number of clearances: " + count);
+	                	$("#clearanceCount").html(count)
+						renderNewClearanceTable(clearances);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching clearances:", error);
+					}
 				});
 			}
 			
+			function getApprovedClerances(){
+				console.log("Getting list of clearances.");
+				
+				let clearanceUrl = contextRoot + '/clearance-list/APPROVED';
+				
+				$.ajax({
+					type: "GET",
+					url: clearanceUrl,
+					dataType: "json",
+					success: function(clearances) {
+						//console.log("Clearances by status:", clearances);
+						var count = clearances.length;
+	                	//console.log("Number of clearances: " + count);
+	                	$("#clearanceCount").html(count)
+						renderApprovedClearanceTable(clearances);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching clearances:", error);
+					}
+				});
+			}
 			
-		});
-		
-		$('#table-list').DataTable({});
-		
-		$(document).on("click", ".showDetails", function() {
-            var id = $(this).attr('data-row-id');
-            var firstName = $(this).attr('data-row-firstName');
-			//var isActive = $(this).attr('data-row-isActive');
-            
-            // Check if id is not null or empty
-            if (id && id.trim() !== "") {
-                $("#activeField").removeClass("d-none");
+			function getDisApprovedClerances(){
+				console.log("Getting list of clearances.");
+				
+				let clearanceUrl = contextRoot + '/clearance-list/DISAPPROVED';
+				
+				$.ajax({
+					type: "GET",
+					url: clearanceUrl,
+					dataType: "json",
+					success: function(clearances) {
+						//console.log("Clearances by status:", clearances);
+						var count = clearances.length;
+	                	//console.log("Number of clearances: " + count);
+	                	$("#clearanceCount").html(count)
+						renderDisApprovedClearanceTable(clearances);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching clearances:", error);
+					}
+				});
+			}
+			
+			function renderNewClearanceTable(clearances) {
+                var tableBody = $("#clearancesTable1 tbody");
+                tableBody.empty(); // Clear existing table rows
+
+                $.each(clearances, function(index, clearance) {
+                    var row = "<tr>" +
+                        "<td>" + clearance.employee.fullName + "</td>" +
+                        "<td>" + clearance.transDate + "</td>" +
+                        "<td>" + clearance.effectiveDate + "</td>" +
+                        "<td>" + clearance.purpose + "</td>" +
+                        "<td>" + clearance.status + "</td>" +
+                        `       						   
+						<td class="text-center">
+							<div class="list-icons">
+								<div class="dropdown">
+									<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
+										<i class="icon-menu9"></i>
+									</a>
+						
+									<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
+										<a href="#" class="dropdown-item" onclick="approvedClearance(${clearance.id})"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
+										<a href="#" class="dropdown-item" onclick="disApprovedClearance()"><i class="icon-close2"></i> DisApprove Clearance</a>										
+									</div>
+								</div>
+							</div>
+						</td>	        						
+	        		
+	        			` +
+                        "</tr>";
+                    tableBody.append(row);
+                });
             }
             
-            $("#modal_form_vertical").find("#id").val(id);
-			//$("#modal_form_vertical").find("#isActive").val(isActive);
-            $("#modal_form_vertical").find("#firstName").val(firstName);
-        });
-        $(document).on("click", ".close",".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var degreeName = $(this).attr('data-row-degreeName');
+            function renderApprovedClearanceTable(clearances) {
+                var tableBody = $("#clearancesTable2 tbody");
+                tableBody.empty(); // Clear existing table rows
+
+                $.each(clearances, function(index, clearance) {
+                    var row = "<tr>" +
+                        "<td>" + clearance.employee.fullName + "</td>" +
+                        "<td>" + clearance.transDate + "</td>" +
+                        "<td>" + clearance.effectiveDate + "</td>" +
+                        "<td>" + clearance.purpose + "</td>" +
+                        "<td>" + clearance.status + "</td>" +                        
+                        "</tr>";
+                    tableBody.append(row);
+                });
+            }
+            
+            function renderDisApprovedClearanceTable(clearances) {
+                var tableBody = $("#clearancesTable3 tbody");
+                tableBody.empty(); // Clear existing table rows
+
+                $.each(clearances, function(index, clearance) {
+                    var row = "<tr>" +
+                        "<td>" + clearance.employee.fullName + "</td>" +
+                        "<td>" + clearance.transDate + "</td>" +
+                        "<td>" + clearance.effectiveDate + "</td>" +
+                        "<td>" + clearance.purpose + "</td>" +
+                        "<td>" + clearance.status + "</td>" +                        
+                        "</tr>";
+                    tableBody.append(row);
+                });
+            }
 			
+			            
+	    	
+	    	
+	    		    				
+			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+			$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+			$("#clearanceListNav").addClass("active");
 
-            $("#activeField").addClass("d-none");
-            $("#modal_form_vertical").find("#id").val("");
-            $("#modal_form_vertical").find("#firstName").val("");
-        });
-        $(document).on("click", ".btnClose", function() {
-            var id = $(this).attr('data-row-id');
-            var firstName = $(this).attr('data-row-firstName');
+	    	
+	    	
 
-            $("#activeField").addClass("d-none");
-            $("#modal_form_vertical").find("#id").val("");
-            $("#modal_form_vertical").find("#firstName").val("");
-        });
+	    });
+	    
+	    
+
+		function approvedClearance(id) {
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to approve this clearance application?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((selectNo) => {
+			  if (selectNo) {
+				  //No Response
+				  console.log("selected no");
+
+			  } else {
+			  	 console.log("selected yes");
+			  	 let url = contextRoot + '/process-clearance/' + id + '/APPROVED';
+			
+				$.ajax({
+		            type: "POST",
+		            url: url,
+		            //dataType: "json",
+		            success: function(response) {
+						console.log(response);
+						
+		                swal({
+							title: "Success!",
+							text: "Clearance successfully approved.",
+							icon: "success",
+							buttons: false,
+				            timer: 2000,
+						})
+						.then((value) => {										
+							window.location.href = contextRoot + '/clearance-list';
+						});
+						
+						
+		            },
+		            error: function(xhr, status, error) {
+		                // Handle error response
+		                console.error("Error approving clearance:", error);
+		            }
+		        });
+			  }
+			  
+			});
+			
+			
+		}
+			
+		function disApprovedClearance(id) {
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to disapprove this clearance application?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((selectNo) => {
+			  if (selectNo) {
+				  //No Response
+				  console.log("selected no");
+
+			  } else {
+			  	 console.log("selected yes");
+			  	 let url = contextRoot + '/process-clearance/' + id + '/DISAPPROVED';
+			
+				$.ajax({
+		            type: "POST",
+		            url: url,
+		            //dataType: "json",
+		            success: function(response) {
+						console.log(response);
+						
+		                swal({
+							title: "Success!",
+							text: "Clearance successfully disapproved.",
+							icon: "success",
+							buttons: false,
+				            timer: 2000,
+						})
+						.then((value) => {										
+							window.location.href = contextRoot + '/clearance-list';
+						});
+						
+						
+		            },
+		            error: function(xhr, status, error) {
+		                // Handle error response
+		                console.error("Error approving clearance:", error);
+		            }
+		        });
+			  }
+			  
+			});
+		}
+
 	</script>
+
 </body>
 </html>

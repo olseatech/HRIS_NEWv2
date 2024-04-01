@@ -26,7 +26,7 @@
 				<div class="modal-dialog modal-lg">
 					<div class="modal-content">
 						<div class="modal-header bg-primary">
-							<h5 class="modal-title">Employee Information</h5>
+							<h5 class="modal-title">Work Experience Information</h5>
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 						</div>
 
@@ -34,29 +34,30 @@
 							<input type="hidden" th:field="*{id}" name="id" id="id">
 							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
-							<!-- <input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value=""> -->
+							<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
 							<div class="modal-body">
 								
 								<div class="form-group">
 
 									<div class="row">
-										<div class="col-sm-6">
+										<div class="col-sm-4">
 											<label for="firstName">Date From</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('dateFrom')}" th:errors="*{dateFrom}"></span>
 											<input id="dateFrom" name="dateFrom" th:field="*{dateFrom}" type="date" class="form-control required-field-hrisp" >
 										</div>	
-										<div class="col-sm-6">
+										<div class="col-sm-4">
 											<label for="firstName">Date To</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('dateTo')}" th:errors="*{dateTo}"></span>
 											<input id="dateTo" name="dateTo" th:field="*{dateTo}" type="date" class="form-control required-field-hrisp" >
 										</div>	
-										<div class="col-sm-12 mt-2 align-items-center">
+										<div class="col-sm-4">
+											<label for="firstName">&nbsp;</label><br>
 											<input th:field="*{upToPresent}" id="upToPresent" name="upToPresent" placeholder="N/A" type="checkbox"> 
 											<label for="dateTo">isPresent</label>
 										</div>
 									</div>
 
-									<div class="row">
+									<div class="row mt-3">
 										<div class="col-sm-4">
 											<label for="positionTitle">Position Title</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('positionTitle')}" th:errors="*{positionTitle}"></span>
@@ -74,19 +75,19 @@
 										</div>		
 									</div>
 
-									<div class="row">
-										<div class="col-sm-6">
+									<div class="row mt-3">
+										<div class="col-sm-4">
 											<label for="immediateSupervisor">Immediate Supervisor</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('immediateSupervisor')}" th:errors="*{immediateSupervisor}"></span>
 											<input id="immediateSupervisor" name="immediateSupervisor" th:field="*{immediateSupervisor}" placeholder="Immediate Supervisor" type="text" class="form-control required-field-hrisp" >
 										</div>
-										<div class="col-sm-6">
+										<div class="col-sm-8">
 											<label for="jobDescription">Job Description</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('jobDescription')}" th:errors="*{jobDescription}"></span>
-											<textarea id="jobDescription" name="jobDescription" th:field="*{jobDescription}" class="form-control" style="resize: none;"></textarea>
+											<input id="jobDescription" name="jobDescription" th:field="*{jobDescription}" placeholder="Job Description" type="text" class="form-control required-field-hrisp" >
 										</div>
 									</div>
-									<div class="row">
+									<div class="row mt-3">
 										<div class="col-sm-4">
 											<label for="salary">Salary</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('salary')}" th:errors="*{salary}"></span>
@@ -103,7 +104,7 @@
 											<input id="stepNo" name="stepNo" th:field="*{stepNo}" placeholder="Salary" type="number" class="form-control required-field-hrisp" >
 										</div>
 									</div>
-									<div class="row">
+									<div class="row  mt-3">
 										<div class="col-sm-6">
 											<label for="appointmentStatus">Appointment Status</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('appointmentStatus')}" th:errors="*{appointmentStatus}"></span>
@@ -121,7 +122,7 @@
 											</select>
 										</div>
 									</div>
-									<div class="row">
+									<div class="row mt-3">
 										<div class="col-sm-12">
 											<label for="remarks">Remarks</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('remarks')}" th:errors="*{remarks}"></span>
@@ -160,16 +161,16 @@
 									
 									<div class="card">
 										<div class="card-header header-elements-inline">
-											<h5 class="card-title">Family Background Information</h5>
+											<h5 class="card-title">Work Experience Information</h5>
 											<div class="header-elements">
 												<div class="list-icons">				                				
-									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Relative Information</button>
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
 									           	</div>
 											</div>
 										</div>
 					
 										<div class="card-body">
-											List of All Family Members. Type to search desired family member.
+											List of All Work Experience. Type to search desired information.
 										</div>
 					
 										<table class="table table-bordered table-hover datatable-highlight">
@@ -426,7 +427,7 @@
 				
 			});
 			
-			let showMode = /*[[${showMode == null ? '' : showMode} ]]*/'';
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
 			
 			if(showMode === 'PROFILE'){
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
@@ -437,13 +438,13 @@
 				//$("#assumptiondate").prop("readOnly", true);
 				//$("#plantillaNo").prop("readOnly", true);
 				
-				$("#saveMode").val("PROFILE");
+				$("#showMode").val("PROFILE");
 			} else {
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
 				$("#employeeListNav").addClass("active");
 				
-				$("#saveMode").val("HRADMIN");
+				$("#showMode").val("HRADMIN");
 			}
 	    		    				
 			

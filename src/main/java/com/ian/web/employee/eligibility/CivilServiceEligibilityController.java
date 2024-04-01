@@ -17,6 +17,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
+import com.ian.web.employee.PdsCountDto;
+import com.ian.web.employee.educationalbg.EducationalBackgroundRepository;
+import com.ian.web.employee.familybg.FamilyBgRepository;
+import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
+import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
+import com.ian.web.employee.otherinfo.OtherInfoRepository;
+import com.ian.web.employee.references.EmpReferencesRepository;
+import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
+import com.ian.web.employee.workexperience.WorkExperienceRepository;
 import com.ian.web.systemsettings.eligibility.EligibilityRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -28,15 +37,42 @@ public class CivilServiceEligibilityController {
     private final CivilServiceEligibilityRepository civilServiceEligibilityRepository;
 	private final EmployeeRepository employeeRepository;
 	private final EligibilityRepository eligibilityRepository;
+	
+	private final FamilyBgRepository familyBgRepository;
+	private final EducationalBackgroundRepository educationalBackgroundRepository;
+	private final WorkExperienceRepository workExperienceRepository;
+	private final VoluntaryWorkRepository voluntaryWorkRepository;
+	private final LearningAndDevelopmentRepository learningAndDevelopmentRepository;
+	private final OtherInfoRepository otherInfoRepository;
+//	private final OtherInfo
+	private final EmpReferencesRepository empReferencesRepository;
+	private final GovermentIssuedIdRepository govermentIssuedIdRepository;
 
-    @GetMapping({"/profile/civil-eligibility/{employeeId}/{empHashCode}", "/employee/civil-eligibility/{employeeId}/{empHashCode}"})
-	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String empHashCode, HttpServletRequest request) {
+	@GetMapping("/employee/civil-eligibility/{employeeId}/{showMode}/{empHashCode}")
+    //@GetMapping({"/profile/civil-eligibility/{employeeId}/{empHashCode}", "/employee/civil-eligibility/{employeeId}/{empHashCode}"})
+	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String showMode, @PathVariable String empHashCode, HttpServletRequest request) {
 		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
 		UXMessage msg = new UXMessage();
 
 		if(optional.isPresent()) {		
 			
 			Employee employee = optional.orElseGet(() -> new Employee());
+			
+			PdsCountDto pdsDtoCount = new PdsCountDto();
+			pdsDtoCount.setFamilyBgCount(familyBgRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setEducationalBgCount(educationalBackgroundRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setEligibilityCount(civilServiceEligibilityRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setWorkExperienceCount(workExperienceRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setVoluntaryWorkCount(voluntaryWorkRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setLearningDevCount(learningAndDevelopmentRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setOtherInfoCount(otherInfoRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setOtherInfoQuestionsCount(0);
+			pdsDtoCount.setReferencesCount(empReferencesRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setGovIdCount(govermentIssuedIdRepository.findByEmployeeId(employeeId).size());
+			
+			employee.setPdsCountDto(pdsDtoCount);
+			employee.setShowMode(showMode);
+			
 			model.addAttribute("employee", employee);
 			
 			List<CivilServiceEligibility> civilEligibilityList = civilServiceEligibilityRepository.findByEmployeeId(employee.getId());
@@ -45,15 +81,9 @@ public class CivilServiceEligibilityController {
 			
 			CivilServiceEligibility civilServiceEligibility = new CivilServiceEligibility();
 			civilServiceEligibility.setEmployee(employee);
+			civilServiceEligibility.setShowMode(showMode);
 			model.addAttribute("civilServiceEligibility", civilServiceEligibility );
-			
-			if (request.getServletPath().startsWith("/profile")) {
-				model.addAttribute("showMode", "PROFILE");
-			} else {
-				model.addAttribute("showMode", "HRADMIN");
-			}
-			
-			
+						
 		} else {
 			msg.setCode("EMP-NOT-FOUND");
 			msg.setMessage("Employee Not Found. You will be redirected to the dashboard.");
@@ -72,44 +102,18 @@ public class CivilServiceEligibilityController {
 			,Model model
 			,HttpServletRequest request
 			) {
-	    
-	    String uxMessageText = "Record added successfully.";	    
-	    
+	    	    
 		if (errors.hasErrors()) {
 			model.addAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
 			model.addAttribute("civilEligibilityList", civilServiceEligibilityRepository.findByEmployeeId(civilServiceEligibility.getEmployee().getId()));
 			return "employee/pds/eligibility";
 		} 
-        // else {
-		// 	if(familyBg.getId() == 0 && !"CHILDREN".equalsIgnoreCase(familyBg.getRelationship())) {
-		// 		FamilyBg recordMatch = familyBgRepository.findByEmployeeIdAndRelationship(familyBg.getEmployee().getId(), familyBg.getRelationship());
-		// 		if (recordMatch != null) {
-		// 			model.addAttribute("msg", new UXMessage("ERROR", "You already have a record for your " + familyBg.getRelationship()));
-		// 			model.addAttribute("familyBgList", familyBgRepository.findByEmployeeId(familyBg.getEmployee().getId()));
-		// 			return "employee/pds/family-background";
-		// 		} else {
-		// 		    redirect.addFlashAttribute("msg", new UXMessage("SUCCESS", uxMessageText));			    
-		// 		}
-		// 	}
-		// }		
+        	
+		String showMode = civilServiceEligibility.getShowMode();
 		civilServiceEligibility = civilServiceEligibilityRepository.save(civilServiceEligibility);
 
-		if (request.getServletPath().equalsIgnoreCase("/addWorkExperience")) {
-			redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-			return "redirect:/profile/civil-eligibility/"+civilServiceEligibility.getEmployee().getId()+"/"+civilServiceEligibility.getEmployee().getEmpHashCode();
-		} else if (request.getServletPath().equalsIgnoreCase("/editWorkExperience")) {
-			// if(workExperience.getSaveMode().equalsIgnoreCase("PROFILE")) {
-			// 	redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-			// 	return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
-			// } else {
-			// 	redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-			// 	return "redirect:/profile/work-experience/"+workExperience.getEmployee().getId()+"/"+workExperience.getEmployee().getEmpHashCode();
-			// }			
-            redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-			return "redirect:/profile/civil-eligibility/"+civilServiceEligibility.getEmployee().getId()+"/"+civilServiceEligibility.getEmployee().getEmpHashCode();
-		} else {
-			return "redirect:/profile/civil-eligibility/"+civilServiceEligibility.getEmployee().getId()+"/"+civilServiceEligibility.getEmployee().getEmpHashCode();
-		}
+		redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
+		return "redirect:/employee/civil-eligibility/"+civilServiceEligibility.getEmployee().getId()+"/"+showMode+"/"+civilServiceEligibility.getEmployee().getEmpHashCode();
 	}
 
 }

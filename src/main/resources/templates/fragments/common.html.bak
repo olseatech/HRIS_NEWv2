@@ -200,6 +200,139 @@
 <th:block th:fragment="right-profile-content">
 	
 	<!-- right content -->
+	<div class="sidebar-content" th:object="${session.actorObj}">
+							
+		<!-- User card -->
+		<div class="card">
+			<div class="card-body text-center">
+				<div class="card-img-actions d-inline-block mb-3 ">										
+								
+						<img id="photoPreview" class="img-fluid rounded-circle card-img-top" th:src="|@{*{profilePhoto == null || profilePhoto == '' ? '/images/avatar.png' : profilePhoto}}|" width="150" height="150" alt="">
+										
+						<div class="card-img-actions-overlay card-img rounded-circle">
+							<button id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
+								<i class="icon-camera"></i>
+							</button>											
+						</div>
+										
+				</div>
+				<form id="fileUploadForm" method="post" enctype="multipart/form-data">
+					    <input type="file" name="profilePhoto" id="profilePhoto" accept="image/*" class="inputfile" />
+					    <input type="hidden" name="employeeId" th:value="${session.actorObj.id}">
+					    <div style="text-align: center;">
+						    <button type="submit" class="btn btn-primary" style="padding: 10px 40px;">Update Photo</button>
+					    </div>
+				</form>
+				
+				<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase mt-3" th:text="${session.actorObj.fullName}">Hanna Dorman</h6>
+				<div class="text-left mt-1">
+					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span><span th:text="${session.actorObj.positionTitle.positionTitleName}">HR ADMIN</span></span>
+					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span><span th:text="${session.actorObj.division.divisionName}">HR ADMIN</span></span>
+					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span><span th:text="${session.actorObj.assumptiondate}">HR ADMIN</span></span>
+					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span><span th:text="${session.actorObj.birthdate}">HR ADMIN</span> <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span><span th:text="${session.actorObj.age}">HR ADMIN</span></span></span>
+									
+					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span><span th:text="${session.actorObj.mobileNo1}">HR ADMIN</span></span>
+											
+				</div>
+									
+										    		
+			</div>
+			
+		</div>
+		<!-- /user card -->
+					    	
+		<!-- Navigation Card -->			    	
+		<div class="card">
+			<div class="card-header bg-transparent header-elements-inline">
+				<span class="card-title font-weight-semibold">Personal Data Sheet</span>
+				<div class="header-elements">
+					<div class="list-icons">
+			       		<a class="list-icons-item" data-action="collapse"></a>
+			   		</div>
+				</div>
+			</div>
+
+			<div class="card-body p-0">
+				<ul class="nav nav-sidebar my-2">
+					<li class="nav-item">
+						<a th:href="@{'/profile/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
+							<i class="icon-checkmark3 text-success"></i>
+							 Personal Information
+						</a>
+					</li>
+					<li class="nav-item">
+						<a th:href="@{'/profile/familybg/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Family Background
+						</a>
+					</li>
+					<li class="nav-item">
+						<a th:href="@{'/profile/educationalbg/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
+							<i th:class="${session.actorObj.getEducationalBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Educational Background
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getEligibilityCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Eligibility
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getWorkExperienceCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Work Experience
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getVoluntaryWorkCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Voluntary Work
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getVoluntaryWorkCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							Learning &amp; Development
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Other Info
+						</a>
+					</li>										
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Other Information Questions
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 References
+						</a>
+					</li>
+					<li class="nav-item">
+						<a href="#" class="nav-link">
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							 Government Issued Id
+						</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+		<!--/ Navigation Card -->
+		
+	</div>
+	<!-- /right content -->
+
+</th:block>
+
+<th:block th:fragment="right-employee-content">
+	
+	<!-- right content -->
 	<div class="sidebar-content" th:object="${employee}">
 							
 		<!-- User card -->
@@ -224,7 +357,7 @@
 					    </div>
 				</form>
 				
-				<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase mt-3" th:text="${employee.fullName}">Hanna Dorman</h6>
+				<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase" th:text="${employee.fullName}">Hanna Dorman</h6>
 				<div class="text-left mt-1">
 					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span><span th:text="${employee.positionTitle.positionTitleName}">HR ADMIN</span></span>
 					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span><span th:text="${employee.division.divisionName}">HR ADMIN</span></span>
@@ -255,68 +388,72 @@
 			<div class="card-body p-0">
 				<ul class="nav nav-sidebar my-2">
 					<li class="nav-item">
-						<a th:href="@{'/employee/' + ${employee.id} + '/' + ${employee.id} + '/' + ${employee.showMode} + ${employee.getEmpHashCode()}}" class="nav-link">
+						<a th:href="@{'/employee/' + ${employee.id} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
 							<i class="icon-checkmark3 text-success"></i>
 							 Personal Information
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/familybg/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+<<<<<<< Updated upstream
+						<a th:href="@{'/profile/familybg/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
+=======
+						<a th:href="@{'/employee/familybg/' + ${employee.id} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
+>>>>>>> Stashed changes
+							<i th:class="${session.actorObj.getFamilyBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 							 Family Background
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/educationalbg/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getEducationalBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a th:href="@{'/employee/educationalbg/' + ${employee.id} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
+							<i th:class="${session.actorObj.getEducationalBgCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 							 Educational Background
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/civil-eligibility/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getEligibilityCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							 Eligibility
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/work-experience/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getWorkExperienceCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							 Work Experience
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/voluntary-work/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getVoluntaryWorkCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							 Voluntary Work
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/learning-development/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getLearningDevCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							Learning &amp; Development
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/other-info/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getOtherInfoCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							 Other Info
 						</a>
 					</li>										
 					<li class="nav-item">
 						<a href="#" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getOtherInfoQuestionsCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+							<i class="icon-cross2 text-danger-400"></i>
 							 Other Information Questions
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/references/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getReferencesCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							 References
 						</a>
 					</li>
 					<li class="nav-item">
-						<a th:href="@{'/employee/government-id/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
-							<i th:class="${employee.getPdsCountDto().getGovIdCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+						<a href="#" class="nav-link">
+							<i class="icon-cross2 text-danger-400"></i>
 							 Government Issued Id
 						</a>
 					</li>
@@ -329,8 +466,6 @@
 	<!-- /right content -->
 
 </th:block>
-
-
 
 
 <th:block th:fragment="footer">
@@ -408,7 +543,7 @@
 
 						<!-- Main -->						
 						<li class="nav-item">							
-							<a th:href="@{/dashboard}" class="nav-link" id="emrDashboardNav" data-submenu-title="Employee Management">
+							<a th:href="@{/dashboard}" class="nav-link" id="emrDashboardNav">
 								<i class="icon-home4"></i>
 								<span>
 									Dashboard									
@@ -418,26 +553,24 @@
 						
 						<li class="nav-item nav-item-submenu" id="myAccountNav">
 							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>My Account</span></a>
-							<ul class="nav nav-group-sub" data-submenu-title="My Account">
-								<li class="nav-item"><a 									
-									th:href="@{'/employee/' + ${session.actorObj.id} + '/PROFILE/' + ${session.actorObj.getEmpHashCode()}}"
-									class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> My Personal Data Sheet</a>
+							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
+								<li class="nav-item"><a 
+									
+									th:href="@{'/profile/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
+									class="nav-link" id="myPersonalInfoNav"><i class="icon-user-tie"></i> Personal Data Sheet</a>
 								</li>
-								<li class="nav-item"><a 									
-									th:href="@{'/myclearance/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
-									class="nav-link" id="myClearanceNav"><i class="icon-user-tie"></i> My Clearance</a>
-								</li>		
-								<li class="nav-item"><a 									
-									th:href="@{'/myServiceRecord/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
-									class="nav-link" id="myServiceRecordNav"><i class="icon-user-tie"></i> My Service Record</a>
-								</li>
+								<li class="nav-item"><a th:href="@{/academic-honors}" class="nav-link" id="myClearanceNav"><i class="icon-paste2"></i> Clearance</a></li>								
+								<li class="nav-item"><a th:href="@{/degree-courses}" class="nav-link" id="myServiceRecordNav"><i class="icon-cabinet"></i> Service Record</a></li>
+								<!-- <li class="nav-item">
+									<a th:href="@{/educational-background}" class="nav-link"><i class="icon-graduation2"></i>Educational Background</a>
+								</li> -->
 							</ul>
 						</li>
 						
 						<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
 						<li class="nav-item nav-item-submenu" id="employeeManagementNav">
 							<a href="#" class="nav-link"><i class="icon-vcard"></i> <span>Employee Management</span></a>
-							<ul class="nav nav-group-sub" data-submenu-title="Employee Management">
+							<ul class="nav nav-group-sub" data-submenu-title="System Settings">
 								<li class="nav-item"><a th:href="@{/employee-list}" class="nav-link" id="employeeListNav"><i class="icon-user-tie"></i> Employee List</a></li>
 								<li class="nav-item"><a th:href="@{/clearance-list}" class="nav-link" id="clearanceListNav"><i class="icon-paste2"></i> Clearance List</a></li>
 								<li class="nav-item nav-item-submenu">

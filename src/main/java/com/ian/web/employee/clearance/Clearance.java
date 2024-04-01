@@ -1,7 +1,6 @@
-package com.ian.web.employee.govermentid;
+package com.ian.web.employee.clearance;
 
 import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,41 +8,41 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Transient;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
 import com.ian.web.employee.Employee;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Table(name = "government_issued_id")
 @Entity
-public class GovermentIssuedId {
+@NoArgsConstructor 
+@AllArgsConstructor
+public class Clearance {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-	
-	private String govermentIssuedName;
-
-	private String idNo;
-	
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private LocalDate issuanceDate;
-	
-	private String placeOfIssuance;
-
-	@ManyToOne(fetch = FetchType.EAGER)
+	private Long id;
+		
+    private String addressTo;	
+    private String purpose;
+    private String otherPurpose;
+    private String status;
+    
+    private String approvedBy;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate transDate;
+    
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+	private LocalDate effectiveDate;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id")
-	private Employee employee;
-	
-	@Transient
+	Employee employee;
+    
+    @Transient
 	private String showMode;
+
 }

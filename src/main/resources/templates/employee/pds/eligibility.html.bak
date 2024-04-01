@@ -34,71 +34,55 @@
 							<input type="hidden" th:field="*{id}" name="id" id="id">
 							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
-							<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
+							<!-- <input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value=""> -->
 							<div class="modal-body">
 								
 								<div class="form-group">
 
-									<div class="row mt-3">
+									<div class="row">
 										<div class="col-sm-4">
 											<label for="eligibility">Eligibility</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('eligibility')}" th:errors="*{eligibility}"></span>
-											<select th:field="*{eligibility}" id="eligibility" class="form-control required-field-hrisp">
-												<option value="">SELECT VALUE</option>
+											<select th:field="*{eligibility}" class="form-control">
 												<option th:each="type: ${eligibilityList}" th:value="${type.getEligibilityName()}" th:text="${type.getEligibilityName()}"></option>
-												<option value="OTHERS">OTHERS</option>
 											</select>
 										</div>
 										<div class="col-sm-4">
-											<label for="otherEligibility">Other Eligibility</label>
+											<label for="otherEligibility">Department</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('otherEligibility')}" th:errors="*{otherEligibility}"></span>
-											<input id="otherEligibility" name="otherEligibility" th:field="*{otherEligibility}" placeholder="Other Eligibility" type="text" class="form-control" readonly>
+											<input id="otherEligibility" name="otherEligibility" th:field="*{otherEligibility}" placeholder="Other Eligibility" type="text" class="form-control required-field-hrisp" >
 										</div>
 										<div class="col-sm-4">
-											<label for="rating">Rating</label>
+											<label for="rating">Office Name</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('rating')}" th:errors="*{rating}"></span>
 											<input id="rating" name="rating" th:field="*{rating}" placeholder="Rating" type="text" class="form-control required-field-hrisp" >
 										</div>		
 									</div>
 
-									<div class="row mt-3">										
+									<div class="row">
+										<div class="col-sm-4">
+											<label for="examYear">Exam Year</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('examYear')}" th:errors="*{examYear}"></span>
+											<input id="examYear" name="examYear" th:field="*{examYear}" placeholder="Exam Year" type="text" class="form-control required-field-hrisp" >
+										</div>
 										<div class="col-sm-4">
 											<label for="examMonth">Exam Month</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('examMonth')}" th:errors="*{examMonth}"></span>
-											<select name="examMonth" id="examMonth" class="form-control required-field-hrisp" th:field="*{examMonth}">
-												<option value="">SELECT VALUE</option>
-												<option value="JAN">JAN</option>
-												<option value="FEB">FEB</option>
-												<option value="MAR">MAR</option>
-												<option value="APR">APR</option>
-												<option value="MAY">MAY</option>
-												<option value="JUNE">JUNE</option>
-												<option value="JULY">JULY</option>
-												<option value="AUG">AUG</option>
-												<option value="SEPT">SEPT</option>
-												<option value="OCT">OCT</option>
-												<option value="NOV">NOV</option>
-												<option value="DEC">DEC</option>
-											</select>
-										</div>
-										<div class="col-sm-2">
-											<label for="examDay">Exam Day</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('examDay')}" th:errors="*{examDay}"></span>
-											<input id="examDay" name="examDay" th:field="*{examDay}" placeholder="Exam Day" type="number" class="form-control required-field-hrisp" >
-										</div>	
-										<div class="col-sm-2">
-											<label for="examYear">Exam Year</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('examYear')}" th:errors="*{examYear}"></span>
-											<input id="examYear" name="examYear" th:field="*{examYear}" placeholder="Exam Year" type="number" class="form-control required-field-hrisp" >
+											<input id="examMonth" name="examMonth" th:field="*{examMonth}" placeholder="Exam Month" type="text" class="form-control required-field-hrisp" >
 										</div>
 										<div class="col-sm-4">
+											<label for="examDay">Exam Day</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('examDay')}" th:errors="*{examDay}"></span>
+											<input id="examDay" name="examDay" th:field="*{examDay}" placeholder="Exam Day" type="text" class="form-control required-field-hrisp" >
+										</div>	
+										<div class="col-sm-12">
 											<label for="placeOfExam">Place of Exam</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('placeOfExam')}" th:errors="*{placeOfExam}"></span>
 											<input id="placeOfExam" name="placeOfExam" th:field="*{placeOfExam}" placeholder="Place of Exam" type="text" class="form-control required-field-hrisp" >
 										</div>		
 									</div>
 
-									<div class="row mt-3">
+									<div class="row">
 										<div class="col-sm-4">
 											<label for="licenseNo">License Number</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('licenseNo')}" th:errors="*{licenseNo}"></span>
@@ -150,7 +134,7 @@
 											<h5 class="card-title">Civil Service Eligibility Information</h5>
 											<div class="header-elements">
 												<div class="list-icons">				                				
-									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Relative Information</button>
 									           	</div>
 											</div>
 										</div>
@@ -249,20 +233,6 @@
 	<script th:inline="javascript">		
 	
 	    $(document).ready(function() {
-			
-			$("#eligibility").change(function() {
-		        var selectedValue = $(this).val();
-		        
-		        if(selectedValue === 'OTHERS'){				
-					$("#otherEligibility").prop("readOnly", false);
-					$("#otherEligibility").addClass("required-field-hrisp");
-					$("#otherEligibility").focus();
-				} else {					
-					$("#otherEligibility").prop("readOnly", true);
-					$("#otherEligibility").removeClass("required-field-hrisp");
-				}
-				
-		    });
 	    	
 	    	$('#consultation-list').DataTable({
 				"lengthMenu": [10, 25, 50],
@@ -270,24 +240,11 @@
 				
 			});
 	    		    				
-			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
-			
-			if(showMode === 'PROFILE'){
-				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
-				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
-				$("#myPersonalInfoNav").addClass("active");
-								
-				$("#showMode").val("PROFILE");
-			} else {
-				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
-				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
-				$("#employeeListNav").addClass("active");
-				
-				$("#showMode").val("HRADMIN");
-			}
+			$(".nav-link").removeClass("active");	    	  	
+			$("#emrDashboardNav").addClass("active");
 
-	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
-			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+	    	let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
+			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
 
 	    	if(msgCode === 'ERROR'){
 				swal({
@@ -297,7 +254,7 @@
 					buttons: false,
 		            timer: 2000,
 				});
-			} else if(msgCode === 'EDIT-SUCCESS'){
+			} else if(msgCode === 'SUCCESS'){
 				swal({
 					title: "Success!",
 					text: msgDesc,
@@ -334,27 +291,30 @@
 	            $("#modal_form_vertical").find("#licenseNo").val(licenseNo);
 	            $("#modal_form_vertical").find("#licenseValidityDate").val(licenseValidityDate);
 	            $("#modal_form_vertical").find("#licenseReleaseDate").val(licenseReleaseDate);    
-		});
+	        });
 
-		$('#employeeForm').submit(function(event) {
-		        var emptyFields = [];
-		        $('.required-field-hrisp').each(function() {
-		            if ($(this).val().trim() === '') {
-		                emptyFields.push($(this));
-		            }
-		        });
-		
-		        if (emptyFields.length > 0) {
-		            event.preventDefault();		            
-		            swal({
-						title: "Error!",
-						text: "Mandatory fields marked in RED are mandatory.",
-						icon: "error",
-						buttons: false,
-			            timer: 2000,
-					});
-		            emptyFields[0].focus();
-		        }
+		$(document).on("click", ".cancelConsultation", function(){
+
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to cancel the appointment?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				  //No Response
+				  console.log("will delete no");
+
+			  } else {
+			  	 console.log("will delete yes");
+				 var id = $(this).attr('data-row-id');
+				 $("#cancelConsultationForm").find("#consultationId").val(id);
+				 $("#cancelConsultationForm").submit();
+			  }
+			});
+
 		});
 
 	</script>

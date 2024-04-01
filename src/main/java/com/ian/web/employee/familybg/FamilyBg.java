@@ -10,7 +10,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 
 import com.ian.web.common.model.Person;
-import com.ian.web.config.data.Auditable;
 import com.ian.web.employee.Employee;
 
 import lombok.AllArgsConstructor;
@@ -44,7 +43,7 @@ public class FamilyBg extends Person {
 	private String mobileNo;
 		
 	@Transient
-	private String saveMode;
+	private String showMode;
 	
 //	@OneToMany(mappedBy = "familyBg", cascade = CascadeType.ALL)
 //    private List<FamilyRelative> relatives;

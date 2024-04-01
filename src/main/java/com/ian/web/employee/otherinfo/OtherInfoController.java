@@ -2,7 +2,9 @@ package com.ian.web.employee.otherinfo;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 
@@ -17,8 +19,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
-import com.ian.web.employee.eligibility.CivilServiceEligibility;
-import com.ian.web.employee.references.EmpReferences;
+import com.ian.web.employee.PdsCountDto;
+import com.ian.web.employee.educationalbg.EducationalBackgroundRepository;
+import com.ian.web.employee.eligibility.CivilServiceEligibilityRepository;
+import com.ian.web.employee.familybg.FamilyBgRepository;
+import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
+import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
+import com.ian.web.employee.references.EmpReferencesRepository;
+import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
+import com.ian.web.employee.workexperience.WorkExperienceRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,47 +37,82 @@ public class OtherInfoController {
 
     private final OtherInfoRepository otherInfoRepository;
     private final EmployeeRepository employeeRepository;
+    
+    private final FamilyBgRepository familyBgRepository;
+	private final EducationalBackgroundRepository educationalBackgroundRepository;
+	private final CivilServiceEligibilityRepository civilServiceEligibilityRepository;
+	private final WorkExperienceRepository workExperienceRepository;
+	private final VoluntaryWorkRepository voluntaryWorkRepository;
+	private final LearningAndDevelopmentRepository learningAndDevelopmentRepository;
+//	private final OtherInfo
+	private final EmpReferencesRepository empReferencesRepository;
+	private final GovermentIssuedIdRepository govermentIssuedIdRepository;
 
-    @GetMapping("/other-info/{employeeId}")
-    public String getRecord(Model model, @PathVariable("employeeId") Long id){
-         if(!employeeRepository.findById(id).isPresent()){
-            model.addAttribute("uxmessage", new UXMessage("ERROR", "Employee doesn't exist"));
-			return "redirect:/dashboard";
-        }
-        Employee employee = employeeRepository.findById(id).get();
-        model.addAttribute("employee", employee);
-        model.addAttribute("listOfOtherInfo", otherInfoRepository.findAllByEmployee(employee));
-        model.addAttribute("otherInfo", new OtherInfo());
+	@GetMapping("/employee/other-info/{employeeId}/{showMode}/{empHashCode}")
+    //@GetMapping({"/profile/other-info/{employeeId}/{empHashCode}", "/employee/other-info/{employeeId}/{empHashCode}"})
+	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String showMode, @PathVariable String empHashCode, HttpServletRequest request) {
+		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
+		UXMessage msg = new UXMessage();
 
-        return "employee/pds/other-info";
-    }
+		if(optional.isPresent()) {		
+			
+			Employee employee = optional.orElseGet(() -> new Employee());
+			
+			PdsCountDto pdsDtoCount = new PdsCountDto();
+			pdsDtoCount.setFamilyBgCount(familyBgRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setEducationalBgCount(educationalBackgroundRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setEligibilityCount(civilServiceEligibilityRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setWorkExperienceCount(workExperienceRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setVoluntaryWorkCount(voluntaryWorkRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setLearningDevCount(learningAndDevelopmentRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setOtherInfoCount(otherInfoRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setOtherInfoQuestionsCount(0);
+			pdsDtoCount.setReferencesCount(empReferencesRepository.findByEmployeeId(employeeId).size());
+			pdsDtoCount.setGovIdCount(govermentIssuedIdRepository.findByEmployeeId(employeeId).size());
+			
+			employee.setPdsCountDto(pdsDtoCount);
+			employee.setShowMode(showMode);
+			
+			model.addAttribute("employee", employee);
+			
+			List<OtherInfo> otherInfoList = otherInfoRepository.findByEmployeeId(employeeId);
+			model.addAttribute("otherInfoList", otherInfoList);
 
-    @PostMapping("/save-other-info/{employeeId}")
+			OtherInfo otherInfo = new OtherInfo();
+			otherInfo.setEmployee(employee);
+			otherInfo.setShowMode(showMode);
+			model.addAttribute("otherInfo", otherInfo );
+						
+		} else {
+			msg.setCode("EMP-NOT-FOUND");
+			msg.setMessage("Employee Not Found. You will be redirected to the dashboard.");
+			model.addAttribute("msg", msg);
+		}		
+		
+		return "employee/pds/other-info";
+		
+	}
+
+    @PostMapping({"/addOtherInfo", "/editOtherInfo"})
     @Transactional
 	public String getRecord(
-			@Valid OtherInfo otherInfo,
-            @PathVariable("employeeId") Long id
+			@Valid OtherInfo otherInfo
 			,Errors errors
 			,final RedirectAttributes redirect
 			,Model model
+			,HttpServletRequest request
 			) throws IllegalAccessException, InvocationTargetException {
 		if (errors.hasErrors()) {
-			Employee employee = employeeRepository.findById(id).get();
-            model.addAttribute("employee", employee);
-            model.addAttribute("listOfOtherInfo", otherInfoRepository.findAllByEmployee(employee));
-            model.addAttribute("otherInfo",otherInfo);
-
+			model.addAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
+            model.addAttribute("otherInfoList", otherInfoRepository.findByEmployeeId(otherInfo.getEmployee().getId()));
             return "employee/pds/other-info";
 		}
-        Employee employee = employeeRepository.findById(id).get();
-        otherInfo.setEmployee(employee);
+		
+		String showMode = otherInfo.getShowMode();
+		otherInfo = otherInfoRepository.save(otherInfo);
 
-//        List<OtherInfo> listOfOtherInfos = employee.getOtherInfos();
-//        listOfOtherInfos.add(otherInfo);
-//        employee.setOtherInfos(listOfOtherInfos);
-//        employeeRepository.save(employee);
+		redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully saved."));
+		return "redirect:/employee/other-info/"+otherInfo.getEmployee().getId()+"/"+showMode+"/"+otherInfo.getEmployee().getEmpHashCode();
 
-		redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS", "Record successfully saved."));
-		return "redirect:/other-info/"+id;
 	}
 }

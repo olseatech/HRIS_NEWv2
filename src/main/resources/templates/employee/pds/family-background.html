@@ -36,7 +36,7 @@
 					<div class="modal-dialog modal-lg">
 						<div class="modal-content">
 							<div class="modal-header bg-primary">
-								<h5 class="modal-title">Employee Information</h5>
+								<h5 class="modal-title">Family Member Information</h5>
 								<button type="button" class="close" data-dismiss="modal">&times;</button>
 							</div>
 
@@ -44,7 +44,7 @@
 								<input type="hidden" th:field="*{id}" name="id" id="id">
 								<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 								<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
-								<input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value="">
+								<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
 								<div class="modal-body">
 									
 									<div class="form-group">
@@ -199,7 +199,7 @@
 											<h5 class="card-title">Family Background Information</h5>
 											<div class="header-elements">
 												<div class="list-icons">				                				
-									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Relative Information</button>
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
 									           	</div>
 											</div>
 										</div>
@@ -467,7 +467,7 @@
 				
 			});
 			
-			let showMode = /*[[${showMode == null ? '' : showMode} ]]*/'';
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
 			
 			if(showMode === 'PROFILE'){
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
@@ -478,13 +478,13 @@
 				//$("#assumptiondate").prop("readOnly", true);
 				//$("#plantillaNo").prop("readOnly", true);
 				
-				$("#saveMode").val("PROFILE");
+				$("#showMode").val("PROFILE");
 			} else {
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
 				$("#employeeListNav").addClass("active");
 				
-				$("#saveMode").val("HRADMIN");
+				$("#showMode").val("HRADMIN");
 			}
 	    		    				
 			

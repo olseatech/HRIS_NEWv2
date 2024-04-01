@@ -77,7 +77,7 @@ public class EducationalBackground {
 	private String remarks;	
 
 	@Transient
-	private String saveMode;	
+	private String showMode;	
 	
 	private String attachmentUrl;	
 	@Transient

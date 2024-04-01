@@ -33,7 +33,7 @@
 							<input type="hidden" th:field="*{id}" name="id" id="id">
 							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
-							<!-- <input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value=""> -->
+							<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
 							<div class="modal-body">
 								
 								<div class="form-group">
@@ -47,28 +47,29 @@
 									</div>
 
 
-									<div class="row">
-										<div class="col-sm-6">
+									<div class="row mt-3">
+										<div class="col-sm-4">
 											<label for="dateFrom">Date From</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('dateFrom')}" th:errors="*{dateFrom}"></span>
 											<input id="dateFrom" name="dateFrom" th:field="*{dateFrom}" type="date" class="form-control required-field-hrisp" >
 										</div>	
-										<div class="col-sm-6">
+										<div class="col-sm-4">
 											<label for="dateTo">Date To</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('dateTo')}" th:errors="*{dateTo}"></span>
 											<input id="dateTo" name="dateTo" th:field="*{dateTo}" type="date" class="form-control required-field-hrisp" >
 										</div>	
-										<div class="col-sm-12 mt-2 align-items-center">
+										<div class="col-sm-4 mt-2">
+											<label for="rating">&nbsp;</label><br>
 											<input th:field="*{upToPresent}" id="upToPresent" name="upToPresent" placeholder="N/A" type="checkbox"> 
 											<label for="dateTo">isPresent</label>
 										</div>
 									</div>
 
-									<div class="row">
+									<div class="row mt-3">
 										<div class="col-sm-4">
 											<label for="noHours">Number of Hours</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('noHours')}" th:errors="*{noHours}"></span>
-											<input id="noHours" name="noHours" th:field="*{noHours}" placeholder="Number of Hours" type="text" class="form-control required-field-hrisp" >
+											<input id="noHours" name="noHours" th:field="*{noHours}" placeholder="Number of Hours" type="number" class="form-control required-field-hrisp" >
 										</div>
 										<div class="col-sm-4">
 											<label for="natureOfWork">Nature of Work</label>
@@ -115,7 +116,7 @@
 											<h5 class="card-title">Voluntary Work Information</h5>
 											<div class="header-elements">
 												<div class="list-icons">				                				
-									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Relative Information</button>
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
 									           	</div>
 											</div>
 										</div>
@@ -213,11 +214,24 @@
 				
 			});
 	    		    				
-			$(".nav-link").removeClass("active");	    	  	
-			$("#emrDashboardNav").addClass("active");
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+								
+				$("#showMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#showMode").val("HRADMIN");
+			}
 
-	    	let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
-			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
 
 	    	if(msgCode === 'ERROR'){
 				swal({
@@ -227,7 +241,7 @@
 					buttons: false,
 		            timer: 2000,
 				});
-			} else if(msgCode === 'SUCCESS'){
+			} else if(msgCode === 'EDIT-SUCCESS'){
 				swal({
 					title: "Success!",
 					text: msgDesc,

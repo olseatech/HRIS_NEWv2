@@ -33,7 +33,7 @@
 							<input type="hidden" th:field="*{id}" name="id" id="id">
 							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
-							<!-- <input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value=""> -->
+							<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
 							<div class="modal-body">
 								
 								<div class="form-group">
@@ -48,6 +48,11 @@
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('idNo')}" th:errors="*{idNo}"></span>
 											<input id="idNo" name="idNo" th:field="*{idNo}" placeholder="ID/License/Passport No." type="text" class="form-control required-field-hrisp" >
 										</div>	
+										
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="row">
 										<div class="col-sm-6">
 											<label for="issuanceDate">Date of issuance</label>
 											<span class="validationError text-danger" th:if="${#fields.hasErrors('issuanceDate')}" th:errors="*{issuanceDate}"></span>
@@ -185,11 +190,24 @@
 				
 			});
 	    		    				
-			$(".nav-link").removeClass("active");	    	  	
-			$("#emrDashboardNav").addClass("active");
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+								
+				$("#showMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#showMode").val("HRADMIN");
+			}
 
-	    	let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
-			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
 
 	    	if(msgCode === 'ERROR'){
 				swal({
@@ -199,7 +217,7 @@
 					buttons: false,
 		            timer: 2000,
 				});
-			} else if(msgCode === 'SUCCESS'){
+			} else if(msgCode === 'EDIT-SUCCESS'){
 				swal({
 					title: "Success!",
 					text: msgDesc,
@@ -228,29 +246,7 @@
 		});
 
 
-		$(document).on("click", ".cancelConsultation", function(){
-
-			swal({
-			  title: "Confirmation?",
-			  text: "Are you sure you want to cancel the appointment?",
-			  icon: "info",
-			  buttons: ["Yes", "No"],
-			  dangerMode: false,
-			})
-			.then((willDelete) => {
-			  if (willDelete) {
-				  //No Response
-				  console.log("will delete no");
-
-			  } else {
-			  	 console.log("will delete yes");
-				 var id = $(this).attr('data-row-id');
-				 $("#cancelConsultationForm").find("#consultationId").val(id);
-				 $("#cancelConsultationForm").submit();
-			  }
-			});
-
-		});
+		
 
 	</script>
 

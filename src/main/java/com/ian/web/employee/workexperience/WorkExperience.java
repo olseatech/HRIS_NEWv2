@@ -64,7 +64,7 @@ public class WorkExperience {
 	private Employee employee;
 
 	@Transient
-	private String saveMode;
+	private String showMode;
 
 	public String getInclusiveDates(){
 		return this.dateFrom +" - "+this.dateTo;

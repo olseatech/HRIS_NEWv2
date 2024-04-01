@@ -1,10 +1,14 @@
 package com.ian.web.employee;
 
+import java.math.BigInteger;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.Query;
 
 @Repository
 public interface EmployeeRepository  extends JpaRepository<Employee, Long> {
@@ -13,4 +17,28 @@ public interface EmployeeRepository  extends JpaRepository<Employee, Long> {
 	Optional<Employee> findById(long id);
 
 	List<Employee> findByFirstNameAndLastNameAndBirthdate(String firstName, String lastName, LocalDate birthDate);
+	
+//	@Query("SELECT e.employeeStatus, COUNT(e) FROM Employee e GROUP BY e.employeeStatus")
+//	Map<Long, Long> countEmployeeStatus();
+	
+	@Query(value = "SELECT employee_status_id, COUNT(*) FROM employee GROUP BY employee_status_id", nativeQuery = true)
+	List<Object[]> countEmployeeStatus();
+
+    default Map<Long, Long> getCountEmployeeStatus() {
+        List<Object[]> result = countEmployeeStatus();
+        Map<Long, Long> statusCounts = new HashMap<>();
+        for (Object[] row : result) {
+            //statusCounts.put((Long) row[0], (Long) row[1]);
+        	BigInteger statusIdBigInt = (BigInteger) row[0];
+            BigInteger countBigInt = (BigInteger) row[1];
+
+            // Convert BigInteger to Long
+            Long statusId = statusIdBigInt.longValue();
+            Long count = countBigInt.longValue();
+
+            // Now, you can put the values into the map
+            statusCounts.put(statusId, count);
+        }
+        return statusCounts;
+    }
 }

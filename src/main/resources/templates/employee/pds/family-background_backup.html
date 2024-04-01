@@ -57,7 +57,7 @@
 										<div class="card-body">
 											
 												<input type="hidden" th:field="*{id}" name="id" id="id">
-												<input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value="">
+												<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
 												<div class="modal-body">													
 													<div class="form-group">
 														<div class="row">
@@ -363,7 +363,7 @@
 				
 			});
 			
-			let showMode = /*[[${showMode == null ? '' : showMode} ]]*/'';
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
 			
 			if(showMode === 'PROFILE'){
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
@@ -374,13 +374,13 @@
 				$("#assumptiondate").prop("readOnly", true);
 				$("#plantillaNo").prop("readOnly", true);
 				
-				$("#saveMode").val("PROFILE");
+				$("#showMode").val("PROFILE");
 			} else {
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
 				$("#employeeListNav").addClass("active");
 				
-				$("#saveMode").val("HRADMIN");
+				$("#showMode").val("HRADMIN");
 			}
 	    		    				
 			

@@ -32,7 +32,63 @@
 		<div class="content-wrapper">
 
 			
-			
+			<!-- modal form credentials -->
+		    <div id="modal_form_change_credential" class="modal fade" tabindex="-1">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title">Employee Credential Information</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>						
+						    <input type="hidden" id="empId" name="empId" value="0">
+							<div class="modal-body">
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-8">								    
+						                    <label for="fullName">Employee Name</label>
+						                    <input id="empFullName" name="empFullName" placeholder="Employee Name" type="text" class="form-control" readonly >
+						                </div>
+						                <div class="col-sm-4">
+						                    <label for="empUserType">User Type</label>
+						                    <select id="empUserType" name="empUserType" class="form-control">
+												<option value="ROLE_EMPLOYEE">ROLE EMPLOYEE</option>
+						                        <option value="ROLE_ADMIN">ROLE ADMIN</option>						                        
+						                    </select>
+						                </div> 		                
+						            </div>
+								</div>
+								
+								<code>Do not change username and password if you dont want to change the old values. Please update USERNAME PASSWORD if needed.</code>
+								<hr>
+								<div class="form-group">
+									<div class="row">       
+						                <div class="col-sm-4">				                    
+						                    <label for="empUsername">Username</label>
+						                    <input id="empUsername" name="empUsername" placeholder="Username" type="text" class="form-control" >
+						                </div>			                
+						                <div class="col-sm-4">				                    
+						                    <label for="newPassword">New Password</label>
+						                    <input id="newPassword" name="newPassword" placeholder="Enter password" type="password" class="form-control">
+						                </div>
+						                
+						                <div class="col-sm-4">				                    
+						                    <label for="confirmPassword">Confirm Password</label>
+						                    <input id="confirmPassword" name="confirmPassword" placeholder="Confirm password" type="password" class="form-control">
+						                </div>
+						            </div>
+								</div>
+								
+							</div>
+		
+							<div class="modal-footer">
+								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+								<button type="button" class="btn bg-primary" onclick="submitChangeCredentials()">Save Record</button>
+							</div>
+						
+					</div>
+				</div>
+			</div>
+			<!-- modal form credentials -->
 			
 			<!-- Vertical form modal -->
 			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
@@ -162,6 +218,34 @@
 												</select>
 											</div>
 							            </div>
+									</div>
+									
+									<div class="form-group">
+										<div class="row">    
+											<div class="col-sm-4">
+												<label for="sssNo">Position Title</label>
+												<select th:field="*{positionTitle.id}" id="positionTitle" class="form-control required-field-hrisp">
+									               	<option selected value="">SELECT VALUE</option>
+									               	<option th:each="positionTitle : ${positionTitleList}" th:value="${positionTitle.id}" th:text="${positionTitle.positionTitleName}">positionTitleName</option>
+									            </select>
+											</div>	
+											
+											<div class="col-sm-4">
+												<label for="employeeStatus">Employment Status</label>										                        
+												<select th:field="*{employeeStatus.id}" id="employeeStatus" class="form-control required-field-hrisp">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="empStatus : ${employeeStatusList}" th:value="${empStatus.id}" th:text="${empStatus.employeeStatusName}">employeeStatusName</option>
+												</select>
+											</div>														
+															
+											<div class="col-sm-4">
+												<label for="department">Department</label>										                        
+												<select th:field="*{division.id}" id="division" class="form-control required-field-hrisp">
+													<option selected value="">SELECT VALUE</option>
+													<option th:each="division : ${divisionList}" th:value="${division.id}" th:text="${division.divisionName}">division</option>
+												</select>
+											</div>											
+										</div>
 									</div>
 									
 									<div class="form-group">
@@ -531,6 +615,7 @@
 								<th>Plantilla No.</th>		
 								<th>Position</th>
 								<th>Division</th>
+								<th>Role</th>
 								<th>Status</th>
 								
 							</tr>
@@ -548,7 +633,8 @@
 												</a>
 
 												<div class="dropdown-menu dropdown-menu-right">
-													<a th:href="@{'/employee/' + ${employee.getId()} + '/' + ${employee.getEmpHashCode()}}" class="dropdown-item"><i class="icon-search4"></i> View Record</a>
+													<span class="dropdown-item" th:attr="onclick='showCredentialsModal(\'' + ${employee.id} +  '\', \'' + ${employee.empHashCode} + '\');'" ><i class="icon-user-lock"></i> Update Employee Credentials</span>
+													<a th:href="@{'/employee/' + ${employee.getId()} + '/HRADMIN/' + ${employee.getEmpHashCode()}}" class="dropdown-item"><i class="icon-search4"></i> View Record</a>
 													<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> View PDS Report</a>														
 												</div>
 											</div>
@@ -560,6 +646,7 @@
 									<td th:text="${employee.getPlantillaNo()}">Status</td>
 									<td th:text="${employee.getPositionTitle().getPositionTitleName()}">Status</td>
 									<td th:text="${employee.getDivision().getDivisionName()}">Status</td>
+									<td th:text="${employee.userType == 'ROLE_EMPLOYEE' ? 'EMPLOYEE' : 'ADMIN'}">Status</td>
 									<td><span class="badge badge-success" th:text="${employee.getStatus()}">Active</span></td>
 									
 								</tr>
@@ -590,18 +677,93 @@
 	<!-- /page content -->
 
 	<script th:inline="javascript">
+		
+		let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+		
+		function showCredentialsModal(employeeId, employeeHashCode){
+			console.log("Employee ID:", employeeId);
+            console.log("Employee HashCode:", employeeHashCode);
+            
+            let url = contextRoot + '/api/' + employeeId + '/' + employeeHashCode;
+				
+			$.ajax({
+				url: url,
+				type: 'GET',
+				dataType: 'json',
+				success: function(response) {
+					console.log(response.username);
+					
+					$("#empId").val(response.id);
+					$("#empFullName").val(response.fullName);
+					$("#empUserType").val(response.userType);
+					$("#empUsername").val(response.username);
+					$("#newPassword").val("");
+				},
+				error: function(xhr, status, error) {
+					console.error('Error fetching employe info:', error);
+				}
+	        });
+			
+			$('#modal_form_change_credential').modal('show');
+		}
+			
+		function submitChangeCredentials() {
+			var empId = $("#empId").val();
+			var empUserType = $("#empUserType").val();
+			var username = $("#empUsername").val();
+			var newPassword = $("#newPassword").val();
+			var confirmPassword = $("#confirmPassword").val();
+			var isErrorExist = false;
+			
+			if(newPassword.length > 0 || confirmPassword.length > 0){
+				if(newPassword != confirmPassword){
+					alert('Password does not match...');
+					isErrorExist = true;
+				}
+			}
+			
+			if(!isErrorExist){
+				let url = contextRoot + '/api/change-credentials/' + empId + '/' + empUserType + '/' + username + '/' + newPassword;
+				
+				$.ajax({
+					url: url,
+					type: 'POST',
+					//dataType: 'json',
+					success: function(response) {
+						//console.log(response);
+						
+						swal({
+							title: "Success!",
+							text: "Employee credentials successfully updated.",
+							icon: "success",
+							buttons: false,
+				            timer: 2000,
+						})
+						.then((value) => {										
+							window.location.href = contextRoot + '/employee-list';
+						});
+						
+						
+					},
+					error: function(xhr, status, error) {
+						console.error('Error fetching employe info:', error);
+					}
+		        });
+			}
+			
+		}
+		
 	
 		$(document).ready(function() {
-			//$(".nav-link").removeClass("active");
-			//$("#academicHonorsNav").addClass("active");
+			
 			
 			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 			$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
 			$("#employeeListNav").addClass("active");
 			
 			
-			let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
-			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+			let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
 			
 			if(msgCode === 'ERROR'){
 				$('#modal_form_vertical').modal('show');
@@ -612,8 +774,14 @@
 					buttons: false,
 		            timer: 2000,
 				});
-			} else if(msgCode === 'SUCCESS'){
-				
+			} else if(msgCode === 'ADD-SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
 			}
 			
 			$('#employeeForm').submit(function(event) {

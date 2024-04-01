@@ -1,8 +1,7 @@
 package com.ian.web.employee.learning;
 
-import java.time.LocalDate;
 
-import javax.persistence.CascadeType;
+import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -10,16 +9,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-
+import javax.persistence.Transient;
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ian.web.employee.Employee;
-import com.ian.web.systemsettings.learning_type.LearningType;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -49,13 +42,20 @@ public class LearningAndDevelopment {
 
 	private Integer noHours;
 	
-	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "learning_development_type", referencedColumnName = "id")
-	private LearningType learningType;
+	private String learningType;
 	
 	private String providers;
 
-	@ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JsonIgnoreProperties
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "employee_id")
 	private Employee employee;
+
+	@Transient
+	public String getInclusiveDates(){
+		return this.dateFrom +" - "+ this.dateTo;
+	}
+	
+	@Transient
+	private String showMode;
+
 }

@@ -38,7 +38,7 @@ public class CivilServiceEligibility {
 	private String rating;
 	
 	private int examYear;
-	private int examMonth;
+	private String examMonth;
 	private int examDay;
 	private String placeOfExam;
 	
@@ -54,7 +54,7 @@ public class CivilServiceEligibility {
 	private MultipartFile attachedFile;
 
 	@Transient
-	private String saveMode;
+	private String showMode;
 
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "employee_id")
@@ -62,8 +62,6 @@ public class CivilServiceEligibility {
 	
 	@Transient
 	public String getExamDate(){
-		LocalDate date = LocalDate.of(examYear, examMonth, examDay);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
-        return formatter.format(date);
+        return examMonth+" "+examYear;
 	}
 }

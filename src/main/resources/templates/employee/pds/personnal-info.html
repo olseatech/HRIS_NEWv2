@@ -52,7 +52,7 @@
 											<form id="employeeForm" th:action="@{/editEmployee}" method="post" th:object="${employee}">
 												<input type="hidden" th:field="*{id}" name="id" id="id">
 												<input type="hidden" th:field="*{userType}" name="userType" id="userType">
-												<input type="hidden" th:field="*{saveMode}" name="saveMode" id="saveMode" value="">
+												<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
 												<div class="modal-body">
 													
 													<div class="form-group">
@@ -542,13 +542,7 @@
 
 						
 						<!-- Main sidebar -->
-						<div th:if="${showMode == 'PROFILE'}">
-						   <div th:replace="fragments/common::right-profile-content"></div>
-						</div>
-						
-						<div th:if="${showMode == 'HRADMIN'}">
-						   <div th:replace="fragments/common::right-employee-content"></div>
-						</div>
+						<div th:replace="fragments/common::right-profile-content"></div>						
 						<!-- /Main sidebar -->
 		
 					</div>
@@ -645,7 +639,7 @@
 				
 			});
 			
-			let showMode = /*[[${showMode == null ? '' : showMode} ]]*/'';
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
 			
 			if(showMode === 'PROFILE'){
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
@@ -666,13 +660,13 @@
 				$("#lastName").removeClass("required-field-hrisp");
 				$("#middleName").removeClass("required-field-hrisp");
 				
-				$("#saveMode").val("PROFILE");
+				$("#showMode").val("PROFILE");
 			} else {
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
 				$("#employeeListNav").addClass("active");
 				
-				$("#saveMode").val("HRADMIN");
+				$("#showMode").val("HRADMIN");
 			}
 	    		    				
 			
@@ -751,29 +745,7 @@
 
 	    });
 
-		$(document).on("click", ".cancelConsultation", function(){
-
-			swal({
-			  title: "Confirmation?",
-			  text: "Are you sure you want to cancel the appointment?",
-			  icon: "info",
-			  buttons: ["Yes", "No"],
-			  dangerMode: false,
-			})
-			.then((willDelete) => {
-			  if (willDelete) {
-				  //No Response
-				  console.log("will delete no");
-
-			  } else {
-			  	 console.log("will delete yes");
-				 var id = $(this).attr('data-row-id');
-				 $("#cancelConsultationForm").find("#consultationId").val(id);
-				 $("#cancelConsultationForm").submit();
-			  }
-			});
-
-		});
+		
 
 	</script>
 

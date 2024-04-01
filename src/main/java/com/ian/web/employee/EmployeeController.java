@@ -16,12 +16,18 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ian.web.common.model.UXMessage;
-import com.ian.web.fileupload.FileDTO;
-import com.ian.web.fileupload.StorageService;
+import com.ian.web.employee.educationalbg.EducationalBackgroundRepository;
+import com.ian.web.employee.eligibility.CivilServiceEligibilityRepository;
+import com.ian.web.employee.familybg.FamilyBgRepository;
+import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
+import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
+import com.ian.web.employee.otherinfo.OtherInfoRepository;
+import com.ian.web.employee.references.EmpReferencesRepository;
+import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
+import com.ian.web.employee.workexperience.WorkExperienceRepository;
 import com.ian.web.systemsettings.division.DivisionRepository;
 import com.ian.web.systemsettings.employee_status.EmployeeStatusRepository;
 import com.ian.web.systemsettings.position_title.PositionTitleRepository;
@@ -38,6 +44,17 @@ public class EmployeeController {
 	private final EmployeeStatusRepository employeeStatusRepository;
 	private final DivisionRepository divisionRepository;
 	
+	private final FamilyBgRepository familyBgRepository;
+	private final EducationalBackgroundRepository educationalBackgroundRepository;
+	private final CivilServiceEligibilityRepository civilServiceEligibilityRepository;
+	private final WorkExperienceRepository workExperienceRepository;
+	private final VoluntaryWorkRepository voluntaryWorkRepository;
+	private final LearningAndDevelopmentRepository learningAndDevelopmentRepository;
+	private final OtherInfoRepository otherInfoRepository;
+//	private final OtherInfo
+	private final EmpReferencesRepository empReferencesRepository;
+	private final GovermentIssuedIdRepository govermentIssuedIdRepository;
+	
 	@GetMapping("/employee/datalist")
     public ResponseEntity<FlexDatalistResult> doctorsFlexDatalist() {
         Set<Employee> allEmployeeSet = new HashSet<>(employeeRepository.findAll());
@@ -48,17 +65,14 @@ public class EmployeeController {
 	public String listAll(Model model) {
 		Iterable<Employee> employeeList = employeeRepository.findAll();
 		model.addAttribute("employeeList", employeeList);
+		model.addAttribute("employeeStatusList", employeeStatusRepository.findAll());
+		model.addAttribute("divisionList", divisionRepository.findAll());
+		model.addAttribute("positionTitleList", positionTitleRepository.findAll());
 		model.addAttribute("employee", new Employee());
 		return "employee/employee-list";
 	}
 	
-	@GetMapping("/clearance-list")
-	public String getAllClearance(Model model) {
-		Iterable<Employee> employeeList = employeeRepository.findAll();
-		model.addAttribute("employeeList", employeeList);
-		model.addAttribute("employee", new Employee());
-		return "employee/clearance/clearance-list";
-	}
+	
 	
 //	@GetMapping("/employee/{employeeId}")
 //	public String viewEmployee(Model model, @PathVariable long employeeId) {
@@ -68,8 +82,10 @@ public class EmployeeController {
 //		return "employee/pds/personnal-info";
 //	}
 	
-	@GetMapping({"/profile/{employeeId}/{empHashCode}", "/employee/{employeeId}/{empHashCode}"})
-	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String empHashCode, HttpServletRequest request) {
+	
+	@GetMapping("/employee/{employeeId}/{showMode}/{empHashCode}")
+	//@GetMapping({"/profile/{employeeId}/{empHashCode}", "/employee/{employeeId}/{empHashCode}"})
+	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String showMode, @PathVariable String empHashCode, HttpServletRequest request) {
 		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
 		UXMessage msg = new UXMessage();
 		if(optional.isPresent()) {			
@@ -84,13 +100,23 @@ public class EmployeeController {
 		model.addAttribute("employeeStatusList", employeeStatusRepository.findAll());
 		model.addAttribute("divisionList", divisionRepository.findAll());
 		model.addAttribute("positionTitleList", positionTitleRepository.findAll());
-		model.addAttribute("employee", employee);
 		
-		if (request.getServletPath().startsWith("/profile")) {
-			model.addAttribute("showMode", "PROFILE");
-		} else {
-			model.addAttribute("showMode", "HRADMIN");
-		}
+		PdsCountDto pdsDtoCount = new PdsCountDto();
+		pdsDtoCount.setFamilyBgCount(familyBgRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setEducationalBgCount(educationalBackgroundRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setEligibilityCount(civilServiceEligibilityRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setWorkExperienceCount(workExperienceRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setVoluntaryWorkCount(voluntaryWorkRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setLearningDevCount(learningAndDevelopmentRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setOtherInfoCount(otherInfoRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setOtherInfoQuestionsCount(0);
+		pdsDtoCount.setReferencesCount(empReferencesRepository.findByEmployeeId(employeeId).size());
+		pdsDtoCount.setGovIdCount(govermentIssuedIdRepository.findByEmployeeId(employeeId).size());
+		
+		employee.setPdsCountDto(pdsDtoCount);
+		employee.setShowMode(showMode);
+		
+		model.addAttribute("employee", employee);		
 		
 		return "employee/pds/personnal-info";
 		
@@ -176,20 +202,15 @@ public class EmployeeController {
 			employee.setEmpHashCode(generateAlphanumericHash());
 		}
 		
-		Employee dbPatient = employeeRepository.save(employee);
+		String showMode = employee.getShowMode();
+		employee = employeeRepository.save(employee);
 		
 		if (request.getServletPath().equalsIgnoreCase("/addEmployee")) {
-			return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
-		} else if (request.getServletPath().equalsIgnoreCase("/editEmployee")) {
-			if(employee.getSaveMode().equalsIgnoreCase("PROFILE")) {
-				redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Employee Record Successfully Updated."));
-				return "redirect:/profile/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
-			} else {
-				redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Employee Record Successfully Updated."));
-				return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
-			}			
+			redirect.addFlashAttribute("msg", new UXMessage("ADD-SUCCESS", "Employee Record Successfully Saved."));
+			return "redirect:/employee-list";
 		} else {
-			return "redirect:/employee/"+dbPatient.getId()+"/"+dbPatient.getEmpHashCode();
+			redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Employee Record Successfully Updated."));
+			return "redirect:/employee/"+employee.getId()+"/"+showMode+"/"+employee.getEmpHashCode();
 		}
 	}
 	

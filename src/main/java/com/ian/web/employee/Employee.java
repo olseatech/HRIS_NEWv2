@@ -53,12 +53,15 @@ public class Employee extends Person  implements UserDetails {
     private long id;
 	
 	@Transient
-	private String saveMode;
+	private String showMode;
 	
 	private String empHashCode;
 	private String empNo;
 	private String username;
 	private String password;
+	
+	@Transient
+	private String confirmPassword;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private LocalDate assumptiondate;	
@@ -108,9 +111,7 @@ public class Employee extends Person  implements UserDetails {
     private String userType;
     
     private String profilePhoto;
-		
-	private boolean isPermanentSame;
-		
+	
 	@Transient
 	private MultipartFile photoFile;
 	
@@ -118,20 +119,7 @@ public class Employee extends Person  implements UserDetails {
 	private List<FamilyBg> familyBgList;
 	
 	@Transient
-	private int familyBgCount;
-	
-	@Transient
-	private int educationalBgCount;
-	
-	@Transient
-	private int eligibilityCount;
-	
-	@Transient
-	private int workExperienceCount;
-	
-	@Transient
-	private int voluntaryWorkCount;
-	
+	private PdsCountDto pdsCountDto;
 
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 //    @JoinColumn(name = "employee_educational_background", referencedColumnName = "id")
