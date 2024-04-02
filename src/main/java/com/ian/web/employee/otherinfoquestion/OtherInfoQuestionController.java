@@ -1,4 +1,4 @@
-package com.ian.web.employee.workexperience;
+package com.ian.web.employee.otherinfoquestion;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +19,7 @@ import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
 import com.ian.web.employee.PdsCountDto;
 import com.ian.web.employee.educationalbg.EducationalBackgroundRepository;
+import com.ian.web.employee.eligibility.CivilServiceEligibility;
 import com.ian.web.employee.eligibility.CivilServiceEligibilityRepository;
 import com.ian.web.employee.familybg.FamilyBgRepository;
 import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
@@ -26,31 +27,32 @@ import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
 import com.ian.web.employee.otherinfo.OtherInfoRepository;
 import com.ian.web.employee.references.EmpReferencesRepository;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
+import com.ian.web.employee.workexperience.WorkExperienceRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
-public class WorkExperienceController {
+public class OtherInfoQuestionController {
     
-    private final WorkExperienceRepository workExperienceRepository;
+    private final OtherInfoQuestionRepository otherInfoQuestionRepository;
     private final EmployeeRepository employeeRepository;
-    
     private final FamilyBgRepository familyBgRepository;
-	private final EducationalBackgroundRepository educationalBackgroundRepository;
+    private final EducationalBackgroundRepository educationalBackgroundRepository;
 	private final CivilServiceEligibilityRepository civilServiceEligibilityRepository;
+	private final WorkExperienceRepository workExperienceRepository;
 	private final VoluntaryWorkRepository voluntaryWorkRepository;
 	private final LearningAndDevelopmentRepository learningAndDevelopmentRepository;
-	private final OtherInfoRepository otherInfoRepository;
-//	private final OtherInfo
 	private final EmpReferencesRepository empReferencesRepository;
 	private final GovermentIssuedIdRepository govermentIssuedIdRepository;
+    private final OtherInfoRepository otherInfoRepository;
 
-	@GetMapping("/employee/work-experience/{employeeId}/{showMode}/{empHashCode}")
-    //@GetMapping({"/profile/work-experience/{employeeId}/{empHashCode}", "/employee/work-experience/{employeeId}/{empHashCode}"})
+    @GetMapping("/employee/other-info-question/{employeeId}/{showMode}/{empHashCode}")
+    //@GetMapping({"/profile/civil-eligibility/{employeeId}/{empHashCode}", "/employee/civil-eligibility/{employeeId}/{empHashCode}"})
 	public String viewEmployee(Model model, @PathVariable long employeeId, @PathVariable String showMode, @PathVariable String empHashCode, HttpServletRequest request) {
 		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
 		UXMessage msg = new UXMessage();
+
 		if(optional.isPresent()) {		
 			
 			Employee employee = optional.orElseGet(() -> new Employee());
@@ -63,7 +65,7 @@ public class WorkExperienceController {
 			pdsDtoCount.setVoluntaryWorkCount(voluntaryWorkRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setLearningDevCount(learningAndDevelopmentRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setOtherInfoCount(otherInfoRepository.findByEmployeeId(employeeId).size());
-			pdsDtoCount.setOtherInfoQuestionsCount(0);
+			pdsDtoCount.setOtherInfoQuestionsCount(otherInfoQuestionRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setReferencesCount(empReferencesRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setGovIdCount(govermentIssuedIdRepository.findByEmployeeId(employeeId).size());
 			
@@ -72,13 +74,13 @@ public class WorkExperienceController {
 			
 			model.addAttribute("employee", employee);
 			
-			List<WorkExperience> workExperienceList = workExperienceRepository.findByEmployeeId(employeeId);
-			model.addAttribute("workExperienceList", workExperienceList);
+			List<OtherInfoQuestion> otherInfoQuestionList = otherInfoQuestionRepository.findByEmployeeId(employee.getId());
+			model.addAttribute("otherInfoQuestionList", otherInfoQuestionList);
 			
-			WorkExperience workExperience = new WorkExperience();
-			workExperience.setEmployee(employee);
-			workExperience.setShowMode(showMode);
-			model.addAttribute("workExperience", workExperience );
+			OtherInfoQuestion otherInfoQuestion = new OtherInfoQuestion();
+            otherInfoQuestion.setEmployee(employee);
+            otherInfoQuestion.setShowMode(showMode);
+			model.addAttribute("otherInfoQuestion", otherInfoQuestion );
 						
 		} else {
 			msg.setCode("EMP-NOT-FOUND");
@@ -86,13 +88,13 @@ public class WorkExperienceController {
 			model.addAttribute("msg", msg);
 		}		
 		
-		return "employee/pds/work-experience";
+		return "employee/pds/other-info-question";
 		
 	}
 	
-	@PostMapping({"/addWorkExperience", "/editWorkExperience"})
+	@PostMapping({"/addOtherInfoQuestion", "/editOtherInfoQuestion"})
 	public String saveFamilyBg(
-			@Valid WorkExperience workExperience
+			@Valid OtherInfoQuestion otherInfoQuestion
 			,Errors errors
 			,final RedirectAttributes redirect
 			,Model model
@@ -101,15 +103,52 @@ public class WorkExperienceController {
 	    	    
 		if (errors.hasErrors()) {
 			model.addAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
-			model.addAttribute("workExperienceList", workExperienceRepository.findByEmployeeId(workExperience.getEmployee().getId()));
-			return "employee/pds/work-experience";
+			model.addAttribute("otherInfoQuestion", otherInfoQuestionRepository.findByEmployeeId(otherInfoQuestion.getEmployee().getId()));
+			return "employee/pds/other-info-question";
 		} 
         	
-		String showMode = workExperience.getShowMode();
-		workExperience = workExperienceRepository.save(workExperience);
+
+		System.out.println("\n\n\n\n\n"+otherInfoQuestion.getQuestionSevenA()+"\n\n\n\n\n\n\n\n");
+		String showMode = otherInfoQuestion.getShowMode();
+		if(!otherInfoQuestion.getQuestionOneThird().equals("NO")){
+			otherInfoQuestion.setQuestionOneThird(otherInfoQuestion.getQuestionOneThird().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionOneFourth().equals("NO")){
+			otherInfoQuestion.setQuestionOneFourth(otherInfoQuestion.getQuestionOneFourth().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionTwoA().equals("NO")){
+			otherInfoQuestion.setQuestionTwoA(otherInfoQuestion.getQuestionTwoA().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionTwoB().equals("NO")){
+			otherInfoQuestion.setQuestionTwoB(otherInfoQuestion.getQuestionTwoB().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionThree().equals("NO")){
+			otherInfoQuestion.setQuestionThree(otherInfoQuestion.getQuestionThree().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionFour().equals("NO")){
+			otherInfoQuestion.setQuestionFour(otherInfoQuestion.getQuestionFour().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionFive().equals("NO")){
+			otherInfoQuestion.setQuestionFive(otherInfoQuestion.getQuestionFive().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionSix().equals("NO")){
+			otherInfoQuestion.setQuestionSix(otherInfoQuestion.getQuestionSix().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionSevenA().equals("NO")){
+			otherInfoQuestion.setQuestionSevenA(otherInfoQuestion.getQuestionSevenA().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionEight().equals("NO")){
+			otherInfoQuestion.setQuestionEight(otherInfoQuestion.getQuestionEight().substring(1));
+		}
+		if(!otherInfoQuestion.getQuestionNine().equals("NO")){
+			otherInfoQuestion.setQuestionNine(otherInfoQuestion.getQuestionNine().substring(1));
+		}
+		
+
+		otherInfoQuestion = otherInfoQuestionRepository.save(otherInfoQuestion);
 
 		redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-		return "redirect:/employee/work-experience/"+workExperience.getEmployee().getId()+"/"+showMode+"/"+workExperience.getEmployee().getEmpHashCode();
+		return "redirect:/employee/other-info-question/"+otherInfoQuestion.getEmployee().getId()+"/"+showMode+"/"+otherInfoQuestion.getEmployee().getEmpHashCode();
 	}
 
 }
