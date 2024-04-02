@@ -35,7 +35,7 @@
 			<div class="page-header">
 				<div class="page-header-content header-elements-md-inline">
 					<div class="page-title d-flex">
-						<h4><span class="font-weight-semibold">My Service Record List</span></h4>
+						<h4><span class="font-weight-semibold">Service Record List</span></h4>
 						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
 					</div>					
 				</div>
@@ -51,7 +51,7 @@
 							<h5 class="modal-title">Service Record Information</h5>
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 						</div>
-						<form th:action="@{/addMyServiceRecord}" method="post" class="form-horizontal" th:object="${serviceRecord}">
+						<form th:action="@{/addServiceRecord}" method="post" class="form-horizontal" th:object="${serviceRecord}">
 							<input type="hidden" th:field="*{id}" name="id" id="id">
 							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
 							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
@@ -152,11 +152,12 @@
 						<!-- Basic datatable -->
 						<div class="card p-3">
 							<div class="card-header header-elements-inline">
-								<h5 class="card-title">My Service Record List</h5>
+								<h5 class="card-title">Service Record List</h5>
 								<div class="header-elements">
 									<div class="list-icons">				                				
 				                		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
-				                		<a th:href="@{'/viewServiceRecordReport/' + ${session.actorObj.id}}" class="btn bg-violet" target="_blank">View Service Record Report</a>
+				                		<a th:href="@{'/viewServiceRecordReport/' + ${employee.id}}" class="btn bg-violet" target="_blank">View Service Record Report</a>
+				                		<a th:href="@{/employee-list}" class="btn bg-green">Back to Employee List</a>
 				                	</div>
 			                	</div>
 							</div>
@@ -224,8 +225,8 @@
 	
 		$(document).ready(function() {
 			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
-			$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
-			$("#myServiceRecordNav").addClass("active");			
+			$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+			$("#employeeListNav").addClass("active");			
 			
 			
 			let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';

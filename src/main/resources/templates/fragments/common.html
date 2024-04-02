@@ -428,7 +428,7 @@
 									class="nav-link" id="myClearanceNav"><i class="icon-user-tie"></i> My Clearance</a>
 								</li>		
 								<li class="nav-item"><a 									
-									th:href="@{'/myServiceRecord/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
+									th:href="@{'/my-service-record/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
 									class="nav-link" id="myServiceRecordNav"><i class="icon-user-tie"></i> My Service Record</a>
 								</li>
 							</ul>
@@ -440,6 +440,7 @@
 							<ul class="nav nav-group-sub" data-submenu-title="Employee Management">
 								<li class="nav-item"><a th:href="@{/employee-list}" class="nav-link" id="employeeListNav"><i class="icon-user-tie"></i> Employee List</a></li>
 								<li class="nav-item"><a th:href="@{/clearance-list}" class="nav-link" id="clearanceListNav"><i class="icon-paste2"></i> Clearance List</a></li>
+								<!--
 								<li class="nav-item nav-item-submenu">
 									<a href="#" class="nav-link"><i class="icon-vcard"></i> Reports</a>
 									<ul class="nav nav-group-sub">
@@ -453,7 +454,8 @@
 											<a th:href="@{/degree-levels}" class="nav-link"><i class="icon-magazine"></i>Clearance List Report</a>
 										</li>
 									</ul>
-								</li>                                                   														
+								</li>            
+								-->                                       														
 							</ul>
 						</li>
 						
@@ -484,6 +486,7 @@
 								<!-- <li class="nav-item"><a th:href="@{/levels}" class="nav-link" id="levelNav"><i class="icon-office"></i>Level</a></li>
 								<li class="nav-item"><a th:href="@{/salary-grades}" class="nav-link" id="salaryGradeNav"><i class="icon-office"></i>Salary Grade</a></li> -->
 								<li class="nav-item"><a th:href="@{/position-titles}" class="nav-link" id="positionTitleNav"><i class="icon-office"></i>Position Title</a></li>
+								<li class="nav-item"><a th:href="@{/clearance=approver-settings}" class="nav-link" id="clearanceApproversNav"><i class="icon-office"></i>Clearance Approvers</a></li>
 							</ul>
 						</li>							
 						</th:block>

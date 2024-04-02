@@ -31,8 +31,44 @@ public class ServiceRecordController {
 	private final ServiceRecordRepository serviceRecordRepository;
 	private final EmployeeStatusRepository employeeStatusRepository;
 	
-	@GetMapping("/myServiceRecord/{employeeId}/{empHashCode}")
+	@GetMapping("/employee-service-record/{employeeId}/{empHashCode}")
 	public String viewEmployeeClearance(Model model, @PathVariable long employeeId, @PathVariable String empHashCode, HttpServletRequest request) {
+		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
+		UXMessage msg = new UXMessage();
+		if(optional.isPresent()) {			
+			
+		} else {
+			msg.setCode("EMP-NOT-FOUND");
+			msg.setMessage("Employee Not Found. You will be redirected to the dashboard.");
+			model.addAttribute("msg", msg);
+		}
+		
+		Employee employee = optional.orElseGet(() -> new Employee());
+		
+		model.addAttribute("employee", employee);
+		
+		ServiceRecord serviceRecord = new ServiceRecord();
+		serviceRecord.setEmployee(employee);
+		
+		model.addAttribute("serviceRecord", serviceRecord);
+		model.addAttribute("employeeStatusList", employeeStatusRepository.findAll());
+		
+		List<ServiceRecord> serviceRecordList = serviceRecordRepository.findByEmployeeId(employeeId);
+		model.addAttribute("serviceRecordList", serviceRecordList);
+		
+		if (request.getServletPath().startsWith("/profile")) {
+			model.addAttribute("showMode", "PROFILE");
+		} else {
+			model.addAttribute("showMode", "HRADMIN");
+		}		
+		
+		
+		return "employee/service-record/employee-service-record";
+		
+	}
+	
+	@GetMapping("/my-service-record/{employeeId}/{empHashCode}")
+	public String viewMyClearance(Model model, @PathVariable long employeeId, @PathVariable String empHashCode, HttpServletRequest request) {
 		Optional<Employee> optional = employeeRepository.findByIdAndEmpHashCode(employeeId, empHashCode);
 		UXMessage msg = new UXMessage();
 		if(optional.isPresent()) {			
@@ -79,7 +115,13 @@ public class ServiceRecordController {
 		if (errors.hasErrors()) {
 			model.addAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
 			model.addAttribute("serviceRecordList", serviceRecordRepository.findByEmployeeId(serviceRecord.getEmployee().getId()));
-			return "employee/service-record/my-service-record";
+			
+			if (request.getServletPath().equalsIgnoreCase("/addMyServiceRecord")) {
+				return "employee/service-record/my-service-record";
+			} else {
+				return "employee/service-record/employee-service-record";
+			}
+			
 		} 
 				
 		
@@ -87,10 +129,10 @@ public class ServiceRecordController {
 		
 		if (request.getServletPath().equalsIgnoreCase("/addMyServiceRecord")) {
 			redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-			return "redirect:/myServiceRecord/"+serviceRecord.getEmployee().getId()+"/"+serviceRecord.getEmployee().getEmpHashCode();
+			return "redirect:/my-service-record/"+serviceRecord.getEmployee().getId()+"/"+serviceRecord.getEmployee().getEmpHashCode();
 		} else {
 			redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));
-			return "redirect:/myServiceRecord/"+serviceRecord.getEmployee().getId()+"/"+serviceRecord.getEmployee().getEmpHashCode();
+			return "redirect:/employee-service-record/"+serviceRecord.getEmployee().getId()+"/"+serviceRecord.getEmployee().getEmpHashCode();
 		}
 	}
 

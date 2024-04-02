@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+	<title>Human Resource Information System</title>
+
+
+</head>
+
+<body>
+
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+
+					
+	<!-- Page content -->
+	<div class="page-content">	
+		
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			<!-- Page header -->
+			<div class="page-header">
+				<div class="page-header-content header-elements-md-inline">
+					<div class="page-title d-flex">
+						<h4><span class="font-weight-semibold">Clearance Approvers</span></h4>
+						<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+					</div>					
+				</div>
+			</div>
+			<!-- /page header -->
+			
+			
+			
+
+			<!-- Content area -->
+			<div class="content pt-0">
+
+				<!-- Dashboard content -->
+				<div class="row">
+					<div class="col-xl-12">
+						<!-- Basic datatable -->
+						<div class="card p-3">
+							<div class="card-header header-elements-inline">
+								<h5 class="card-title">Clearance Approvers</h5>
+								<div class="header-elements">
+									<div class="list-icons">				                				
+				                		<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal_form_vertical">Save Record</button>
+				                	</div>
+			                	</div>
+							</div>
+		
+		
+							
+						</div>
+						<!-- /basic datatable -->					
+					</div>
+				</div>
+				<!-- /dashboard content -->
+
+			</div>
+			<!-- /content area -->
+
+			<!-- Footer -->
+			<div th:replace="fragments/common::footer"></div>
+			<!-- /Footer -->    
+
+		</div>
+		<!-- /main content -->
+
+	</div>
+	<!-- /page content -->
+
+	<script th:inline="javascript">
+
+			
+		$(document).ready(function() {
+			
+			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+			$("#systemSettingsNav").addClass("nav-item-expanded nav-item-open");
+			$("#clearanceApproversNav").addClass("active");			
+			
+			let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+			
+			if(msgCode === 'ERROR'){
+				$('#modal_form_vertical').modal('show');
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+			
+			
+		});
+		
+		$('#table-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false,                
+		});
+		
+		
+        
+	</script>
+</body>
+</html>

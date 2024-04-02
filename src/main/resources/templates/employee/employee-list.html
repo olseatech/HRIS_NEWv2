@@ -633,9 +633,11 @@
 												</a>
 
 												<div class="dropdown-menu dropdown-menu-right">
-													<span class="dropdown-item" th:attr="onclick='showCredentialsModal(\'' + ${employee.id} +  '\', \'' + ${employee.empHashCode} + '\');'" ><i class="icon-user-lock"></i> Update Employee Credentials</span>
 													<a th:href="@{'/employee/' + ${employee.getId()} + '/HRADMIN/' + ${employee.getEmpHashCode()}}" class="dropdown-item"><i class="icon-search4"></i> View Record</a>
-													<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> View PDS Report</a>														
+													<a href="#" class="dropdown-item"><i class="icon-file-pdf"></i> View PDS Report</a>
+													<a th:href="@{'/employee-service-record/' + ${employee.getId()} + '/' + ${employee.getEmpHashCode()}}" class="dropdown-item"><i class="icon-search4"></i> View Service Record</a>
+													<a th:href="@{'/viewServiceRecordReport/' + ${employee.id}}" class="dropdown-item" target="_blank"><i class="icon-file-pdf"></i> View Service Record Report</a>
+													<span class="dropdown-item" th:attr="onclick='showCredentialsModal(\'' + ${employee.id} +  '\', \'' + ${employee.empHashCode} + '\');'" ><i class="icon-user-lock"></i> Update Employee Credentials</span>																											
 												</div>
 											</div>
 										</div>

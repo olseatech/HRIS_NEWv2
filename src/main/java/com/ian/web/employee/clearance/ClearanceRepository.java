@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ClearanceRepository  extends JpaRepository<Clearance, Long> {
+public interface ClearanceRepository extends JpaRepository<Clearance, Long> {
 
 	List<Clearance> findByEmployeeId(long employeeId);
 	List<Clearance> findByStatus(String status);
