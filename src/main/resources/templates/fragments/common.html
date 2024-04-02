@@ -303,7 +303,7 @@
 						</a>
 					</li>										
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a th:href="@{'/employee/other-info-question/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
 							<i th:class="${employee.getPdsCountDto().getOtherInfoQuestionsCount() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
 							 Other Information Questions
 						</a>
@@ -488,7 +488,7 @@
 						</li>							
 						</th:block>
 						<li class="nav-item">
-							<a th:href="@{emrChangePassword}" class="nav-link" id="emrChangePasswordNav">
+							<a th:href="@{'/change-password/'+1}" class="nav-link" id="emrChangePasswordNav">
 								<i class="icon-user-lock"></i>
 								<span>
 									Change Password									
