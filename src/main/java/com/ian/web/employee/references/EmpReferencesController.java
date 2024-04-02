@@ -26,6 +26,7 @@ import com.ian.web.employee.familybg.FamilyBgRepository;
 import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
 import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
 import com.ian.web.employee.otherinfo.OtherInfoRepository;
+import com.ian.web.employee.otherinfoquestion.OtherInfoQuestionRepository;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
 import com.ian.web.employee.workexperience.WorkExperienceRepository;
 
@@ -45,7 +46,7 @@ public class EmpReferencesController {
 	private final VoluntaryWorkRepository voluntaryWorkRepository;
 	private final LearningAndDevelopmentRepository learningAndDevelopmentRepository;
 	private final OtherInfoRepository otherInfoRepository;
-//	private final OtherInfo
+	private final OtherInfoQuestionRepository otherInfoQuestionRepository;
 	private final GovermentIssuedIdRepository govermentIssuedIdRepository;
 
 	@GetMapping("/employee/references/{employeeId}/{showMode}/{empHashCode}")
@@ -66,7 +67,7 @@ public class EmpReferencesController {
 			pdsDtoCount.setVoluntaryWorkCount(voluntaryWorkRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setLearningDevCount(learningAndDevelopmentRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setOtherInfoCount(otherInfoRepository.findByEmployeeId(employeeId).size());
-			pdsDtoCount.setOtherInfoQuestionsCount(0);
+			pdsDtoCount.setOtherInfoQuestionsCount(otherInfoQuestionRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setReferencesCount(empReferencesRepository.findByEmployeeId(employeeId).size());
 			pdsDtoCount.setGovIdCount(govermentIssuedIdRepository.findByEmployeeId(employeeId).size());
 			

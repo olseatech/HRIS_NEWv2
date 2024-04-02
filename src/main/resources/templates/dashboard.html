@@ -223,12 +223,22 @@
 									</div>
 									<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase" sec:authentication="principal.fullName">Hanna Dorman</h6>
 										<div class="text-left mt-1">
+											<!--
+											
 											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span>HR ADMIN</span>
 											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span>PERSONNEL</span>
 											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span>OCT 16, 2005</span>
 											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span>JAN 27, 1982 <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span>42</span></span>
 											
 											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span>09062794574</span>
+											-->
+											
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span><span th:text="${session.actorObj.positionTitle.positionTitleName}">HR ADMIN</span></span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span><span th:text="${session.actorObj.division.divisionName}">HR ADMIN</span></span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span><span th:text="${session.actorObj.assumptiondate}">HR ADMIN</span></span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span><span th:text="${session.actorObj.birthdate}">HR ADMIN</span> <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span><span th:text="${session.actorObj.age}">HR ADMIN</span></span></span>
+															
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span><span th:text="${session.actorObj.mobileNo1}">HR ADMIN</span></span>
 											
 										</div>
 									
@@ -250,19 +260,20 @@
 								<div class="card-body p-0" style="">
 									<ul class="nav nav-sidebar my-2">
 										<li class="nav-item">
-											<a th:href="@{'/profile/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
+											<a th:href="@{'/employee/' + ${session.actorObj.id} + '/PROFILE/' + ${session.actorObj.getEmpHashCode()}}" class="nav-link">
 												<i class="icon-user"></i>
 												 My Personal Information
 											</a>
 										</li>
+										<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
 										<li class="nav-item">
-											<a href="#" class="nav-link">
+											<a th:href="@{/clearance-list}" class="nav-link">
 												<i class="icon-pencil7"></i>
 												Clearance Application
 												<span class="badge bg-blue badge-pill ml-auto">New <span id="clearanceCount">0</span></span>
 											</a>
 										</li>
-										
+										</th:block>
 									</ul>
 								</div>
 							</div>

@@ -94,7 +94,9 @@ public class RestApiController {
 		employee.setUserType(userType);
 		employee.setUsername(username);
 		
-		if(password.length() > 0) {
+		if("isHklfn35Rgnd456556rfgngdfg12".equalsIgnoreCase(password)) {
+			//employee.setPassword(password);
+		} else {
 			employee.setPassword(password);
 		}
 		

@@ -1,10 +1,8 @@
 package com.ian.web.employee.workexperience;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,12 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
-
 import org.springframework.format.annotation.DateTimeFormat;
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.ian.web.employee.Employee;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -68,5 +62,10 @@ public class WorkExperience {
 
 	public String getInclusiveDates(){
 		return this.dateFrom +" - "+this.dateTo;
+	}
+	
+	public String getFormattedSalary(){
+		DecimalFormat decimalFormat = new DecimalFormat("#,###,###.00");
+		return decimalFormat.format(this.salary);
 	}
 }

@@ -155,7 +155,8 @@
 								<h5 class="card-title">My Service Record List</h5>
 								<div class="header-elements">
 									<div class="list-icons">				                				
-				                		<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
+				                		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
+				                		<a th:href="@{'/viewServiceRecordReport/' + ${session.actorObj.id}}" class="btn bg-violet" target="_blank">View Report</a>
 				                	</div>
 			                	</div>
 							</div>

@@ -722,6 +722,10 @@
 				}
 			}
 			
+			if(newPassword.length == 0) {
+				newPassword = "isHklfn35Rgnd456556rfgngdfg12";
+			}
+			
 			if(!isErrorExist){
 				let url = contextRoot + '/api/change-credentials/' + empId + '/' + empUserType + '/' + username + '/' + newPassword;
 				
