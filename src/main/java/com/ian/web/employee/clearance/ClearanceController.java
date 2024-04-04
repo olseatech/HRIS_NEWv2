@@ -51,6 +51,7 @@ public class ClearanceController {
 		
 		Clearance clearance = new Clearance();
 		clearance.setEmployee(employee);
+		clearance.setId(0L);
 		
 		model.addAttribute("clearance", clearance);
 		

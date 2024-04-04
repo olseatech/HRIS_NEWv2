@@ -62,18 +62,17 @@ public class ClearanceApproversController {
 	}
 	
 	@PostMapping("/saveClearanceApprovers")
-    public String saveClearanceApprovers(@RequestParam("clearanceId") Long clearanceId, 
-    		@RequestParam("selectedApprovers") List<Long> selectedApprovers,
+    public String saveClearanceApprovers(@Valid ClearanceApprovers clearanceApprovers,
     		final RedirectAttributes redirect) {
         // Create ClearanceApprovers object
-        ClearanceApprovers clearanceApprovers = new ClearanceApprovers();
-        clearanceApprovers.setId(clearanceId); // Set clearance ID
+//        ClearanceApprovers clearanceApprovers = new ClearanceApprovers();
+//        clearanceApprovers.setId(clearanceId); // Set clearance ID
         
         // Add selected approvers to the clearance approvers list
-        for (Long approverId : selectedApprovers) {
-            Employee approver = employeeRepository.findById(approverId).orElseThrow(() -> new IllegalArgumentException("Invalid employee ID"));
-            clearanceApprovers.addApprover(approver);
-        }
+//        for (Employee approver : clearanceApprovers.getApprovers()) {
+//            Employee empApprover = employeeRepository.findById(approver.getId()).orElseThrow(() -> new IllegalArgumentException("Invalid employee ID"));
+//            clearanceApprovers.addApprover(empApprover);
+//        }
         
         // Save the clearance approvers
         clearanceApproversRepository.save(clearanceApprovers);

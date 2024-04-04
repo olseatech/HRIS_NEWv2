@@ -53,15 +53,89 @@
 					<div class="col-xl-12">
 						<!-- Basic datatable -->
 						<div class="card p-3">
-							<div class="card-header header-elements-inline">
-								<h5 class="card-title">Clearance Approvers</h5>
-								<div class="header-elements">
-									<div class="list-icons">				                				
-				                		<button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#modal_form_vertical">Save Record</button>
-				                	</div>
-			                	</div>
+							<div class="card-header header-elements-inline bg-primary">
+								<h6 class="card-title">Approvers List</h6>
 							</div>
-		
+							<div class="card-body">
+											<form id="employeeForm" th:action="@{/saveClearanceApprovers}" method="post" th:object="${clearanceApprovers}">
+												<input type="hidden" th:field="*{id}" name="id" id="id">
+												<div class="modal-body">
+													
+													<div class="form-group">
+														<div class="row">
+															<div class="col-sm-4">
+																<label for="empId1">Immediate Supervisor</label>
+																<input id="empId1" name="empId1" th:field="*{empId1}" type="text" class="form-control required-field-hrisp" >
+															</div>   
+															<div class="col-sm-4">
+																<label for="empId2">Immediate Supervisor</label>
+																<input id="empId2" name="empId2" th:field="*{empId2}" type="text" class="form-control required-field-hrisp" >
+															</div>
+															<div class="col-sm-4">
+																<label for="empId3">Immediate Supervisor</label>
+																<input id="empId3" name="empId3" th:field="*{empId3}" type="text" class="form-control required-field-hrisp" >
+															</div>               
+											            </div>
+											            <div class="row">
+															<div class="col-sm-4">
+																<label for="empId4">Immediate Supervisor</label>
+																<input id="empId4" name="empId4" th:field="*{empId4}" type="text" class="form-control required-field-hrisp" >
+															</div>   
+															<div class="col-sm-4">
+																<label for="empId5">Immediate Supervisor</label>
+																<input id="empId5" name="empId5" th:field="*{empId5}" type="text" class="form-control required-field-hrisp" >
+															</div>
+															<div class="col-sm-4">
+																<label for="empId6">Immediate Supervisor</label>
+																<input id="empId6" name="empId6" th:field="*{empId6}" type="text" class="form-control required-field-hrisp" >
+															</div>               
+											            </div>
+											            <div class="row">
+															<div class="col-sm-4">
+																<label for="empId7">Immediate Supervisor</label>
+																<input id="empId7" name="empId7" th:field="*{empId7}" type="text" class="form-control required-field-hrisp" >
+															</div>   
+															<div class="col-sm-4">
+																<label for="empId8">Immediate Supervisor</label>
+																<input id="empId8" name="empId8" th:field="*{empId8}" type="text" class="form-control required-field-hrisp" >
+															</div>
+															<div class="col-sm-4">
+																<label for="empId9">Immediate Supervisor</label>
+																<input id="empId9" name="empId9" th:field="*{empId9}" type="text" class="form-control required-field-hrisp" >
+															</div>               
+											            </div>
+											            <div class="row">
+															<div class="col-sm-4">
+																<label for="empId10">Immediate Supervisor</label>
+																<input id="empId10" name="empId10" th:field="*{empId10}" type="text" class="form-control required-field-hrisp" >
+															</div>   
+															<div class="col-sm-4">
+																<label for="empId11">Immediate Supervisor</label>
+																<input id="empId11" name="empId11" th:field="*{empId11}" type="text" class="form-control required-field-hrisp" >
+															</div>
+															<div class="col-sm-4">
+																<label for="empId12">Immediate Supervisor</label>
+																<input id="empId12" name="empId12" th:field="*{empId12}" type="text" class="form-control required-field-hrisp" >
+															</div>               
+											            </div>
+											            <div class="row">
+															<div class="col-sm-4">
+																<label for="empId13">Immediate Supervisor</label>
+																<input id="empId13" name="empId1" th:field="*{empId13}" type="text" class="form-control required-field-hrisp" >
+															</div>   
+															<div class="col-sm-4">
+																<label for="empId14">Immediate Supervisor</label>
+																<input id="empId14" name="empId14" th:field="*{empId14}" type="text" class="form-control required-field-hrisp" >
+															</div>           
+											            </div>
+													</div>
+													
+													<div class="modal-footer">
+														<button type="submit" class="btn bg-primary">Save Approvers</button>
+													</div>
+												</div>
+											</form>
+										</div>
 		
 							
 						</div>

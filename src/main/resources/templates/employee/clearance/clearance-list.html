@@ -183,73 +183,7 @@
 													
 												</tr>
 											</thead>
-											<tbody>							
-												<tr role="row" class="odd">
-														<td class="sorting_1">Ian Alfred Orozco</td>
-														<td class="">Accounting</td>
-														<td class="">Business Services Sales Representative</td>
-														<td class="">19 Apr 2023</td>
-														<td class=""><span class="badge badge-primary">New</span></td>
-														<td class="text-center">
-															<div class="list-icons">
-																<div class="dropdown">
-																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
-																		<i class="icon-menu9"></i>
-																	</a>
-						
-																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
-																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
-																	</div>
-																</div>
-															</div>
-														</td>
-												</tr>
-												<tr role="row" class="even">
-														<td class="sorting_1">Ethan Espina</td>
-														<td class="">Engineering</td>
-														<td class="">Civil Engineer</td>
-														<td class="">19 March 2023</td>
-														<td class=""><span class="badge badge-primary">New</span></td>
-														<td class="text-center">
-															<div class="list-icons">
-																<div class="dropdown">
-																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
-																		<i class="icon-menu9"></i>
-																	</a>
-						
-																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
-																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
-																	</div>
-																</div>
-															</div>
-														</td>
-												</tr>
-												<tr role="row" class="odd">
-														<td class="sorting_1">Nicole Ayala</td>
-														<td class="">Legal</td>
-														<td class="">Legal Officer IV</td>
-														<td class="">19 Jan 2023</td>
-														<td class=""><span class="badge badge-primary">New</span></td>
-														<td class="text-center">
-															<div class="list-icons">
-																<div class="dropdown">
-																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
-																		<i class="icon-menu9"></i>
-																	</a>
-						
-																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
-																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
-																	</div>
-																</div>
-															</div>
-														</td>
-												</tr>
+											<tbody>
 											</tbody>
 										</table>
 										
@@ -385,7 +319,8 @@
 						
 									<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
 										<a href="#" class="dropdown-item" onclick="approvedClearance(${clearance.id})"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-										<a href="#" class="dropdown-item" onclick="disApprovedClearance()"><i class="icon-close2"></i> DisApprove Clearance</a>										
+										<a href="#" class="dropdown-item" onclick="disApprovedClearance()"><i class="icon-close2"></i> DisApprove Clearance</a>	
+										<a href="/hrisp/viewClearanceForm/${clearance.id}" class="dropdown-item" target="_blank"><i class="icon-file-pdf"></i> View Clearance Form</a>									
 									</div>
 								</div>
 							</div>

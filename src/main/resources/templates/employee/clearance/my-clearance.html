@@ -229,6 +229,17 @@
 				});
 			}
 			
+			document.getElementById("purpose").addEventListener("change", function() {
+			  var otherInput = document.getElementById("otherPurpose");
+			  var selectValue = this.value;
+			  
+			  if (selectValue === "OTHERS MODE OF SEPARATION") {
+			    otherInput.removeAttribute("readonly");
+			  } else {
+			    otherInput.setAttribute("readonly", true);
+			  }
+			});
+			
 			
 		});
 		
