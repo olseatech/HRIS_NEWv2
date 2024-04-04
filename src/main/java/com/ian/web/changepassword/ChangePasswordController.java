@@ -1,5 +1,7 @@
 package com.ian.web.changepassword;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
@@ -34,39 +36,34 @@ public class ChangePasswordController {
         model.addAttribute("employee", employee);
 
         ChangePassword changePassword = new ChangePassword();
-        changePassword.setEmployee(employee);
         model.addAttribute("changePassword", changePassword);
-        System.out.println(changePassword.getEmployee().getFullName());
         return "/changepassword/change-password";
     }
 
-    @PostMapping("/save-change-password")
+    @PostMapping("/save-change-password/{employeeId}")
     public String savePassword(
         @Valid ChangePassword changePassword
+        ,@PathVariable("employeeId") long id
         ,Errors errors
 		,final RedirectAttributes redirect
 		,Model model
 		,HttpServletRequest request
         ){
-        Employee employee = changePassword.getEmployee();
+        Employee employee = employeeRepository.findById((long)id).get();
         if (errors.hasErrors()) {
-			model.addAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
-			model.addAttribute("changePassword", changePassword);
-			return "redirect:/change-password/"+employee.getId();
+            redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Please check items marked in red."));
+            model.addAttribute("changePassword", changePassword);
+            return "redirect:/change-password/"+id;
 		} 
-        if(changePassword.getOldPassword().equals(employee.getPassword())){
-            if(!changePassword.getConfirmPassword().equals(changePassword.getNewPassword())){
-                model.addAttribute("msg", new UXMessage("ERROR", "Mismatch confirm password and new password."));
-                model.addAttribute("changePassword", changePassword);
-                return "redirect:/change-password/"+employee.getId();
-            }
+
+        if(changePassword.getConfirmPassword().equals(changePassword.getNewPassword()) && employee.getPassword().equals(changePassword.getOldPassword())){
             employee.setPassword(changePassword.getNewPassword());
             employeeRepository.save(employee);
+            redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully saved."));
         }else{
-            model.addAttribute("msg", new UXMessage("ERROR", "Invalid old password."));
             model.addAttribute("changePassword", changePassword);
-            return "employee/pds/other-info-question";
+            redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Invalid password."));
         }
-        return "redirect:/change-password/"+employee.getId();
+        return "redirect:/change-password/"+id;
     }
 }

@@ -335,9 +335,11 @@
 										<div class="card-header header-elements-inline">
 											<h5 class="card-title">Other Information Question</h5>
 											<div class="header-elements">
-												<div class="list-icons">				                				
-									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
-									           	</div>
+												<div class="list-icons">
+													<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical" th:disabled="${employee.getPdsCountDto().getOtherInfoQuestionsCount() > 0}">
+														Add Record
+													</button>
+												</div>
 											</div>
 										</div>
 					
@@ -385,8 +387,8 @@
 			                                                >View Record</button>
 														</td>														
 														
-														<td th:text="${question.getQuestionOneFourth().equals('NO')?'NO':'YES'}"></td>
 														<td th:text="${question.getQuestionOneThird().equals('NO')?'NO':'YES'}"></td>
+														<td th:text="${question.getQuestionOneFourth().equals('NO')?'NO':'YES'}"></td>
 														<td th:text="${question.getQuestionEight().equals('NO')?'NO':'YES'}"></td>
 														<td th:text="${question.getQuestionNine().equals('NO')?'NO':'YES'}"></td>
 													</tr>

@@ -107,8 +107,6 @@ public class OtherInfoQuestionController {
 			return "employee/pds/other-info-question";
 		} 
         	
-
-		System.out.println("\n\n\n\n\n"+otherInfoQuestion.getQuestionSevenA()+"\n\n\n\n\n\n\n\n");
 		String showMode = otherInfoQuestion.getShowMode();
 		if(!otherInfoQuestion.getQuestionOneThird().equals("NO")){
 			otherInfoQuestion.setQuestionOneThird(otherInfoQuestion.getQuestionOneThird().substring(1));
@@ -137,9 +135,9 @@ public class OtherInfoQuestionController {
 		if(!otherInfoQuestion.getQuestionSevenA().equals("NO")){
 			otherInfoQuestion.setQuestionSevenA(otherInfoQuestion.getQuestionSevenA().substring(1));
 		}
-		if(!otherInfoQuestion.getQuestionEight().equals("NO")){
-			otherInfoQuestion.setQuestionEight(otherInfoQuestion.getQuestionEight().substring(1));
-		}
+		// if(!otherInfoQuestion.getQuestionEight().equals("NO")){
+		// 	otherInfoQuestion.setQuestionEight(otherInfoQuestion.getQuestionEight().substring(1));
+		// }
 		if(!otherInfoQuestion.getQuestionNine().equals("NO")){
 			otherInfoQuestion.setQuestionNine(otherInfoQuestion.getQuestionNine().substring(1));
 		}

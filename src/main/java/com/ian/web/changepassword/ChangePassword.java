@@ -18,5 +18,4 @@ public class ChangePassword {
     private String newPassword;
     @NotBlank(message = " is mandatory.")
     private String confirmPassword;
-    private Employee employee;
 }
