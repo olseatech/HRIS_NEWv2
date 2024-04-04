@@ -85,7 +85,13 @@
 			
 										<div class="card">
 											<div class="card-header header-elements-inline">
-												<h5 class="card-title">New Clearance Application List</h5>
+												<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
+													<h5 class="card-title">New Clearance Application List</h5>
+												</th:block>
+												<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_EMPLOYEE'}">
+													<h5 class="card-title">My Clearance Application List</h5>
+												</th:block>
+												
 												<div class="header-elements">
 													<div class="list-icons">
 								                		<a class="list-icons-item" data-action="collapse"></a>
@@ -94,9 +100,14 @@
 								                	</div>
 							                	</div>
 											</div>
-
+											
 											<div class="card-body">
-												List of all new clearance applications.
+												<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
+													List of all new clearance applications.
+												</th:block>
+												<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_EMPLOYEE'}">
+													My clearance applications.
+												</th:block>
 											</div>
 
 					<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
@@ -119,72 +130,7 @@
 												</tr>
 											</thead>
 											<tbody>							
-												<tr role="row" class="odd">
-														<td class="sorting_1">Ian Alfred Orozco</td>
-														<td class="">Accounting</td>
-														<td class="">Business Services Sales Representative</td>
-														<td class="">19 Apr 2023</td>
-														<td class=""><span class="badge badge-primary">New</span></td>
-														<td class="text-center">
-															<div class="list-icons">
-																<div class="dropdown">
-																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
-																		<i class="icon-menu9"></i>
-																	</a>
-						
-																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
-																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
-																	</div>
-																</div>
-															</div>
-														</td>
-												</tr>
-												<tr role="row" class="even">
-														<td class="sorting_1">Ethan Espina</td>
-														<td class="">Engineering</td>
-														<td class="">Civil Engineer</td>
-														<td class="">19 March 2023</td>
-														<td class=""><span class="badge badge-primary">New</span></td>
-														<td class="text-center">
-															<div class="list-icons">
-																<div class="dropdown">
-																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
-																		<i class="icon-menu9"></i>
-																	</a>
-						
-																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
-																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
-																	</div>
-																</div>
-															</div>
-														</td>
-												</tr>
-												<tr role="row" class="odd">
-														<td class="sorting_1">Nicole Ayala</td>
-														<td class="">Legal</td>
-														<td class="">Legal Officer IV</td>
-														<td class="">19 Jan 2023</td>
-														<td class=""><span class="badge badge-primary">New</span></td>
-														<td class="text-center">
-															<div class="list-icons">
-																<div class="dropdown">
-																	<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
-																		<i class="icon-menu9"></i>
-																	</a>
-						
-																	<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
-																		<a href="#" class="dropdown-item"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-close2"></i> DisApprove Clearance</a>
-																		<a href="#" class="dropdown-item"><i class="icon-search4"></i> View Application</a>
-																	</div>
-																</div>
-															</div>
-														</td>
-												</tr>
+												
 											</tbody>
 										</table>
 										
@@ -305,6 +251,13 @@
 	<script th:inline="javascript">		
 		
 		let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+		/*<![CDATA[*/
+	    var userType = /*[[${session.actorObj.userType}]]*/ null;
+	    /*]]>*/
+	    
+	    /*<![CDATA[*/
+	    var loggedInId = /*[[${session.actorObj.id}]]*/ null;
+	    /*]]>*/
 	
 	    $(document).ready(function() {			
 			
@@ -335,6 +288,14 @@
 			function getNewClerances(){
 				
 				let clearanceUrl = contextRoot + '/clearance-list/SUBMITTED';
+				
+				if(userType === 'ROLE_ADMIN'){
+					
+				} else {
+					clearanceUrl = contextRoot + '/clearance-list-employee/' + loggedInId;
+				}
+				
+				
 				
 				$.ajax({
 					type: "GET",

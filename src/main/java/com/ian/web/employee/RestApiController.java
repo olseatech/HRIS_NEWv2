@@ -62,6 +62,12 @@ public class RestApiController {
         return ResponseEntity.ok(list);
     }
 	
+	@GetMapping("/clearance-list-employee/{employeeId}")
+    public ResponseEntity<List<Clearance>> getClearanceListByEmployee(@PathVariable Long employeeId) {
+		List<Clearance> list = clearanceRepository.findByEmployeeId(employeeId);	
+        return ResponseEntity.ok(list);
+    }
+	
 	@GetMapping("/pdslink/count")
     public ResponseEntity<PdsCountDto> getPdsCountDto() {
 		List<FamilyBg> familyBgList = familyBgRepository.findByEmployeeId(0);
