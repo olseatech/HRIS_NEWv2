@@ -134,8 +134,8 @@
 							</div>
 
 							<div class="modal-footer">
-								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-								<button type="submit" class="btn bg-primary">Save Info</button>
+								<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
+								<button id="submitBtn" type="submit" class="btn bg-primary">Save Info</button>
 							</div>
 						</form>
 					</div>
@@ -178,10 +178,7 @@
 												<tr>
 													<th width="150px;">&nbsp;</th>
 													<th>Position Title</th>
-													<th>Department</th>
-													<th>Office</th>		
-													<th>Date</th>
-													<th>Supervisor</th>		
+													<th>Period</th>	
 													<th>Salary</th>			
 													<th>Appointment Status</th>	
 													<th>Gov't Service</th>											
@@ -213,10 +210,7 @@
 														</td>														
 														
 														<td th:text="${experience.getPositionTitle()}"></td>
-														<td th:text="${experience.getDepartment()}"></td>
-														<td th:text="${experience.getOfficeName()}"></td>
 														<td th:text="${experience.getInclusiveDates()}"></td>
-														<td th:text="${experience.getImmediateSupervisor()}"></td>
 														<td th:text="${experience.getFormattedSalary()}"></td>
 														<td th:text="${experience.getAppointmentStatus()}"></td>
 														<td th:text="${experience.getGovtOffice()}"></td>
@@ -313,61 +307,10 @@
 	            $("#modal_form_vertical").find("#stepNo").val(stepNo);
 	            $("#modal_form_vertical").find("#appointmentStatus").val(appointmentStatus);
 	            $("#modal_form_vertical").find("#govtOffice").val(govtOffice);
-	            $("#modal_form_vertical").find("#remarks").val(remarks);
-	            
-	            if(relationship === 'SPOUSE'){
-					$(".spouseField").show();
-					
-					$("#gender").val("FEMALE");
-					$("#gender").prop("disabled", true);					
-					
-				} else if(relationship === 'MOTHER'){
-					
-					$("#gender").val("FEMALE");
-					$("#gender").prop("disabled", true);	
-					$(".spouseField").hide();
-				} else if(relationship === 'FATHER'){
-					
-					$("#gender").val("MALE");
-					$("#gender").prop("disabled", true);	
-					$(".spouseField").hide();
-				} else {					
-					
-					$("#gender").prop("disabled", false);	
-					$(".spouseField").hide();
-				}
+	            $("#modal_form_vertical").find("#remarks").val(remarks);	            
 	            
 	        });
-			
-			$("#relationship").change(function() {
-		        var selectedValue = $(this).val();
-		        //console("Selected value: " + selectedValue);
-		        
-		        if(selectedValue === 'SPOUSE'){
-					$(".spouseField").show();
 					
-					$("#gender").val("FEMALE");
-					$("#gender").prop("disabled", true);					
-					
-				} else if(selectedValue === 'MOTHER'){
-					
-					$("#gender").val("FEMALE");
-					$("#gender").prop("disabled", true);	
-					$(".spouseField").hide();
-				} else if(selectedValue === 'FATHER'){
-					
-					$("#gender").val("MALE");
-					$("#gender").prop("disabled", true);	
-					$(".spouseField").hide();
-				} else {					
-					
-					$("#gender").prop("disabled", false);	
-					$(".spouseField").hide();
-				}
-		        
-		        // You can perform any action based on the selected value here
-		    });
-			
 			// start update profile photo
 			const fileSelect = document.getElementById('fileSelect');
 		    const profilePhoto = document.getElementById('profilePhoto');
@@ -434,9 +377,15 @@
 				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
 				$("#myPersonalInfoNav").addClass("active");
 				
-				//$("#empNo").prop("readOnly", true);
-				//$("#assumptiondate").prop("readOnly", true);
-				//$("#plantillaNo").prop("readOnly", true);
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				$('textarea').prop('readonly', true);
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
 				
 				$("#showMode").val("PROFILE");
 			} else {

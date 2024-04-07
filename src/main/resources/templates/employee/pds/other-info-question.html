@@ -30,286 +30,7 @@
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
 						</div>
 
-						<form id="employeeForm" method="post" th:action="@{/addOtherInfoQuestion}" th:object="${otherInfoQuestion}" style="overflow: auto; height: 800px;">
-							<input type="hidden" th:field="*{id}" name="id" id="id">
-							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
-							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
-							<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
-							<div class="modal-body">
-								
-								<div class="form-group">
-
-									<div class="row mt-3">
-                                        <p>1.) Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau of office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed</p>
-										<div class="col-sm-4">
-											<label for="questionOneThird">a. within the third degree?</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThird')}" th:errors="*{questionOneThird}"></span>
-
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionOneThird" id="questionOneThirdYes" value="" onchange="disabledDetails('questionOneThird')"/>&nbsp;YES
-											</p>
-											
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" value="NO" onclick="disableDetails('questionOneThird')">&nbsp;NO
-											</p>
-											
-                                            <div class="col-sm-12">
-                                                <label for="questionOneThirdInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThird')}" th:errors="*{questionOneThird}"></span>
-                                                <input type="text" th:field="*{questionOneThird}" name="questionOneThirdInput" id="questionOneThirdInput" class="form-control" disabled>
-                                            </div>
-										</div>
-										<div class="col-sm-4 ">
-											<label for="questionOneFourth">b. within the fourth degree?</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
-											
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionOneFourth" value="" id="questionOneFourthYes" onclick="disabledDetails('questionOneFourth')">&nbsp;YES
-											</p>
-                                            <p class=" d-flex align-items-center">
-												<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" value="NO" onclick="disableDetails('questionOneFourth')">&nbsp;NO
-											</p>
-                                            <div class="col-sm-12">
-                                                <label for="questionOneThird">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
-                                                <input type="text" name="questionOneThirdInput" id="questionOneFourthInput" th:field="*{questionOneFourth}" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-
-									<div class="row mt-3">
-                                        <p>2.) </p>
-										<div class="col-sm-4">
-											<label for="questionTwoA">a. Have you ever been found guilty of any administrative offense?</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoA')}" th:errors="*{questionTwoA}"></span>
-
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionTwoA" id="questionTwoAYes" value="" onchange="disabledDetails('questionTwoA')"/>&nbsp;YES
-											</p>
-											
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionTwoA" id="questionTwoANo" th:field="*{questionTwoA}" value="NO" onclick="disableDetails('questionTwoA')">&nbsp;NO
-											</p>
-											
-                                            <div class="col-sm-12">
-                                                <label for="questionTwoAInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoA')}" th:errors="*{questionTwoA}"></span>
-                                                <input type="text" th:field="*{questionTwoA}" name="questionTwoAInput" id="questionTwoAInput" class="form-control" disabled>
-                                            </div>
-										</div>
-
-										<div class="col-sm-4">
-											<label for="questionTwoB">b. Have you ever been criminally charged before any court?</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
-
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionTwoB" id="questionTwoBYes" value="" onchange="disabledDetails('questionTwoB')"/>&nbsp;YES
-											</p>
-											
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionTwoB" id="questionTwoBNo" th:field="*{questionTwoB}" value="NO" onclick="disableDetails('questionTwoB')">&nbsp;NO
-											</p>
-											
-                                            <div class="col-sm-12">
-                                                <label for="questionTwoBInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
-                                                <input type="text" th:field="*{questionTwoB}" name="questionTwoBInput" id="questionTwoBInput" class="form-control" disabled>
-                                            </div>
-										</div>
-
-									</div>
-
-									<div class=" row my-3 d-none date-details">
-										<div class="col-sm-4 ">
-												<label for="questionTwoBMonth">Month</label>
-												<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBMonth')}" th:errors="*{questionTwoBMonth}"></span>
-												<select class="form-control" th:field="*{questionTwoBMonth}">
-													<option value=null disabled></option>
-													<option value="JAN">JAN</option>
-													<option value="FEB">FEB</option>
-													<option value="MAR">MAR</option>
-													<option value="APR">APR</option>
-													<option value="MAY">MAY</option>
-													<option value="JUN">JUN</option>
-													<option value="JUL">JUL</option>
-													<option value="AUG">AUG</option>
-													<option value="SEPT">SEPT</option>
-													<option value="OCT">OCT</option>
-													<option value="NOV">NOV</option>
-													<option value="DEC">DEC</option>
-												</select>
-										</div>
-										<div class="col-sm-4 ">
-											<label for="questionTwoBDay">Day</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBDay')}" th:errors="*{questionTwoBDay}"></span>
-											<input type="number" name="questionTwoBDay" id="questionTwoBDay" class="form-control">
-										</div>
-										<div class="col-sm-4 ">
-											<label for="questionTwoBYear">Year</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBYear')}" th:errors="*{questionTwoBYear}"></span>
-											<input type="text" name="questionTwoBYear" id="questionTwoBYear" class="form-control">
-										</div>
-										<div class="col-sm-12 ">
-											<label for="questionTwoBStatusCase">Status Case</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBStatusCase')}" th:errors="*{questionTwoBStatusCase}"></span>
-											<input type="text" name="questionTwoBStatusCase" id="questionTwoBStatusCase" class="form-control">
-										</div>
-									</div>
-									
-									<div class="row mt-3">
-                                        <p>3.) Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionThree" id="questionThreeYes" value="" onchange="disabledDetails('questionThree')"/>&nbsp;YES
-											</p>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionThree" id="questionThreeNo" th:field="*{questionThree}" value="NO" onclick="disableDetails('questionThree')">&nbsp;NO
-											</p>
-                                            <div class="col-sm-12">
-                                                <label for="questionThreeInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
-                                                <input type="text" th:field="*{questionThree}" name="questionThreeInput" id="questionThreeInput" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-
-									<div class="row mt-3">
-                                        <p>4.) Have you ever been seperated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term,finished contract or phased out (abolition) in the public or private sector?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionFour" id="questionFourYes" value="" onchange="disabledDetails('questionFour')"/>&nbsp;YES
-											</p>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionFour" id="questionFourNo" th:field="*{questionFour}" value="NO" onclick="disableDetails('questionFour')">&nbsp;NO
-											</p>
-                                            <div class="col-sm-12">
-                                                <label for="questionFourInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
-                                                <input type="text" name="questionFourInput" th:field="*{questionFour}" id="questionFourInput" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-
-									<div class="row mt-3">
-                                        <p>5.) Have you ever been a candidate in national or local election held within the last year (except Barangay Election)?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionFive" id="questionFiveYes" value="" onchange="disabledDetails('questionFive')"/>&nbsp;YES
-											</p>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionFive" id="questionFiveNo" th:field="*{questionFive}" value="NO" onclick="disableDetails('questionFive')">&nbsp;NO
-											</p>
-                                            <div class="col-sm-12">
-                                                <label for="questionFiveInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
-                                                <input type="text" th:field="*{questionFive}" name="questionFiveInput" id="questionFiveInput" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-
-									<div class="row mt-3">
-                                        <p>6.) Have you resigned from the government service during the three (3) month period before the last election to promote/actively campaign for a national or local candidate?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionSix"id="questionSixYes" value="" onchange="disabledDetails('questionSix')"/>&nbsp;YES
-											</p>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionSix" id="questionSixNo" th:field="*{questionSix}" value="NO" onclick="disableDetails('questionSix')">&nbsp;NO
-											</p>
-                                            <div class="col-sm-12">
-                                                <label for="questionSixInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
-                                                <input type="text" th:field="*{questionSix}" name="questionSixInput" id="questionSixInput" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-
-									<div class="row mt-3">
-                                        <p>7.) Have you acquired the status of immigrant or permanent resident of another country?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionSevenA" id="questionSevenAYes" value="" onchange="disabledDetails('questionSevenA')"/>&nbsp;YES
-											</p>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionSevenA" id="questionSevenANo" th:field="*{questionSevenA}" value="NO" onclick="disableDetails('questionSevenA')">&nbsp;NO
-											</p>
-                                            <div class="col-sm-12">
-                                                <label for="questionSevenAInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
-                                                <input type="text" th:field="*{questionSevenA}" name="questionSevenAInput" id="questionSevenAInput" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-									
-									<div class="row mt-3">
-                                        <p>8.) Are you a person with disability?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEight')}" th:errors="*{questionEight}"></span>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionEight" id="questionEightYes" value="" onchange="disabledDetails('questionEight')"/>&nbsp;YES
-											</p>
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionEight" id="questionEightNo" th:field="*{questionEight}" value="NO" onclick="disableDetails('questionEight')">&nbsp;NO
-											</p>
-										</div>
-									</div>
-									<div class="row my-3 d-none disability-details">
-										<div class="col-sm-6">
-											<label for="questionEightType">If YES, please specify Type</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightType')}" th:errors="*{questionEightType}"></span>
-											<input type="text" name="questionEightType" placeholder="N/A" id="questionEightType" class="form-control">
-										</div>
-										<div class="col-sm-6">
-											<label for="questionEightId">If YES, please specify ID No</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightId')}" th:errors="*{questionEightId}"></span>
-											<input type="text" name="questionEightId" placeholder="N/A" id="questionEightId" class="form-control">
-										</div>
-										<div class="col-sm-6">
-											<label for="questionEightValidityDate">Validity Date</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightValidityDate')}" th:errors="*{questionEightValidityDate}"></span>
-											<input type="date" name="questionEightValidityDate" placeholder="N/A" id="questionEightValidityDate" class="form-control">
-										</div>
-										<div class="col-sm-6">
-											<label for="questionEightAttachment">Person With Disability Attachment</label>
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightAttachment')}" th:errors="*{questionEightAttachment}"></span>
-											<input type="file" name="questionEightAttachment" placeholder="N/A" id="questionEightAttachment" class="form-control">
-										</div>
-									</div>
-									
-									<div class="row mt-3">
-                                        <p>9.) Are you a solo parent?</p>
-										<div class="col-sm-12">
-											<span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
-
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionNine" id="questionNineYes" value="" onchange="disabledDetails('questionNine')"/>&nbsp;YES
-											</p>
-											
-											<p class=" d-flex align-items-center">
-												<input type="radio" name="questionNine" id="questionNineNo" th:field="*{questionNine}" value="NO" onclick="disableDetails('questionNine')">&nbsp;NO
-											</p>
-											
-                                            <div class="col-sm-12">
-                                                <label for="questionNineInput">If YES, give details:</label>
-                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
-                                                <input type="text" th:field="*{questionNine}" name="questionNineInput" id="questionNineInput" class="form-control" disabled>
-                                            </div>
-										</div>
-									</div>
-
-								</div>
-							</div>
-
-							<div class="modal-footer">
-								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-								<button type="submit" class="btn bg-primary">Save Info</button>
-							</div>
-						</form>
+						
 					</div>
 				</div>
 			</div>
@@ -332,70 +53,297 @@
 									
 									
 									<div class="card">
+										
 										<div class="card-header header-elements-inline">
-											<h5 class="card-title">Other Information Question</h5>
-											<div class="header-elements">
-												<div class="list-icons">
-													<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical" th:disabled="${employee.getPdsCountDto().getOtherInfoQuestionsCount() > 0}">
-														Add Record
-													</button>
-												</div>
-											</div>
+											<h5 class="card-title">Other Info Questions</h5>											
 										</div>
-					
+										
 										<div class="card-body">
-											List of All Other Information Question. Type to search desired other information question.
-										</div>
+											<form id="employeeForm" method="post" th:action="@{/addOtherInfoQuestion}" th:object="${otherInfoQuestion}" style="overflow: auto; height: 800px;">
+												<input type="hidden" th:field="*{id}" name="id" id="id">
+												<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
+												<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
+												<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
+												<div class="modal-body">
+													
+													<div class="form-group">
 					
-										<table class="table table-bordered table-hover datatable-highlight">
-											<thead>
-												<tr>
-													<th width="150px;">&nbsp;</th>
-													<th>Within the third degree?</th>
-													<th>Within the fourth degree?</th>
-													<th>Are you a person with disability?</th>
-													<th>Are you a solo parent?</th>							
-												</tr>
-											</thead>
-											<tbody>
-												<th:block th:each="question: ${otherInfoQuestionList}">
-													<tr>
+														<div class="row mt-3">
+					                                        <p>1.) Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau of office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed</p>
+															<div class="col-sm-4">
+																<label for="questionOneThird">a. within the third degree?</label>
+																					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'Option 1'}" value="YES" onchange="disabledDetails('questionOneThird')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'Option 1'}" value="NO"  onclick="disableDetails('questionOneThird')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionOneThirdInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThird')}" th:errors="*{questionOneThird}"></span>
+					                                                <input type="text" th:field="*{questionOneThird}" name="questionOneThirdInput" id="questionOneThirdInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+															<div class="col-sm-4 ">
+																<label for="questionOneFourth">b. within the fourth degree?</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneFourth" value="" id="questionOneFourthYes" onclick="disabledDetails('questionOneFourth')">&nbsp;YES
+																</p>
+					                                            <p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" value="NO" onclick="disableDetails('questionOneFourth')">&nbsp;NO
+																</p>
+					                                            <div class="col-sm-12">
+					                                                <label for="questionOneThird">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
+					                                                <input type="text" name="questionOneThirdInput" id="questionOneFourthInput" th:field="*{questionOneFourth}" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>2.) </p>
+															<div class="col-sm-4">
+																<label for="questionTwoA">a. Have you ever been found guilty of any administrative offense?</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoA')}" th:errors="*{questionTwoA}"></span>
+					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoA" id="questionTwoAYes" value="" onchange="disabledDetails('questionTwoA')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoA" id="questionTwoANo" th:field="*{questionTwoA}" value="NO" onclick="disableDetails('questionTwoA')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionTwoAInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoA')}" th:errors="*{questionTwoA}"></span>
+					                                                <input type="text" th:field="*{questionTwoA}" name="questionTwoAInput" id="questionTwoAInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+					
+															<div class="col-sm-4">
+																<label for="questionTwoB">b. Have you ever been criminally charged before any court?</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
+					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoB" id="questionTwoBYes" value="" onchange="disabledDetails('questionTwoB')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoB" id="questionTwoBNo" th:field="*{questionTwoB}" value="NO" onclick="disableDetails('questionTwoB')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionTwoBInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
+					                                                <input type="text" th:field="*{questionTwoB}" name="questionTwoBInput" id="questionTwoBInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+					
+														</div>
+					
+														<div class=" row my-3 d-none date-details">
+															<div class="col-sm-4 ">
+																	<label for="questionTwoBMonth">Month</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBMonth')}" th:errors="*{questionTwoBMonth}"></span>
+																	<select class="form-control" th:field="*{questionTwoBMonth}">
+																		<option value=null disabled></option>
+																		<option value="JAN">JAN</option>
+																		<option value="FEB">FEB</option>
+																		<option value="MAR">MAR</option>
+																		<option value="APR">APR</option>
+																		<option value="MAY">MAY</option>
+																		<option value="JUN">JUN</option>
+																		<option value="JUL">JUL</option>
+																		<option value="AUG">AUG</option>
+																		<option value="SEPT">SEPT</option>
+																		<option value="OCT">OCT</option>
+																		<option value="NOV">NOV</option>
+																		<option value="DEC">DEC</option>
+																	</select>
+															</div>
+															<div class="col-sm-4 ">
+																<label for="questionTwoBDay">Day</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBDay')}" th:errors="*{questionTwoBDay}"></span>
+																<input type="number" name="questionTwoBDay" id="questionTwoBDay" class="form-control">
+															</div>
+															<div class="col-sm-4 ">
+																<label for="questionTwoBYear">Year</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBYear')}" th:errors="*{questionTwoBYear}"></span>
+																<input type="text" name="questionTwoBYear" id="questionTwoBYear" class="form-control">
+															</div>
+															<div class="col-sm-12 ">
+																<label for="questionTwoBStatusCase">Status Case</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBStatusCase')}" th:errors="*{questionTwoBStatusCase}"></span>
+																<input type="text" name="questionTwoBStatusCase" id="questionTwoBStatusCase" class="form-control">
+															</div>
+														</div>
 														
-														<td class="text-center">
-															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
-															th:data-row-questionOneThird="${question.getQuestionOneThird()}"
-															th:data-row-questionOneFourth="${question.getQuestionOneFourth()}"
-															th:data-row-questionTwoA="${question.getQuestionTwoA()}"
-															th:data-row-questionTwoB="${question.getQuestionTwoB()}"
-															th:data-row-questionTwoBMonth="${question.getQuestionTwoBMonth()}"
-															th:data-row-questionTwoBDay="${question.getQuestionTwoBDay()}"
-															th:data-row-questionTwoBYear="${question.getQuestionTwoBYear()}"
-															th:data-row-questionTwoBStatusCase="${question.getQuestionTwoBStatusCase()}"
-															th:data-row-questionThree="${question.getQuestionThree()}"
-															th:data-row-questionFour="${question.getQuestionFour()}"
-															th:data-row-questionFive="${question.getQuestionFive()}"
-															th:data-row-questionSix="${question.getQuestionSix()}"
-															th:data-row-questionSevenA="${question.getQuestionSevenA()}"
-															th:data-row-questionEight="${question.getQuestionEight()}"
-															th:data-row-questionEightType="${question.getQuestionEightType()}"
-															th:data-row-questionEightId="${question.getQuestionEightId()}"
-															th:data-row-questionEightValidityDate="${question.getQuestionEightValidityDate()}"
-															th:data-row-questionEightAttachment="${question.getQuestionEightAttachment()}"
-															th:data-row-questionNine="${question.getQuestionNine()}"
-															th:data-row-id="${question.getId()}"
-															data-toggle="modal" data-target="#modal_form_vertical"
-			                                                >View Record</button>
-														</td>														
+														<div class="row mt-3">
+					                                        <p>3.) Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionThree" id="questionThreeYes" value="" onchange="disabledDetails('questionThree')"/>&nbsp;YES
+																</p>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionThree" id="questionThreeNo" th:field="*{questionThree}" value="NO" onclick="disableDetails('questionThree')">&nbsp;NO
+																</p>
+					                                            <div class="col-sm-12">
+					                                                <label for="questionThreeInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
+					                                                <input type="text" th:field="*{questionThree}" name="questionThreeInput" id="questionThreeInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>4.) Have you ever been seperated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term,finished contract or phased out (abolition) in the public or private sector?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFour" id="questionFourYes" value="" onchange="disabledDetails('questionFour')"/>&nbsp;YES
+																</p>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFour" id="questionFourNo" th:field="*{questionFour}" value="NO" onclick="disableDetails('questionFour')">&nbsp;NO
+																</p>
+					                                            <div class="col-sm-12">
+					                                                <label for="questionFourInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
+					                                                <input type="text" name="questionFourInput" th:field="*{questionFour}" id="questionFourInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>5.) Have you ever been a candidate in national or local election held within the last year (except Barangay Election)?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFive" id="questionFiveYes" value="" onchange="disabledDetails('questionFive')"/>&nbsp;YES
+																</p>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFive" id="questionFiveNo" th:field="*{questionFive}" value="NO" onclick="disableDetails('questionFive')">&nbsp;NO
+																</p>
+					                                            <div class="col-sm-12">
+					                                                <label for="questionFiveInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
+					                                                <input type="text" th:field="*{questionFive}" name="questionFiveInput" id="questionFiveInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>6.) Have you resigned from the government service during the three (3) month period before the last election to promote/actively campaign for a national or local candidate?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSix"id="questionSixYes" value="" onchange="disabledDetails('questionSix')"/>&nbsp;YES
+																</p>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSix" id="questionSixNo" th:field="*{questionSix}" value="NO" onclick="disableDetails('questionSix')">&nbsp;NO
+																</p>
+					                                            <div class="col-sm-12">
+					                                                <label for="questionSixInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
+					                                                <input type="text" th:field="*{questionSix}" name="questionSixInput" id="questionSixInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>7.) Have you acquired the status of immigrant or permanent resident of another country?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSevenA" id="questionSevenAYes" value="" onchange="disabledDetails('questionSevenA')"/>&nbsp;YES
+																</p>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSevenA" id="questionSevenANo" th:field="*{questionSevenA}" value="NO" onclick="disableDetails('questionSevenA')">&nbsp;NO
+																</p>
+					                                            <div class="col-sm-12">
+					                                                <label for="questionSevenAInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
+					                                                <input type="text" th:field="*{questionSevenA}" name="questionSevenAInput" id="questionSevenAInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
 														
-														<td th:text="${question.getQuestionOneThird().equals('NO')?'NO':'YES'}"></td>
-														<td th:text="${question.getQuestionOneFourth().equals('NO')?'NO':'YES'}"></td>
-														<td th:text="${question.getQuestionEight().equals('NO')?'NO':'YES'}"></td>
-														<td th:text="${question.getQuestionNine().equals('NO')?'NO':'YES'}"></td>
-													</tr>
-												</th:block>		
-											</tbody>
-										</table>
+														<div class="row mt-3">
+					                                        <p>8.) Are you a person with disability?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEight')}" th:errors="*{questionEight}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionEight" id="questionEightYes" value="" onchange="disabledDetails('questionEight')"/>&nbsp;YES
+																</p>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionEight" id="questionEightNo" th:field="*{questionEight}" value="NO" onclick="disableDetails('questionEight')">&nbsp;NO
+																</p>
+															</div>
+														</div>
+														<div class="row my-3 d-none disability-details">
+															<div class="col-sm-6">
+																<label for="questionEightType">If YES, please specify Type</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightType')}" th:errors="*{questionEightType}"></span>
+																<input type="text" name="questionEightType" placeholder="N/A" id="questionEightType" class="form-control">
+															</div>
+															<div class="col-sm-6">
+																<label for="questionEightId">If YES, please specify ID No</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightId')}" th:errors="*{questionEightId}"></span>
+																<input type="text" name="questionEightId" placeholder="N/A" id="questionEightId" class="form-control">
+															</div>
+															<div class="col-sm-6">
+																<label for="questionEightValidityDate">Validity Date</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightValidityDate')}" th:errors="*{questionEightValidityDate}"></span>
+																<input type="date" name="questionEightValidityDate" placeholder="N/A" id="questionEightValidityDate" class="form-control">
+															</div>
+															<div class="col-sm-6">
+																<label for="questionEightAttachment">Person With Disability Attachment</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightAttachment')}" th:errors="*{questionEightAttachment}"></span>
+																<input type="file" name="questionEightAttachment" placeholder="N/A" id="questionEightAttachment" class="form-control">
+															</div>
+														</div>
+														
+														<div class="row mt-3">
+					                                        <p>9.) Are you a solo parent?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
+					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionNine" id="questionNineYes" value="" onchange="disabledDetails('questionNine')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionNine" id="questionNineNo" th:field="*{questionNine}" value="NO" onclick="disableDetails('questionNine')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionNineInput">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
+					                                                <input type="text" th:field="*{questionNine}" name="questionNineInput" id="questionNineInput" class="form-control" disabled>
+					                                            </div>
+															</div>
+														</div>
+					
+													</div>
+												</div>
+					
+												<div class="modal-footer">
+													<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+													<button type="submit" class="btn bg-primary">Save Info</button>
+												</div>
+											</form>
+										</div>
+										
+												
+										
 									</div>
+									<!-- end card -->
 									
 									
 											

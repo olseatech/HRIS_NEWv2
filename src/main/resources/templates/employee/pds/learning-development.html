@@ -95,8 +95,8 @@
 							</div>
 
 							<div class="modal-footer">
-								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-								<button type="submit" class="btn bg-primary">Save Info</button>
+								<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
+								<button id="submitBtn" type="submit" class="btn bg-primary">Save Info</button>
 							</div>
 						</form>
 					</div>
@@ -235,9 +235,15 @@
 				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
 				$("#myPersonalInfoNav").addClass("active");
 				
-				//$("#empNo").prop("readOnly", true);
-				//$("#assumptiondate").prop("readOnly", true);
-				//$("#plantillaNo").prop("readOnly", true);
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				$('textarea').prop('readonly', true);
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
 				
 				$("#showMode").val("PROFILE");
 			} else {
@@ -294,30 +300,7 @@
 			$("#modal_form_vertical").find("#providers").val(providers);
 		});
 
-
-		$(document).on("click", ".cancelConsultation", function(){
-
-			swal({
-			  title: "Confirmation?",
-			  text: "Are you sure you want to cancel the appointment?",
-			  icon: "info",
-			  buttons: ["Yes", "No"],
-			  dangerMode: false,
-			})
-			.then((willDelete) => {
-			  if (willDelete) {
-				  //No Response
-				  console.log("will delete no");
-
-			  } else {
-			  	 console.log("will delete yes");
-				 var id = $(this).attr('data-row-id');
-				 $("#cancelConsultationForm").find("#consultationId").val(id);
-				 $("#cancelConsultationForm").submit();
-			  }
-			});
-
-		});
+		
 
 	</script>
 

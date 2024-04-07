@@ -168,8 +168,8 @@
 								</div>
 
 								<div class="modal-footer">
-									<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-									<button type="submit" class="btn bg-primary">Save Info</button>
+									<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
+									<button id="submitBtn" type="submit" class="btn bg-primary">Save Info</button>
 								</div>
 							</form>
 						</div>
@@ -477,6 +477,17 @@
 				//$("#empNo").prop("readOnly", true);
 				//$("#assumptiondate").prop("readOnly", true);
 				//$("#plantillaNo").prop("readOnly", true);
+				
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
+				
 				
 				$("#showMode").val("PROFILE");
 			} else {

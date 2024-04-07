@@ -75,9 +75,18 @@ public class OtherInfoQuestionController {
 			model.addAttribute("employee", employee);
 			
 			List<OtherInfoQuestion> otherInfoQuestionList = otherInfoQuestionRepository.findByEmployeeId(employee.getId());
-			model.addAttribute("otherInfoQuestionList", otherInfoQuestionList);
 			
-			OtherInfoQuestion otherInfoQuestion = new OtherInfoQuestion();
+			OtherInfoQuestion otherInfoQuestion;
+
+			// Check if the list contains any elements
+			if (!otherInfoQuestionList.isEmpty()) {
+			    // If the list is not empty, get the first record
+			    otherInfoQuestion = otherInfoQuestionList.get(0);
+			} else {
+			    // If the list is empty, create a new OtherInfoQuestion object
+			    otherInfoQuestion = new OtherInfoQuestion();
+			}
+			
             otherInfoQuestion.setEmployee(employee);
             otherInfoQuestion.setShowMode(showMode);
 			model.addAttribute("otherInfoQuestion", otherInfoQuestion );

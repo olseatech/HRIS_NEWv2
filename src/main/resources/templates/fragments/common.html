@@ -209,7 +209,7 @@
 								
 						<img id="photoPreview" class="img-fluid rounded-circle card-img-top" th:src="|@{*{profilePhoto == null || profilePhoto == '' ? '/images/avatar.png' : profilePhoto}}|" width="150" height="150" alt="">
 										
-						<div class="card-img-actions-overlay card-img rounded-circle">
+						<div class="card-img-actions-overlay card-img rounded-circle" id="cameraArea">
 							<button id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
 								<i class="icon-camera"></i>
 							</button>											
@@ -220,11 +220,11 @@
 					    <input type="file" name="profilePhoto" id="profilePhoto" accept="image/*" class="inputfile" />
 					    <input type="hidden" name="employeeId" th:value="${employee.id}">
 					    <div style="text-align: center;">
-						    <button type="submit" class="btn btn-primary" style="padding: 10px 40px;">Update Photo</button>
+						    <button id="updatePhotoBtn" type="submit" class="btn btn-primary" style="padding: 10px 40px;">Update Photo</button>
 					    </div>
 				</form>
 				
-				<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase mt-3" th:text="${employee.fullName}">Hanna Dorman</h6>
+				<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase mt-2" th:text="${employee.fullName}">Hanna Dorman</h6>
 				<div class="text-left mt-1">
 					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span><span th:text="${employee.positionTitle.positionTitleName}">HR ADMIN</span></span>
 					<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span><span th:text="${employee.division.divisionName}">HR ADMIN</span></span>
@@ -255,7 +255,7 @@
 			<div class="card-body p-0">
 				<ul class="nav nav-sidebar my-2">
 					<li class="nav-item">
-						<a th:href="@{'/employee/' + ${employee.id} + '/' + ${employee.id} + '/' + ${employee.showMode} + ${employee.getEmpHashCode()}}" class="nav-link">
+						<a th:href="@{'/employee/' + ${employee.id} + '/' + ${employee.showMode} + '/' + ${employee.getEmpHashCode()}}" class="nav-link">
 							<i class="icon-checkmark3 text-success"></i>
 							 Personal Information
 						</a>
@@ -492,7 +492,9 @@
 								<!-- <li class="nav-item"><a th:href="@{/levels}" class="nav-link" id="levelNav"><i class="icon-office"></i>Level</a></li>
 								<li class="nav-item"><a th:href="@{/salary-grades}" class="nav-link" id="salaryGradeNav"><i class="icon-office"></i>Salary Grade</a></li> -->
 								<li class="nav-item"><a th:href="@{/position-titles}" class="nav-link" id="positionTitleNav"><i class="icon-office"></i>Position Title</a></li>
+								<!--
 								<li class="nav-item"><a th:href="@{/clearance=approver-settings}" class="nav-link" id="clearanceApproversNav"><i class="icon-stamp"></i>Clearance Approvers</a></li>
+								-->
 							</ul>
 						</li>							
 						</th:block>

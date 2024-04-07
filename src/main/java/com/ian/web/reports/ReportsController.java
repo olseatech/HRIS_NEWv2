@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.SequenceInputStream;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -31,17 +32,23 @@ import com.ian.web.employee.clearance.ClearanceApproversRepository;
 import com.ian.web.employee.clearance.ClearanceRepository;
 import com.ian.web.employee.educationalbg.EducationalBackground;
 import com.ian.web.employee.educationalbg.EducationalBackgroundRepository;
+import com.ian.web.employee.eligibility.CivilServiceEligibility;
 import com.ian.web.employee.eligibility.CivilServiceEligibilityRepository;
 import com.ian.web.employee.familybg.FamilyBg;
 import com.ian.web.employee.familybg.FamilyBgRepository;
+import com.ian.web.employee.govermentid.GovermentIssuedId;
 import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
 import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
+import com.ian.web.employee.otherinfo.OtherInfo;
 import com.ian.web.employee.otherinfo.OtherInfoRepository;
+import com.ian.web.employee.otherinfoquestion.OtherInfoQuestion;
+import com.ian.web.employee.references.EmpReferences;
 import com.ian.web.employee.references.EmpReferencesRepository;
 import com.ian.web.employee.servicerecord.ServiceRecord;
 import com.ian.web.employee.servicerecord.ServiceRecordReportDto;
 import com.ian.web.employee.servicerecord.ServiceRecordRepository;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
+import com.ian.web.employee.workexperience.WorkExperience;
 import com.ian.web.employee.workexperience.WorkExperienceRepository;
 import com.ian.web.systemsettings.division.DivisionRepository;
 import com.ian.web.systemsettings.employee_status.EmployeeStatusRepository;
@@ -57,6 +64,8 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
+
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -110,9 +119,17 @@ public class ReportsController {
 		
 		response.setContentType("application/pdf");
 
-		InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS1.jasper");
+		InputStream pdsFullStream = Thread.currentThread().getContextClassLoader().getResourceAsStream("jasper/reports/PDSFULL.jasper");
+		InputStream pds1Stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS1.jasper");
+		InputStream pds2Stream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS2.jasper");
 		
-		if(reportStream == null){
+		JasperReport pdsFullReport = (JasperReport) JRLoader.loadObject(pdsFullStream);
+		JasperReport pds1Report = (JasperReport) JRLoader.loadObject(pds1Stream);
+		JasperReport pds2Report = (JasperReport) JRLoader.loadObject(pds2Stream);
+		
+		
+		
+		if(pds1Stream == null){
 			System.out.println("reportStream is NULL");
 		}
 		
@@ -120,9 +137,45 @@ public class ReportsController {
 			System.out.println("response.getOutputStream() is NULL");
 		}
 		
+		if (pds1Stream == null || pds2Stream == null) {
+            System.err.println("One or both reports could not be loaded.");
+            return;
+        }
+		
 		Map<String, Object> map = populateMapReport1(employee, fbList, eduList);
 		
-		JasperRunManager.runReportToPdfStream(reportStream,	response.getOutputStream(), map, beanColDataSource);
+		File file2 = ResourceUtils.getFile("classpath:static/images/PDS2.png");
+		String bgImg2 = file2.getAbsolutePath();
+		map.put("V.CSE_Career_Service_RA_1080_1", "test");
+		map.put("FormBg2", bgImg2);
+		
+		map.put("PDS1", pds1Report);
+		map.put("PDS2", pds2Report);
+		
+		SequenceInputStream mergedStream = new SequenceInputStream(pds1Stream, pds2Stream);
+		
+		JasperPrint pdsFullPrint = JasperFillManager.fillReport(pdsFullReport, map, new JREmptyDataSource());
+		
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        JasperExportManager.exportReportToPdfStream(pdsFullPrint, outputStream);
+        
+        // Write the PDF stream to output or do whatever you need with it
+        response.getOutputStream().write(outputStream.toByteArray());
+        
+//		JasperPrint pds1Print = JasperFillManager.fillReport(pds1Report, map, beanColDataSource);
+//		JasperPrint pds2Print = JasperFillManager.fillReport(pds2Report, map, beanColDataSource);
+//		
+//		JasperPrint mergedPrint = new JasperPrint();
+//        mergedPrint.addPage(pds1Print.getPages().get(0));
+//        mergedPrint.addPage(pds2Print.getPages().get(0));
+//        
+//        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+//        JasperExportManager.exportReportToPdfStream(mergedPrint, outputStream);
+//        
+//        response.getOutputStream().write(outputStream.toByteArray());
+		
+//		JasperRunManager.runReportToPdfStream(pds2Stream,	response.getOutputStream(), map, beanColDataSource);
+//		JasperRunManager.runReportToPdfStream(pds2Stream,	response.getOutputStream(), map, beanColDataSource);
 	}
 	
 	private Map<String, Object> populateMapReport1(Employee emp, List<FamilyBg> fbList, List<EducationalBackground> eduList) throws FileNotFoundException {
@@ -448,6 +501,14 @@ public class ReportsController {
 		
 		
 		return map;
+	}
+	
+	private Map<String, Object> populateMapReport2(List<CivilServiceEligibility> csList, List<WorkExperience> workExList, List<OtherInfo> otherInfoList) throws FileNotFoundException {
+		return null;
+	}
+	
+	private Map<String, Object> populateMapReport3(OtherInfoQuestion otherInfoQuestion, List<EmpReferences> referencesList, List<GovermentIssuedId> govIdList) throws FileNotFoundException {
+		return null;
 	}
 	
 	@GetMapping("/viewEmployeeListReport")

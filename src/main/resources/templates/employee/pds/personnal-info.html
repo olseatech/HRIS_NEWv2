@@ -523,8 +523,8 @@
 												</div>
 
 												<div class="modal-footer">
-													<button type="button" class="btn bg-violet" onclick="returnToList();">Return to Employee List</button>
-													<button type="submit" class="btn bg-primary">Save Info</button>
+													<button id="returnBtn" type="button" class="btn bg-violet" onclick="returnToList();">Return to Employee List</button>
+													<button id="submitBtn" type="submit" class="btn bg-primary">Save Info</button>
 												</div>
 											</form>
 										</div>
@@ -646,19 +646,28 @@
 				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
 				$("#myPersonalInfoNav").addClass("active");
 				
-				$("#empNo").prop("readOnly", true);
-				$("#assumptiondate").prop("readOnly", true);
-				$("#plantillaNo").prop("readOnly", true);
-				$("#firstName").prop("readOnly", true);
-				$("#lastName").prop("readOnly", true);
-				$("#middleName").prop("readOnly", true);
+				//$("#empNo").prop("readOnly", true);
+				//$("#assumptiondate").prop("readOnly", true);
+				//$("#plantillaNo").prop("readOnly", true);
+				//$("#firstName").prop("readOnly", true);
+				//$("#lastName").prop("readOnly", true);
+				//$("#middleName").prop("readOnly", true);
 				
-				$("#empNo").removeClass("required-field-hrisp");
-				$("#assumptiondate").removeClass("required-field-hrisp");
-				$("#plantillaNo").removeClass("required-field-hrisp");
-				$("#firstName").removeClass("required-field-hrisp");
-				$("#lastName").removeClass("required-field-hrisp");
-				$("#middleName").removeClass("required-field-hrisp");
+				//$("#empNo").removeClass("required-field-hrisp");
+				//$("#assumptiondate").removeClass("required-field-hrisp");
+				//$("#plantillaNo").removeClass("required-field-hrisp");
+				//$("#firstName").removeClass("required-field-hrisp");
+				//$("#lastName").removeClass("required-field-hrisp");
+				//$("#middleName").removeClass("required-field-hrisp");
+				
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
+				
+				$('#returnBtn').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
 				
 				$("#showMode").val("PROFILE");
 			} else {
