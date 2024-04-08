@@ -70,7 +70,7 @@
 					
 														<div class="row mt-3">
 					                                        <p>1.) Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau of office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed</p>
-															<div class="col-sm-4">
+															<div class="col-sm-6">
 																<label for="questionOneThird">a. within the third degree?</label>
 																					
 																<p class=" d-flex align-items-center">
@@ -87,7 +87,7 @@
 					                                                <input type="text" th:field="*{questionOneThird}" name="questionOneThirdInput" id="questionOneThirdInput" class="form-control" disabled>
 					                                            </div>
 															</div>
-															<div class="col-sm-4 ">
+															<div class="col-sm-6 ">
 																<label for="questionOneFourth">b. within the fourth degree?</label>
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
 																
