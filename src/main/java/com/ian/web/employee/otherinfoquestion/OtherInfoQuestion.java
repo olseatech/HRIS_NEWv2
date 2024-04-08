@@ -28,22 +28,31 @@ public class OtherInfoQuestion {
     
     private String questionOneThird;
     private String questionOneThirdIfYes;
+
     private String questionOneFourth;
+    private String questionOneFourthIfYes;
     
     private String questionTwoA;
+    private String questionTwoAIfYes;
 
     private String questionTwoB;
+    private String questionTwoBIfYes;
     private String questionTwoBMonth;
     private String questionTwoBDay;
     private String questionTwoBYear;
     private String questionTwoBStatusCase;
 
     private String questionThree;
+    private String questionThreeIfYes;
     private String questionFour;
+    private String questionFourIfYes;
     private String questionFive;
+    private String questionFiveIfYes;
     private String questionSix;
+    private String questionSixIfYes;
 
     private String questionSevenA;
+    private String questionSevenAIfYes;
 
     private String questionEight;
     private String questionEightType;
@@ -52,6 +61,7 @@ public class OtherInfoQuestion {
     private String questionEightAttachment;
 
     private String questionNine;
+    private String questionNineIfYes;
 
     @Transient
 	private String showMode;

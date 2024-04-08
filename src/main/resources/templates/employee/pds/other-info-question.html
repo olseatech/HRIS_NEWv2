@@ -74,81 +74,82 @@
 																<label for="questionOneThird">a. within the third degree?</label>
 																					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'YES'}" value="YES" onchange="disabledDetails('questionOneThird')"/>&nbsp;YES
+																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'YES'}" value="YES" onclick="disableDetails('questionOneThird')"/>&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'NO'}" value="NO"  onclick="disableDetails('questionOneThird')">&nbsp;NO
+																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'NO'}" value="NO"  onclick="disabledDetails('questionOneThird')">&nbsp;NO
 																</p>
 																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionOneThirdInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThird')}" th:errors="*{questionOneThird}"></span>
-					                                                <input type="text" th:field="*{questionOneThirdIfYes}" name="questionOneThirdIfYes" id="questionOneThirdIfYes" class="form-control" disabled>
+					                                                <label for="questionOneThirdIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThirdIfYes')}" th:errors="*{questionOneThirdIfYes}"></span>
+					                                                <input type="text" th:field="*{questionOneThirdIfYes}"  id="questionOneThirdIfYes" name="questionOneThirdIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionOneThird == 'NO'}">
 					                                            </div>
 															</div>
-															<div class="col-sm-6 ">
+															<div class="col-sm-6">
 																<label for="questionOneFourth">b. within the fourth degree?</label>
-																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
+																					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthYes" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'YES'}" value="YES" onclick="disableDetails('questionOneFourth')"/>&nbsp;YES
+																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneFourth" value="" id="questionOneFourthYes" onclick="disabledDetails('questionOneFourth')">&nbsp;YES
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'NO'}" value="NO"  onclick="disabledDetails('questionOneFourth')">&nbsp;NO
 																</p>
-					                                            <p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" value="NO" onclick="disableDetails('questionOneFourth')">&nbsp;NO
-																</p>
+																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionOneThird">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourth')}" th:errors="*{questionOneFourth}"></span>
-					                                                <input type="text" name="questionOneThirdInput" id="questionOneFourthInput" th:field="*{questionOneFourth}" class="form-control" disabled>
+					                                                <label for="questionOneFourthIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourthIfYes')}" th:errors="*{questionOneFourthIfYes}"></span>
+					                                                <input type="text" th:field="*{questionOneFourthIfYes}" id="questionOneFourthIfYes" name="questionOneFourthIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionOneFourth == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
-					
+														
 														<div class="row mt-3">
-					                                        <p>2.) </p>
-															<div class="col-sm-4">
+					                                        <p class="col-sm-12">2.) </p>
+															<div class="col-sm-6">
 																<label for="questionTwoA">a. Have you ever been found guilty of any administrative offense?</label>
-																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoA')}" th:errors="*{questionTwoA}"></span>
-					
+																					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionTwoA" id="questionTwoAYes" value="" onchange="disabledDetails('questionTwoA')"/>&nbsp;YES
+																	<input type="radio" name="questionTwoA" id="questionTwoAYes" th:field="*{questionTwoA}" th:checked="${otherInfoQuestion.questionTwoA == 'YES'}" value="YES" onclick="disableDetails('questionTwoA')"/>&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionTwoA" id="questionTwoANo" th:field="*{questionTwoA}" value="NO" onclick="disableDetails('questionTwoA')">&nbsp;NO
+																	<input type="radio" name="questionTwoA" id="questionTwoANo" th:field="*{questionTwoA}" th:checked="${otherInfoQuestion.questionTwoA == 'NO'}" value="NO"  onclick="disabledDetails('questionTwoA')">&nbsp;NO
 																</p>
 																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionTwoAInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoA')}" th:errors="*{questionTwoA}"></span>
-					                                                <input type="text" th:field="*{questionTwoA}" name="questionTwoAInput" id="questionTwoAInput" class="form-control" disabled>
+					                                                <label for="questionTwoAIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoAIfYes')}" th:errors="*{questionTwoAIfYes}"></span>
+					                                                <input type="text" th:field="*{questionTwoAIfYes}"  id="questionTwoAIfYes" name="questionTwoAIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionTwoA == 'NO'}">
 					                                            </div>
 															</div>
 					
-															<div class="col-sm-4">
+															<div class="col-sm-6">
 																<label for="questionTwoB">b. Have you ever been criminally charged before any court?</label>
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
 					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionTwoB" id="questionTwoBYes" value="" onchange="disabledDetails('questionTwoB')"/>&nbsp;YES
+																	<input type="radio" name="questionTwoB" id="questionTwoBYes" th:field="*{questionTwoB}" th:checked="${otherInfoQuestion.questionTwoB == 'YES'}" value="YES" onclick="disableDetails('questionTwoB')"/>&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionTwoB" id="questionTwoBNo" th:field="*{questionTwoB}" value="NO" onclick="disableDetails('questionTwoB')">&nbsp;NO
+																	<input type="radio" name="questionTwoB" id="questionTwoBNo" th:field="*{questionTwoB}" th:checked="${otherInfoQuestion.questionTwoB == 'NO'}" value="NO"  onclick="disabledDetails('questionTwoB')">&nbsp;NO
 																</p>
 																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionTwoBInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
-					                                                <input type="text" th:field="*{questionTwoB}" name="questionTwoBInput" id="questionTwoBInput" class="form-control" disabled>
+					                                                <label for="questionTwoBIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBIfYes')}" th:errors="*{questionTwoBIfYes}"></span>
+					                                                <input type="text" th:field="*{questionTwoBIfYes}"  id="questionTwoBIfYes" name="questionTwoBIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionTwoB == 'NO'}">
 					                                            </div>
 															</div>
 					
 														</div>
 					
-														<div class=" row my-3 d-none date-details">
-															<div class="col-sm-4 ">
+														<div th:class="'row my-3 date-details justify-content-end' + (${otherInfoQuestion.questionTwoB == 'NO' ? ' d-none' : ''})">
+															<div class="col-sm-6 d-flex flex-wrap">
+																<div class="col-sm-4 ">
 																	<label for="questionTwoBMonth">Month</label>
 																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBMonth')}" th:errors="*{questionTwoBMonth}"></span>
 																	<select class="form-control" th:field="*{questionTwoBMonth}">
@@ -166,22 +167,24 @@
 																		<option value="NOV">NOV</option>
 																		<option value="DEC">DEC</option>
 																	</select>
+																</div>
+																<div class="col-sm-4 ">
+																	<label for="questionTwoBDay">Day</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBDay')}" th:errors="*{questionTwoBDay}"></span>
+																	<input type="number" th:field="*{questionTwoBDay}" name="questionTwoBDay" id="questionTwoBDay" class="form-control">
+																</div>
+																<div class="col-sm-4 ">
+																	<label for="questionTwoBYear">Year</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBYear')}" th:errors="*{questionTwoBYear}"></span>
+																	<input type="text" th:field="*{questionTwoBYear}" name="questionTwoBYear" id="questionTwoBYear" class="form-control">
+																</div>
+																<div class="col-sm-12 ">
+																	<label for="questionTwoBStatusCase">Status Case</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBStatusCase')}" th:errors="*{questionTwoBStatusCase}"></span>
+																	<input type="text" th:field="*{questionTwoBStatusCase}" name="questionTwoBStatusCase" id="questionTwoBStatusCase" class="form-control">
+																</div>
 															</div>
-															<div class="col-sm-4 ">
-																<label for="questionTwoBDay">Day</label>
-																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBDay')}" th:errors="*{questionTwoBDay}"></span>
-																<input type="number" name="questionTwoBDay" id="questionTwoBDay" class="form-control">
-															</div>
-															<div class="col-sm-4 ">
-																<label for="questionTwoBYear">Year</label>
-																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBYear')}" th:errors="*{questionTwoBYear}"></span>
-																<input type="text" name="questionTwoBYear" id="questionTwoBYear" class="form-control">
-															</div>
-															<div class="col-sm-12 ">
-																<label for="questionTwoBStatusCase">Status Case</label>
-																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBStatusCase')}" th:errors="*{questionTwoBStatusCase}"></span>
-																<input type="text" name="questionTwoBStatusCase" id="questionTwoBStatusCase" class="form-control">
-															</div>
+															
 														</div>
 														
 														<div class="row mt-3">
@@ -189,15 +192,17 @@
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionThree" id="questionThreeYes" value="" onchange="disabledDetails('questionThree')"/>&nbsp;YES
+																	<input type="radio" name="questionThree" id="questionThreeYes" th:field="*{questionThree}" th:checked="${otherInfoQuestion.questionThree == 'YES'}" value="YES" onclick="disableDetails('questionThree')"/>&nbsp;YES
 																</p>
+																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionThree" id="questionThreeNo" th:field="*{questionThree}" value="NO" onclick="disableDetails('questionThree')">&nbsp;NO
+																	<input type="radio" name="questionThree" id="questionThreeNo" th:field="*{questionThree}" th:checked="${otherInfoQuestion.questionThree == 'NO'}" value="NO"  onclick="disabledDetails('questionThree')">&nbsp;NO
 																</p>
+																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionThreeInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
-					                                                <input type="text" th:field="*{questionThree}" name="questionThreeInput" id="questionThreeInput" class="form-control" disabled>
+					                                                <label for="questionThreeIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionThreeIfYes')}" th:errors="*{questionThreeIfYes}"></span>
+					                                                <input type="text" th:field="*{questionThreeIfYes}"  id="questionThreeIfYes" name="questionThreeIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionThree == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
@@ -207,15 +212,17 @@
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionFour" id="questionFourYes" value="" onchange="disabledDetails('questionFour')"/>&nbsp;YES
+																	<input type="radio" name="questionFour" id="questionFourYes" th:field="*{questionFour}" th:checked="${otherInfoQuestion.questionFour == 'YES'}" value="YES" onclick="disableDetails('questionFour')"/>&nbsp;YES
 																</p>
+																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionFour" id="questionFourNo" th:field="*{questionFour}" value="NO" onclick="disableDetails('questionFour')">&nbsp;NO
+																	<input type="radio" name="questionFour" id="questionFourNo" th:field="*{questionFour}" th:checked="${otherInfoQuestion.questionFour == 'NO'}" value="NO"  onclick="disabledDetails('questionFour')">&nbsp;NO
 																</p>
+																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionFourInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
-					                                                <input type="text" name="questionFourInput" th:field="*{questionFour}" id="questionFourInput" class="form-control" disabled>
+					                                                <label for="questionFourIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFourIfYes')}" th:errors="*{questionFourIfYes}"></span>
+					                                                <input type="text" th:field="*{questionFourIfYes}"  id="questionFourIfYes" name="questionFourIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionFour == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
@@ -225,15 +232,17 @@
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionFive" id="questionFiveYes" value="" onchange="disabledDetails('questionFive')"/>&nbsp;YES
+																	<input type="radio" name="questionFive" id="questionFiveYes" th:field="*{questionFive}" th:checked="${otherInfoQuestion.questionFive == 'YES'}" value="YES" onclick="disableDetails('questionFive')"/>&nbsp;YES
 																</p>
+																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionFive" id="questionFiveNo" th:field="*{questionFive}" value="NO" onclick="disableDetails('questionFive')">&nbsp;NO
+																	<input type="radio" name="questionFive" id="questionFiveNo" th:field="*{questionFive}" th:checked="${otherInfoQuestion.questionFive == 'NO'}" value="NO"  onclick="disabledDetails('questionFive')">&nbsp;NO
 																</p>
+																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionFiveInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
-					                                                <input type="text" th:field="*{questionFive}" name="questionFiveInput" id="questionFiveInput" class="form-control" disabled>
+					                                                <label for="questionFiveIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFiveIfYes')}" th:errors="*{questionFiveIfYes}"></span>
+					                                                <input type="text" th:field="*{questionFiveIfYes}"  id="questionFiveIfYes" name="questionFiveIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionFive == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
@@ -243,15 +252,17 @@
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionSix"id="questionSixYes" value="" onchange="disabledDetails('questionSix')"/>&nbsp;YES
+																	<input type="radio" name="questionSix" id="questionSixYes" th:field="*{questionSix}" th:checked="${otherInfoQuestion.questionSix == 'YES'}" value="YES" onclick="disableDetails('questionSix')"/>&nbsp;YES
 																</p>
+																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionSix" id="questionSixNo" th:field="*{questionSix}" value="NO" onclick="disableDetails('questionSix')">&nbsp;NO
+																	<input type="radio" name="questionSix" id="questionSixNo" th:field="*{questionSix}" th:checked="${otherInfoQuestion.questionSix == 'NO'}" value="NO"  onclick="disabledDetails('questionSix')">&nbsp;NO
 																</p>
+																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionSixInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
-					                                                <input type="text" th:field="*{questionSix}" name="questionSixInput" id="questionSixInput" class="form-control" disabled>
+					                                                <label for="questionSixIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSixIfYes')}" th:errors="*{questionSixIfYes}"></span>
+					                                                <input type="text" th:field="*{questionSixIfYes}"  id="questionSixIfYes" name="questionSixIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionSix == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
@@ -261,15 +272,17 @@
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionSevenA" id="questionSevenAYes" value="" onchange="disabledDetails('questionSevenA')"/>&nbsp;YES
+																	<input type="radio" name="questionSevenA" id="questionSevenAYes" th:field="*{questionSevenA}" th:checked="${otherInfoQuestion.questionSevenA == 'YES'}" value="YES" onclick="disableDetails('questionSevenA')"/>&nbsp;YES
 																</p>
+																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionSevenA" id="questionSevenANo" th:field="*{questionSevenA}" value="NO" onclick="disableDetails('questionSevenA')">&nbsp;NO
+																	<input type="radio" name="questionSevenA" id="questionSevenANo" th:field="*{questionSevenA}" th:checked="${otherInfoQuestion.questionSevenA == 'NO'}" value="NO"  onclick="disabledDetails('questionSevenA')">&nbsp;NO
 																</p>
+																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionSevenAInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
-					                                                <input type="text" th:field="*{questionSevenA}" name="questionSevenAInput" id="questionSevenAInput" class="form-control" disabled>
+					                                                <label for="questionSevenAIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenAIfYes')}" th:errors="*{questionSevenAIfYes}"></span>
+					                                                <input type="text" th:field="*{questionSevenAIfYes}"  id="questionSevenAIfYes" name="questionSevenAIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionSevenA == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
@@ -279,33 +292,34 @@
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEight')}" th:errors="*{questionEight}"></span>
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionEight" id="questionEightYes" value="" onchange="disabledDetails('questionEight')"/>&nbsp;YES
+																	<input type="radio" name="questionEight" id="questionEightYes" th:field="*{questionEight}" th:checked="${otherInfoQuestion.questionEight == 'YES'}" value="YES" onclick="disableDetails('questionEight')"/>&nbsp;YES
 																</p>
+																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionEight" id="questionEightNo" th:field="*{questionEight}" value="NO" onclick="disableDetails('questionEight')">&nbsp;NO
+																	<input type="radio" name="questionEight" id="questionEightNo" th:field="*{questionEight}" th:checked="${otherInfoQuestion.questionEight == 'NO'}" value="NO"  onclick="disabledDetails('questionEight')">&nbsp;NO
 																</p>
 															</div>
 														</div>
-														<div class="row my-3 d-none disability-details">
+														<div th:class="'row my-3 disability-details justify-content-end' + (${otherInfoQuestion.questionEight == 'NO' ? ' d-none' : ''})">
 															<div class="col-sm-6">
 																<label for="questionEightType">If YES, please specify Type</label>
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightType')}" th:errors="*{questionEightType}"></span>
-																<input type="text" name="questionEightType" placeholder="N/A" id="questionEightType" class="form-control">
+																<input type="text" th:field="*{questionEightType}" name="questionEightType" placeholder="N/A" id="questionEightType" class="form-control">
 															</div>
 															<div class="col-sm-6">
 																<label for="questionEightId">If YES, please specify ID No</label>
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightId')}" th:errors="*{questionEightId}"></span>
-																<input type="text" name="questionEightId" placeholder="N/A" id="questionEightId" class="form-control">
+																<input type="text" th:field="*{questionEightId}" name="questionEightId" placeholder="N/A" id="questionEightId" class="form-control">
 															</div>
 															<div class="col-sm-6">
 																<label for="questionEightValidityDate">Validity Date</label>
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightValidityDate')}" th:errors="*{questionEightValidityDate}"></span>
-																<input type="date" name="questionEightValidityDate" placeholder="N/A" id="questionEightValidityDate" class="form-control">
+																<input type="date" th:field="*{questionEightValidityDate}" name="questionEightValidityDate" placeholder="N/A" id="questionEightValidityDate" class="form-control">
 															</div>
 															<div class="col-sm-6">
 																<label for="questionEightAttachment">Person With Disability Attachment</label>
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightAttachment')}" th:errors="*{questionEightAttachment}"></span>
-																<input type="file" name="questionEightAttachment" placeholder="N/A" id="questionEightAttachment" class="form-control">
+																<input type="file" th:field="*{questionEightAttachment}" name="questionEightAttachment" placeholder="N/A" id="questionEightAttachment" class="form-control">
 															</div>
 														</div>
 														
@@ -313,19 +327,18 @@
 					                                        <p>9.) Are you a solo parent?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
-					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionNine" id="questionNineYes" value="" onchange="disabledDetails('questionNine')"/>&nbsp;YES
+																	<input type="radio" name="questionNine" id="questionNineYes" th:field="*{questionNine}" th:checked="${otherInfoQuestion.questionNine == 'YES'}" value="YES" onclick="disableDetails('questionNine')"/>&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionNine" id="questionNineNo" th:field="*{questionNine}" value="NO" onclick="disableDetails('questionNine')">&nbsp;NO
+																	<input type="radio" name="questionNine" id="questionNineNo" th:field="*{questionNine}" th:checked="${otherInfoQuestion.questionNine == 'NO'}" value="NO"  onclick="disabledDetails('questionNine')">&nbsp;NO
 																</p>
 																
 					                                            <div class="col-sm-12">
-					                                                <label for="questionNineInput">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
-					                                                <input type="text" th:field="*{questionNine}" name="questionNineInput" id="questionNineInput" class="form-control" disabled>
+					                                                <label for="questionNineIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionNineIfYes')}" th:errors="*{questionNineIfYes}"></span>
+					                                                <input type="text" th:field="*{questionNineIfYes}"  id="questionNineIfYes" name="questionNineIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionNine == 'NO'}">
 					                                            </div>
 															</div>
 														</div>
@@ -444,143 +457,6 @@
 
 	    });
 
-		$(document).on("click", ".showDetails", function() {
-
-				var id = $(this).attr('data-row-id');
-	            var questionOneThird = $(this).attr('data-row-questionOneThird');
-				var questionOneFourth = $(this).attr('data-row-questionOneFourth');
-				var questionTwoA = $(this).attr('data-row-questionTwoA');
-				var questionTwoB = $(this).attr('data-row-questionTwoB');
-				var questionTwoBMonth = $(this).attr('data-row-questionTwoBMonth');
-				var questionTwoBDay = $(this).attr('data-row-questionTwoBDay');
-				var questionTwoBYear = $(this).attr('data-row-questionTwoBYear');
-				var questionTwoBStatusCase = $(this).attr('data-row-questionTwoBStatusCase');
-				var questionThree = $(this).attr('data-row-questionThree');
-				var questionFour = $(this).attr('data-row-questionFour');
-				var questionFive = $(this).attr('data-row-questionFive');
-				var questionSix = $(this).attr('data-row-questionSix');
-				var questionSevenA = $(this).attr('data-row-questionSevenA');
-				var questionEightType = $(this).attr('data-row-questionEightType');
-				var questionEightId = $(this).attr('data-row-questionEightId');
-				var questionEightValidityDate = $(this).attr('data-row-questionEightValidityDate');
-				var questionEightAttachment = $(this).attr('data-row-questionEightAttachment');
-				var questionEight = $(this).attr('data-row-questionEight');
-				var questionNine = $(this).attr('data-row-questionNine');
-				console.log("seven "+questionSevenA);
-	                    
-	            $("#modal_form_vertical").find("#id").val(id);
-				
-				// START QUESTION THIRD DEGREE
-				if(questionOneThird==="NO"){
-					$("#modal_form_vertical").find("#questionOneThirdNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionOneThirdYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionOneThirdInput").val(questionOneThird).prop("disabled",false);
-				}
-				// END QUESTION THIRD DEGREE
-
-				// START QUESTION FOUR DEGREE
-				if(questionOneFourth==="NO"){
-					$("#modal_form_vertical").find("#questionOneFourthNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionOneFourthYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionOneFourthInput").val(questionOneFourth).prop("disabled",false);
-				}
-				// END QUESTION FOUR DEGREE
-
-				// START QUESTION TWO A 
-				if(questionTwoA==="NO"){
-					$("#modal_form_vertical").find("#questionTwoANo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionTwoAYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionTwoAInput").val(questionTwoA).prop("disabled",false);
-				}
-				// END QUESTION TWO A
-
-				// START QUESTION TWO B
-				if(questionTwoB==="NO"){
-					$("#modal_form_vertical").find("#questionTwoBNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionTwoBYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionTwoBInput").val(questionTwoB).prop("disabled",false);
-					$("#modal_form_vertical").find(`.date-details`).removeClass("d-none");
-					$("#modal_form_vertical").find("#questionTwoBMonth").val(questionTwoBMonth);
-					$("#modal_form_vertical").find("#questionTwoBDay").val(questionTwoBDay);
-					$("#modal_form_vertical").find("#questionTwoBYear").val(questionTwoBYear);
-					$("#modal_form_vertical").find("#questionTwoBStatusCase").val(questionTwoBStatusCase);
-				}
-				// END QUESTION TWO B
-
-				// START QUESTION THREE 
-				if(questionThree==="NO"){
-					$("#modal_form_vertical").find("#questionThreeNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionThreeYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionThreeInput").val(questionThree).prop("disabled",false);
-				}
-				// END QUESTION THREE
-				
-				// START QUESTION FOUR 
-				if(questionFour==="NO"){
-					$("#modal_form_vertical").find("#questionFourNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionFourYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionFourInput").val(questionFour).prop("disabled",false);
-				}
-				// END QUESTION FOUR
-				
-				// START QUESTION FIVE 
-				if(questionFive==="NO"){
-					$("#modal_form_vertical").find("#questionFiveNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionFiveYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionFiveInput").val(questionFive).prop("disabled",false);
-				}
-				// END QUESTION FIVE
-
-				// START QUESTION SIX 
-				if(questionSix==="NO"){
-					$("#modal_form_vertical").find("#questionSixNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionSixYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionSixInput").val(questionSix).prop("disabled",false);
-				}
-				// END QUESTION SIX
-
-				// START QUESTION SEVEN A 
-				if(questionSevenA==="NO"){
-					$("#modal_form_vertical").find("#questionSevenANo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionSevenAYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionSevenAInput").val(questionSevenA).prop("disabled",false);
-				}
-				// END QUESTION SEVEN A
-				
-				// START QUESTION EIGHT
-				if(questionEight==="NO"){
-					$("#modal_form_vertical").find("#questionEightNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionEightYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionEightInput").val(questionEight).prop("disabled",false);
-					$("#modal_form_vertical").find(`.disability-details`).removeClass("d-none");
-					$("#modal_form_vertical").find("#questionEightType").val(questionEightType);
-					$("#modal_form_vertical").find("#questionEightId").val(questionEightId);
-					$("#modal_form_vertical").find("#questionEightValidityDate").val(questionEightValidityDate);
-					// $("#modal_form_vertical").find("#questionEightAttachment").val(questionEightAttachment);
-				}
-				// END QUESTION EIGHT
-
-				// START QUESTION SIX 
-				if(questionNine === "NO"){
-					$("#modal_form_vertical").find("#questionNineNo").attr("checked", true);
-				}else{
-					$("#modal_form_vertical").find("#questionNineYes").attr("checked", true);
-					$("#modal_form_vertical").find("#questionNineInput").val(questionNine).prop("disabled",false);
-				}
-				// END QUESTION SIX
-
-		});
-
 		$('#employeeForm').submit(function(event) {
 		        var emptyFields = [];
 		        $('.required-field-hrisp').each(function() {
@@ -604,31 +480,32 @@
 
         const disabledDetails = (id) =>{
 			// $("#modal_form_vertical").find(`#${id}`).val("");
-            $("#modal_form_vertical").find(`#${id}Input`).val("").prop("disabled",false);
+            $("#employeeForm").find(`#${id}IfYes`).val("").prop("disabled",true);
 			if(id === "questionTwoB"){
-				$("#modal_form_vertical").find(`.date-details`).removeClass("d-none")
-			}else if(id === "questionEight"){
-				$("#modal_form_vertical").find(`.disability-details`).removeClass("d-none")
+				$("#employeeForm .date-details #questionTwoBMonth").val(null);
+				$("#employeeForm .date-details #questionTwoBDay").val("");
+				$("#employeeForm .date-details #questionTwoBYear").val("");
+				$("#employeeForm .date-details #questionTwoBStatusCase").val("");
+				$("#employeeForm").find(`.date-details`).addClass("d-none")
 			}
+			if (id === "questionEight") {
+				$("#employeeForm .disability-details #questionEightType").val("");
+				$("#employeeForm .disability-details #questionEightId").val("");
+				$("#employeeForm .disability-details #questionEightValidityDate").val("");
+				$("#employeeForm .disability-details #questionEightAttachment").val("");
+				$("#employeeForm .disability-details").addClass("d-none");
+			}
+
         }
 
         const disableDetails = (id) =>{
-            $("#modal_form_vertical").find(`#${id}Input`).val("").prop("disabled",true)
+            $("#employeeForm").find(`#${id}IfYes`).val("").prop("disabled",false)
 			if(id === "questionTwoB"){
-				$("#modal_form_vertical .date-details #questionTwoBMonth").val(null);
-				$("#modal_form_vertical .date-details #questionTwoBDay").val("");
-				$("#modal_form_vertical .date-details #questionTwoBYear").val("");
-				$("#modal_form_vertical .date-details #questionTwoBStatusCase").val("");
-				$("#modal_form_vertical").find(`.date-details`).addClass("d-none")
+				$("#employeeForm").find(`.date-details`).removeClass("d-none")
+			}else if(id === "questionEight"){
+				$("#employeeForm").find(`.disability-details`).removeClass("d-none")
 			}
-			if (id === "questionEight") {
-				$("#modal_form_vertical .disability-details #questionEightType").val("");
-				$("#modal_form_vertical .disability-details #questionEightId").val("");
-				$("#modal_form_vertical .disability-details #questionEightValidityDate").val("");
-				$("#modal_form_vertical .disability-details #questionEightAttachment").val("");
-				$("#modal_form_vertical .disability-details").addClass("d-none");
-			}
-
+			
 			// if(id === "questionEight"){
 				
 			// 	$("#modal_form_vertical .disability-details #questionEightType").val("");

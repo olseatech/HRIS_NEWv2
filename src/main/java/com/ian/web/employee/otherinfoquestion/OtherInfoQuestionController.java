@@ -117,41 +117,6 @@ public class OtherInfoQuestionController {
 		} 
         	
 		String showMode = otherInfoQuestion.getShowMode();
-		if(!otherInfoQuestion.getQuestionOneThird().equals("NO")){
-			otherInfoQuestion.setQuestionOneThird(otherInfoQuestion.getQuestionOneThird().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionOneFourth().equals("NO")){
-			otherInfoQuestion.setQuestionOneFourth(otherInfoQuestion.getQuestionOneFourth().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionTwoA().equals("NO")){
-			otherInfoQuestion.setQuestionTwoA(otherInfoQuestion.getQuestionTwoA().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionTwoB().equals("NO")){
-			otherInfoQuestion.setQuestionTwoB(otherInfoQuestion.getQuestionTwoB().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionThree().equals("NO")){
-			otherInfoQuestion.setQuestionThree(otherInfoQuestion.getQuestionThree().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionFour().equals("NO")){
-			otherInfoQuestion.setQuestionFour(otherInfoQuestion.getQuestionFour().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionFive().equals("NO")){
-			otherInfoQuestion.setQuestionFive(otherInfoQuestion.getQuestionFive().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionSix().equals("NO")){
-			otherInfoQuestion.setQuestionSix(otherInfoQuestion.getQuestionSix().substring(1));
-		}
-		if(!otherInfoQuestion.getQuestionSevenA().equals("NO")){
-			otherInfoQuestion.setQuestionSevenA(otherInfoQuestion.getQuestionSevenA().substring(1));
-		}
-		// if(!otherInfoQuestion.getQuestionEight().equals("NO")){
-		// 	otherInfoQuestion.setQuestionEight(otherInfoQuestion.getQuestionEight().substring(1));
-		// }
-		if(!otherInfoQuestion.getQuestionNine().equals("NO")){
-			otherInfoQuestion.setQuestionNine(otherInfoQuestion.getQuestionNine().substring(1));
-		}
-		
-
 		otherInfoQuestion = otherInfoQuestionRepository.save(otherInfoQuestion);
 
 		redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully Updated."));

@@ -5,16 +5,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.ian.web.changepassword.ChangePassword;
+import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.clearance.Clearance;
 import com.ian.web.employee.clearance.ClearanceRepository;
 import com.ian.web.employee.familybg.FamilyBg;
@@ -110,7 +117,5 @@ public class RestApiController {
         
 		return ResponseEntity.ok("Credential successfully updated.");
     }
-	
-	
 
 }
