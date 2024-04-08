@@ -27,6 +27,7 @@ public class OtherInfoQuestion {
     private Long id;
     
     private String questionOneThird;
+    private String questionOneThirdIfYes;
     private String questionOneFourth;
     
     private String questionTwoA;

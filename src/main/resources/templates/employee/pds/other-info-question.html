@@ -74,17 +74,17 @@
 																<label for="questionOneThird">a. within the third degree?</label>
 																					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'Option 1'}" value="YES" onchange="disabledDetails('questionOneThird')"/>&nbsp;YES
+																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'YES'}" value="YES" onchange="disabledDetails('questionOneThird')"/>&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'Option 1'}" value="NO"  onclick="disableDetails('questionOneThird')">&nbsp;NO
+																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'NO'}" value="NO"  onclick="disableDetails('questionOneThird')">&nbsp;NO
 																</p>
 																
 					                                            <div class="col-sm-12">
 					                                                <label for="questionOneThirdInput">If YES, give details:</label>
 					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThird')}" th:errors="*{questionOneThird}"></span>
-					                                                <input type="text" th:field="*{questionOneThird}" name="questionOneThirdInput" id="questionOneThirdInput" class="form-control" disabled>
+					                                                <input type="text" th:field="*{questionOneThirdIfYes}" name="questionOneThirdIfYes" id="questionOneThirdIfYes" class="form-control" disabled>
 					                                            </div>
 															</div>
 															<div class="col-sm-6 ">
