@@ -1,5 +1,6 @@
 package com.ian.web.employee.educationalbg;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,9 +28,12 @@ import com.ian.web.employee.otherinfoquestion.OtherInfoQuestionRepository;
 import com.ian.web.employee.references.EmpReferencesRepository;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
 import com.ian.web.employee.workexperience.WorkExperienceRepository;
+import com.ian.web.systemsettings.academichonors.AcademicHonors;
 import com.ian.web.systemsettings.academichonors.AcademicHonorsRepository;
+import com.ian.web.systemsettings.degree_courses.DegreeCourses;
 import com.ian.web.systemsettings.degree_courses.DegreeCoursesRepository;
 import com.ian.web.systemsettings.degreelevels.DegreeLevelRepository;
+import com.ian.web.systemsettings.scholarship.Scholarship;
 import com.ian.web.systemsettings.scholarship.ScholarshipRepository;
 import com.ian.web.systemsettings.schools.SchoolRepository;
 
@@ -84,7 +88,34 @@ public class EducationalBackgroundController {
 			model.addAttribute("employee", employee);
 			
 			List<EducationalBackground> educationalBgList = educationalBackgroundRepository.findByEmployeeId(employeeId);
-			model.addAttribute("educationalBgList", educationalBgList);
+			
+			List<EducationalBackground> educationalBgListNew = new ArrayList<>();
+			for(EducationalBackground obj : educationalBgList) {
+				if(obj.getAcademicHonors() == null) {
+					AcademicHonors a = new AcademicHonors();
+					a.setId(0L);
+					a.setAcademicHonorsName("");
+					obj.setAcademicHonors(a);
+				}
+				
+				if(obj.getScholarship() == null) {
+					Scholarship s = new Scholarship();
+					s.setId(0L);
+					s.setScholarshipName("");
+					obj.setScholarship(s);
+				}
+				
+				if(obj.getDegreeCourse() == null) {
+					DegreeCourses d = new DegreeCourses();
+					d.setId(0L);
+					d.setDegreeCourseName("");
+					obj.setDegreeCourse(d);
+				}
+				
+				educationalBgListNew.add(obj);
+			}
+			
+			model.addAttribute("educationalBgList", educationalBgListNew);
 			
 			model.addAttribute("degreeLevelList", degreeLevelRepository.findAll());
 			model.addAttribute("schoolList", schoolRepository.findAll());
@@ -121,6 +152,24 @@ public class EducationalBackgroundController {
 			model.addAttribute("educationalBgList", educationalBackgroundRepository.findByEmployeeId(educBackground.getEmployee().getId()));
 			return "employee/pds/educational-background";
 		}				
+		
+		if(educBackground.getDegreeCourse() == null) {
+			educBackground.setDegreeCourse(null);
+		} else if(educBackground.getDegreeCourse().getId() == null) {
+			educBackground.setDegreeCourse(null);
+		}
+		
+		if(educBackground.getAcademicHonors() == null) {
+			educBackground.setAcademicHonors(null);
+		} else if(educBackground.getAcademicHonors().getId() == null) {
+			educBackground.setAcademicHonors(null);
+		}
+		
+		if(educBackground.getScholarship() == null) {
+			educBackground.setScholarship(null);
+		} else if(educBackground.getScholarship().getId() == null) {
+			educBackground.setScholarship(null);
+		}
 		
 		String showMode = educBackground.getShowMode();
 		educBackground = educationalBackgroundRepository.save(educBackground);

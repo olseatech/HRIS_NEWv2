@@ -134,14 +134,71 @@
 							</div>
 
 							<div class="modal-footer">
-								<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+								<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
+								<!--
 								<button type="submit" class="btn bg-primary">Submit</button>
+								-->
 							</div>
 						</form>
 					</div>
 				</div>
 			</div>
 			<!-- /Vertical form modal -->
+			
+			
+			<!-- Modal for Report -->
+			<div id="modal_form_report" class="modal fade" tabindex="-1" >
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title">Service Record Report Parameters</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+						
+							<div class="modal-body">
+									<!--
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-6">
+												<label for="signatory">Signatory</label>
+												<input id="signatory" name="signatory" placeholder="Signatory" type="text" class="form-control required-field-hrisp" >
+											</div>	
+											<div class="col-sm-6">
+												<label for="Position">Position</label>
+												<input id="position" name="position" placeholder="Position" type="text" class="form-control required-field-hrisp" >
+											</div>
+										</div>
+									</div>
+									-->
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-6">
+												<label for="printDate">Print Date</label>
+												<input id="printDate" name="printDate" type="date" class="form-control" >
+											</div>												
+										</div>
+									</div>		
+									<div class="form-group">
+										<div class="row">       
+											<div class="col-sm-12">
+												<label for="notes" class="mb-1">Notes (You can change default notes below as needed.)</label>
+												<textarea id="notes" name="notes" class="form-control" rows="4">1. Did not incur any leave of absence without pay. &#10;2. This supersedes all previously submitted Service Records to GSIS.
+												</textarea>
+											</div>                    
+							            </div>
+									</div>					
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>								
+								<button type="button" class="btn bg-primary" onclick="displayServiceRecord();">Submit</button>								
+							</div>
+						
+					</div>
+				</div>
+			</div>
+			<!-- /Modal for Report -->
+			
 
 			<!-- Content area -->
 			<div class="content pt-0">
@@ -155,8 +212,11 @@
 								<h5 class="card-title">My Service Record List</h5>
 								<div class="header-elements">
 									<div class="list-icons">				                				
-				                		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
+				                		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical" id="addButton">Add Record</button>
+				                		<button type="button" class="btn bg-violet" data-toggle="modal" data-target="#modal_form_report" id="rptButton">View Service Record Report</button>
+				                		<!--
 				                		<a th:href="@{'/viewServiceRecordReport/' + ${session.actorObj.id}}" class="btn bg-violet" target="_blank">View Service Record Report</a>
+				                		-->
 				                	</div>
 			                	</div>
 							</div>
@@ -221,11 +281,93 @@
 	<!-- /page content -->
 
 	<script th:inline="javascript">
+		
+		let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/'';
+		
+		function displayServiceRecord() {
+	        
+	        //var signatory = document.getElementById('signatory').value;
+	        //var position = document.getElementById('position').value;
+	        var employeeId = document.getElementById('employeeId').value;
+	        var notes = document.getElementById('notes').value;
+	        var printDate = document.getElementById('printDate').value;
+	        //var encodedNotes = encodeURIComponent(notes);
+	        
+	         var saveurl = contextRoot + "/saveServiceRecordRequest/"; 
+	        
+	        
+	        if (employeeId && notes && printDate) {
+	            // Create the URL with the parameters
+	            
+	            var requestdata = {
+			        employeeId: employeeId,
+			        printDate: printDate,
+			        notes: notes
+			    };
+			
+			    // Make a POST request to save the data
+			    fetch(saveurl, {
+			        method: 'POST',
+			        headers: {
+			            'Content-Type': 'application/json'
+			        },
+			        body: JSON.stringify(requestdata)
+			    })
+			    .then(response => {
+			        if (response.ok) {
+			            return response.json(); // Parse the JSON response
+			        }
+			        throw new Error('Network response was not ok.');
+			    })
+			    .then(data => {
+			        // Get the record ID from the response
+			        var recordId = data.recordId;
+			        // Use the recordId as needed
+			        console.log("Record ID:", recordId);
+			        
+			        var url = contextRoot + "/viewServiceRecordReportNew/" + recordId;
+			
+			    	window.open(url, '_blank');
+			    })
+			    .catch(error => {
+			        console.error('There was a problem with the fetch operation:', error);
+			    });
+	            
+	            
+	        } else {
+	             swal({
+						title: "Error!",
+						text: "Print Date and Notes are mandatory.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		            emptyFields[0].focus();
+	        }  
+	    }
 	
 		$(document).ready(function() {
 			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 			$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
-			$("#myServiceRecordNav").addClass("active");			
+			$("#myServiceRecordNav").addClass("active");		
+			
+			$('#addButton').hide();
+			$('#submitBtn').hide();
+			$('#updatePhotoBtn').hide();
+			$('#cameraArea').hide();
+				
+			//$('textarea').prop('readonly', true);
+			$('input').prop('readonly', true);
+			$('select').prop('disabled', true);
+			$('input, select').removeClass("required-field-hrisp");	
+						
+			//$('#signatory').prop('readonly', false);
+			//$('#position').prop('readonly', false);
+			
+			var today = new Date();
+			var formattedDate = today.toISOString().substr(0, 10);
+			document.getElementById("printDate").value = formattedDate;
+			$('#printDate').prop('readonly', false);
 			
 			
 			let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';

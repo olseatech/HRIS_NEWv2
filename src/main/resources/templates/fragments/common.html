@@ -125,7 +125,12 @@
     <script th:src="@{/global_assets/js/demo_pages/datatables_advanced.js}"></script>
     <!-- /theme JS files 2-->
     
+    <!-- Graph JS files -->
+	<script th:src="@{/global_assets/js/plugins/visualization/echarts/echarts.min.js}"></script>
+    
     <script th:src="@{/js/philippines.js}"></script>
+    
+    
     
     
     
@@ -146,23 +151,26 @@
 					&nbsp;
 				</a>
 			</div>
-			
+			<!--
 			<div class="navbar-brand navbar-brand-xs">
 				<a href="index.html" class="d-inline-block">
 					<img th:src="@{/global_assets/images/logo_icon_light.png}" alt="">
 				</a>
 			</div>
+			-->
 		</div>
 		<!-- /header with logos -->
 	
 
 		<!-- Mobile controls -->
 		<div class="d-flex flex-1 d-md-none">
+			<!--
 			<div class="navbar-brand mr-auto">
 				<a href="index.html" class="d-inline-block">
 					<img th:src="@{/global_assets/images/logo_dark.png}" alt="">
 				</a>
 			</div>	
+			-->
 
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-mobile">
 				<i class="icon-tree5"></i>
@@ -437,6 +445,10 @@
 									th:href="@{'/my-service-record/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
 									class="nav-link" id="myServiceRecordNav"><i class="icon-user-tie"></i> My Service Record</a>
 								</li>
+								<li class="nav-item"><a 									
+									th:href="@{'/my201files/' + ${session.actorObj.id} + '/' + ${session.actorObj.getEmpHashCode()}}"
+									class="nav-link" id="my201FileNav"><i class="icon-user-tie"></i> My 201 Files</a>
+								</li>
 							</ul>
 						</li>
 						
@@ -492,9 +504,9 @@
 								<!-- <li class="nav-item"><a th:href="@{/levels}" class="nav-link" id="levelNav"><i class="icon-office"></i>Level</a></li>
 								<li class="nav-item"><a th:href="@{/salary-grades}" class="nav-link" id="salaryGradeNav"><i class="icon-office"></i>Salary Grade</a></li> -->
 								<li class="nav-item"><a th:href="@{/position-titles}" class="nav-link" id="positionTitleNav"><i class="icon-office"></i>Position Title</a></li>
-								<!--
-								<li class="nav-item"><a th:href="@{/clearance=approver-settings}" class="nav-link" id="clearanceApproversNav"><i class="icon-stamp"></i>Clearance Approvers</a></li>
-								-->
+								<li class="nav-item"><a th:href="@{/service-record-signatory}" class="nav-link" id="srSignatoryNav"><i class="icon-stamp"></i>Service Record Signatory</a></li>	
+								<li class="nav-item"><a th:href="@{/clearance-approver-settings}" class="nav-link" id="clearanceApproversNav"><i class="icon-stamp"></i>Clearance Approvers</a></li>
+								
 							</ul>
 						</li>							
 						</th:block>

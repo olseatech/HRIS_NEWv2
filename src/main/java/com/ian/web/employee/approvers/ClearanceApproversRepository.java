@@ -1,4 +1,4 @@
-package com.ian.web.employee.clearance;
+package com.ian.web.employee.approvers;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

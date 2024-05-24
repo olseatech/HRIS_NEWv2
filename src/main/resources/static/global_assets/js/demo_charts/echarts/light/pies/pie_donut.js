@@ -90,7 +90,7 @@ var EchartsPieDonutLight = function() {
                     orient: 'vertical',
                     top: 'center',
                     left: 0,
-                    data: ['IE', 'Opera', 'Safari', 'Firefox', 'Chrome'],
+                    data: ['IE', 'Opera2', 'Safari', 'Firefox', 'Chrome'],
                     itemHeight: 8,
                     itemWidth: 8
                 },
@@ -109,7 +109,7 @@ var EchartsPieDonutLight = function() {
                     },
                     data: [
                         {value: 335, name: 'IE'},
-                        {value: 310, name: 'Opera'},
+                        {value: 310, name: 'Opera2'},
                         {value: 234, name: 'Safari'},
                         {value: 135, name: 'Firefox'},
                         {value: 1548, name: 'Chrome'}

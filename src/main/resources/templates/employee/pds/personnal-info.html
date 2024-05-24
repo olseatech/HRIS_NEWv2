@@ -143,6 +143,7 @@
 																	<option value="">SELECT VALUE</option>
 																	<option value="M">MALE</option>
 																	<option value="F">FEMALE</option>
+																	<option value="L">LGBTQ</option>
 																</select>
 															</div>							                
 											                
@@ -518,7 +519,104 @@
 										                        </select>
 										                    </div>											
 											           </div>
-													</div>							
+													</div>		
+													
+													
+													<hr>
+													<h5>Residencial Address</h5>
+													<!--  For Address -->
+													<div class="form-group">
+														<div class="row">    
+															<div class="col-sm-6">
+																<label for="houseno1">House/Block/Lot No.</label>
+																<input type="text" class="form-control" name="houseno1" id="houseno1" th:field="*{houseno1}" placeholder="House/Block/Lot No." />
+															</div>															
+															
+															<div class="col-sm-6">
+											                    <label for="street1">Street</label>										                        
+										                        <input type="text" class="form-control" name="street1" id="street1" th:field="*{street1}" placeholder="Street" />
+										                    </div>											
+											           </div>
+													</div>
+													<div class="form-group">
+														<div class="row">    
+															<div class="col-sm-5">
+																<label for="subdivision1">Subdivision/Village</label>
+																<input type="text" class="form-control" name="subdivision1" id="subdivision1" th:field="*{subdivision1}" placeholder="Subdivision/Village" />
+															</div>															
+															<div class="col-sm-4">
+											                    <label for="brgy1">Barangay</label>										                        
+										                        <input type="text" class="form-control" name="brgy1" id="brgy1" th:field="*{brgy1}" placeholder="Barangay" />
+										                    </div>
+										                    <div class="col-sm-3">
+											                    <label for="zipcode1">Zip Code</label>										                        
+										                        <input type="text" class="form-control" name="zipcode1" id="zipcode1" th:field="*{zipcode1}" placeholder="Zip Code" />
+										                    </div>											
+											           </div>
+													</div>
+													<div class="form-group">
+														<div class="row">    
+															<div class="col-sm-6">
+																<label for="province1">Province</label>
+																<select class="form-control" name="province1" id="province1" th:data-province1="*{province1}" onchange="loadCities('city1', this.value)" readonly>
+																</select>
+															</div>															
+															
+															<div class="col-sm-6">
+											                    <label for="city1">City</label>										                        
+										                        <select class="form-control" name="city1" id="city1" th:data-city1="*{city1}" readonly>
+																</select>
+										                    </div>											
+											           </div>
+													</div>
+													
+													<hr>
+													<h5>Permanent Address</h5>
+													<!--  For Address -->
+													<div class="form-group">
+														<div class="row">    
+															<div class="col-sm-6">
+																<label for="houseno2">House/Block/Lot No.</label>
+																<input type="text" class="form-control" name="houseno2" id="houseno2" th:field="*{houseno2}" placeholder="House/Block/Lot No." />
+															</div>															
+															
+															<div class="col-sm-6">
+											                    <label for="street2">Street</label>										                        
+										                        <input type="text" class="form-control" name="street2" id="street2" th:field="*{street2}" placeholder="Street" />
+										                    </div>											
+											           </div>
+													</div>
+													<div class="form-group">
+														<div class="row">    
+															<div class="col-sm-5">
+																<label for="subdivision2">Subdivision/Village</label>
+																<input type="text" class="form-control" name="subdivision2" id="subdivision2" th:field="*{subdivision2}" placeholder="Subdivision/Village" />
+															</div>															
+															<div class="col-sm-4">
+											                    <label for="brgy2">Barangay</label>										                        
+										                        <input type="text" class="form-control" name="brgy2" id="brgy2" th:field="*{brgy2}" placeholder="Barangay" />
+										                    </div>
+										                    <div class="col-sm-3">
+											                    <label for="zipcode2">Zip Code</label>										                        
+										                        <input type="text" class="form-control" name="zipcode2" id="zipcode2" th:field="*{zipcode2}" placeholder="Zip Code" />
+										                    </div>											
+											           </div>
+													</div>
+													<div class="form-group">
+														<div class="row">    
+															<div class="col-sm-6">
+																<label for="province2">Province</label>
+																<select class="form-control" name="province2" id="province2" th:data-province2="*{province2}" onchange="loadCities('city2', this.value)" readonly>
+																</select>
+															</div>															
+															
+															<div class="col-sm-6">
+											                    <label for="city2">City</label>										                        
+										                        <select class="form-control" name="city2" id="city2" th:data-city2="*{city2}" readonly>
+																</select>
+										                    </div>											
+											           </div>
+													</div>					
 													
 												</div>
 
@@ -579,6 +677,50 @@
 	<script th:inline="javascript">		
 	
 	    $(document).ready(function() {
+			
+			//Province 1 and City 1
+			loadProvinces('province1');
+	    	var province1 = $('#province1').attr('data-province1');
+	    	$('#province1').val(province1);
+	
+	    	if(province1 === undefined){
+	    		loadCities('city1','MM');
+	    	} else {
+	    		loadCities('city1',province1);
+	    	}
+	    	
+	    	var city1 = $('#city1').attr('data-city1');
+	    	$('#city1').val(city1);
+	
+	    	if (!province1) {
+	    		$('#province1')[0].selectedIndex = 1;
+	    		$('#city1')[0].selectedIndex = 0;
+	    	}
+	    	else if (!city1) {
+	    		$('#city1')[0].selectedIndex = 0;
+    		}
+    		
+    		//Province 2 and City 2
+    		loadProvinces('province2');
+	    	var province2 = $('#province2').attr('data-province2');
+	    	$('#province2').val(province2);
+	
+	    	if(province2 === undefined){
+	    		loadCities('city2','MM');
+	    	} else {
+	    		loadCities('city2',province2);
+	    	}
+	    	
+	    	var city2 = $('#city2').attr('data-city2');
+	    	$('#city2').val(city2);
+	
+	    	if (!province2) {
+	    		$('#province2')[0].selectedIndex = 1;
+	    		$('#city2')[0].selectedIndex = 0;
+	    	}
+	    	else if (!city2) {
+	    		$('#city2')[0].selectedIndex = 0;
+    		}
 			
 			// start update profile photo
 			const fileSelect = document.getElementById('fileSelect');

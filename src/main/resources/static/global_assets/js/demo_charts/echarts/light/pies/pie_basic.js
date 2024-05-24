@@ -109,7 +109,7 @@ var EchartsPieBasicLight = function() {
                     },
                     data: [
                         {value: 335, name: 'IE'},
-                        {value: 310, name: 'Opera'},
+                        {value: 310, name: 'Operaxxx'},
                         {value: 234, name: 'Safari'},
                         {value: 135, name: 'Firefox'},
                         {value: 1548, name: 'Chrome'}

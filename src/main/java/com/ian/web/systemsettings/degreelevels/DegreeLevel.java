@@ -29,7 +29,6 @@ public class DegreeLevel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = " is mandatory.")
     public String degreeName;
     @Builder.Default
     private boolean isActive = true;

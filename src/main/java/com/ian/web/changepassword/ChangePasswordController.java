@@ -32,31 +32,31 @@ public class ChangePasswordController {
         return "/changepassword/change-password";
     }
 
-    @PostMapping("/save-change-password/{employeeId}")
-    public String savePassword(@Valid ChangePassword changePassword,
-                               @PathVariable("employeeId") Long id,
-                               Errors errors,
-                               final RedirectAttributes redirect) {
-                                 
-        if(changePassword.getConfirmPassword().isBlank() || changePassword.getNewPassword().isBlank() || changePassword.getOldPassword().isBlank()){
-            redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Please fill up empty field."));
-            return "redirect:/change-password/" + id;
-        }else{
-            Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + id));
-        
-            if (changePassword.getConfirmPassword().equals(changePassword.getNewPassword()) 
-                    && employee.getPassword().equals(changePassword.getOldPassword())) {
-                employee.setPassword(changePassword.getNewPassword());
-                employeeRepository.save(employee);
-                redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully saved."));
-            } else if (!changePassword.getConfirmPassword().equals(changePassword.getNewPassword())) {
-                redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Mismatch new password to confirm password."));
-            } else {
-                redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Invalid old password."));
-            }
-        }
-        return "redirect:/change-password/" + id;
-    }
+//    @PostMapping("/save-change-password/{employeeId}")
+//    public String savePassword(@Valid ChangePassword changePassword,
+//                               @PathVariable("employeeId") Long id,
+//                               Errors errors,
+//                               final RedirectAttributes redirect) {
+//                                 
+//        if(changePassword.getConfirmPassword().isBlank() || changePassword.getNewPassword().isBlank() || changePassword.getOldPassword().isBlank()){
+//            redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Please fill up empty field."));
+//            return "redirect:/change-password/" + id;
+//        }else{
+//            Employee employee = employeeRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Employee not found with ID: " + id));
+//        
+//            if (changePassword.getConfirmPassword().equals(changePassword.getNewPassword()) 
+//                    && employee.getPassword().equals(changePassword.getOldPassword())) {
+//                employee.setPassword(changePassword.getNewPassword());
+//                employeeRepository.save(employee);
+//                redirect.addFlashAttribute("msg", new UXMessage("EDIT-SUCCESS", "Record Successfully saved."));
+//            } else if (!changePassword.getConfirmPassword().equals(changePassword.getNewPassword())) {
+//                redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Mismatch new password to confirm password."));
+//            } else {
+//                redirect.addFlashAttribute("msg", new UXMessage("ERROR", "Invalid old password."));
+//            }
+//        }
+//        return "redirect:/change-password/" + id;
+//    }
 }
 

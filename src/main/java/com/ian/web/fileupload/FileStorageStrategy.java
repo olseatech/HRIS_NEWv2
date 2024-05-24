@@ -61,6 +61,33 @@ public class FileStorageStrategy implements StorageStrategy {
 	}
 	
 	@Override
+	public String[] uploadFile201(MultipartFile multipartFile, String fileName, long empId) throws Exception {
+		log.info("FileStorageStrategy ==> uploading file");
+		//String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+		if (fileName.contains("..")) {
+			throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+		}
+		
+		String folderPath = "/uploads/201/" + empId + "/";
+//		Path targetLocation = this.fileStorageLocation.resolve(fileName);
+		Path targetLocation = this.fileStorageLocation.resolve(folderPath).resolve(fileName);
+		
+		// Create directories if they don't exist
+		Files.createDirectories(targetLocation.getParent());
+		
+        Files.copy(multipartFile.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
+        
+        String downloadUrl = UriComponentsBuilder.newInstance()
+        		//.scheme("http").host("localhost").port(8080)
+        		//.path("/uploads/201/" + empId)
+        		.path(folderPath)
+        		.path(fileName)
+        		.build().toUriString();
+        
+        return new String[]{downloadUrl, fileName};
+	}
+	
+	@Override
 	public ResponseEntity<Object> downloadFile(String fileUrl, HttpServletRequest request) throws Exception {
         log.info("FileStorageStrategy==> downloading file");
         // String fileName = fileUrl.substring(fileUrl.lastIndexOf("/") + 1);

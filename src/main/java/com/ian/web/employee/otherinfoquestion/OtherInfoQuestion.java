@@ -54,14 +54,20 @@ public class OtherInfoQuestion {
     private String questionSevenA;
     private String questionSevenAIfYes;
 
+    //Reserved for 40 B
     private String questionEight;
     private String questionEightType;
     private String questionEightId;
     private String questionEightValidityDate;
     private String questionEightAttachment;
-
+    
+    //Reserved for 40 C
     private String questionNine;
     private String questionNineIfYes;
+    
+    //Reserved for 40 A
+    private String questionTen;
+    private String questionTenIfYes;
 
     @Transient
 	private String showMode;

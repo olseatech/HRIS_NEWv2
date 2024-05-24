@@ -29,7 +29,7 @@ public class Scholarship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = " is mandatory.")
+    
     private String scholarshipName;
     @Builder.Default
     private boolean isActive = true;

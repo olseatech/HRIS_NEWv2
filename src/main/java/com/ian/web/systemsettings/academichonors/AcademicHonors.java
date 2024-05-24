@@ -24,6 +24,6 @@ public class AcademicHonors {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotBlank(message = " is mandatory.")
+	
     private String academicHonorsName;	
 }

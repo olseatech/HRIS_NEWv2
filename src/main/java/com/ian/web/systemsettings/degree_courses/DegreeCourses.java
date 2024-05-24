@@ -28,9 +28,9 @@ public class DegreeCourses {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank(message = " is mandatory.")
+    
     private String degreeCourseName;
-    @NotBlank(message = " is mandatory.")
+    
     private String abbreviation;
     private boolean isLawDegree;
     @Builder.Default

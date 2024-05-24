@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.SequenceInputStream;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,18 +18,20 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
+import com.ian.web.employee.approvers.ClearanceApprovers;
+import com.ian.web.employee.approvers.ClearanceApproversRepository;
+import com.ian.web.employee.approvers.ServiceRecordSignatory;
+import com.ian.web.employee.approvers.ServiceRecordSignatoryRepository;
 import com.ian.web.employee.clearance.Clearance;
-import com.ian.web.employee.clearance.ClearanceApprovers;
-import com.ian.web.employee.clearance.ClearanceApproversRepository;
 import com.ian.web.employee.clearance.ClearanceRepository;
 import com.ian.web.employee.educationalbg.EducationalBackground;
 import com.ian.web.employee.educationalbg.EducationalBackgroundRepository;
@@ -38,15 +41,20 @@ import com.ian.web.employee.familybg.FamilyBg;
 import com.ian.web.employee.familybg.FamilyBgRepository;
 import com.ian.web.employee.govermentid.GovermentIssuedId;
 import com.ian.web.employee.govermentid.GovermentIssuedIdRepository;
+import com.ian.web.employee.learning.LearningAndDevelopment;
 import com.ian.web.employee.learning.LearningAndDevelopmentRepository;
 import com.ian.web.employee.otherinfo.OtherInfo;
 import com.ian.web.employee.otherinfo.OtherInfoRepository;
 import com.ian.web.employee.otherinfoquestion.OtherInfoQuestion;
+import com.ian.web.employee.otherinfoquestion.OtherInfoQuestionRepository;
 import com.ian.web.employee.references.EmpReferences;
 import com.ian.web.employee.references.EmpReferencesRepository;
 import com.ian.web.employee.servicerecord.ServiceRecord;
 import com.ian.web.employee.servicerecord.ServiceRecordReportDto;
+import com.ian.web.employee.servicerecord.ServiceRecordReportRequest;
+import com.ian.web.employee.servicerecord.ServiceRecordReportRequestRepository;
 import com.ian.web.employee.servicerecord.ServiceRecordRepository;
+import com.ian.web.employee.voluntary_workexperience.VoluntaryWork;
 import com.ian.web.employee.voluntary_workexperience.VoluntaryWorkRepository;
 import com.ian.web.employee.workexperience.WorkExperience;
 import com.ian.web.employee.workexperience.WorkExperienceRepository;
@@ -57,7 +65,7 @@ import com.ian.web.systemsettings.position_title.PositionTitleRepository;
 import lombok.RequiredArgsConstructor;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JRPrintPage;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -65,11 +73,6 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.JasperRunManager;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
-
-import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 
 @Controller
 @RequiredArgsConstructor
@@ -90,17 +93,100 @@ public class ReportsController {
 	private final VoluntaryWorkRepository voluntaryWorkRepository;
 	private final LearningAndDevelopmentRepository learningAndDevelopmentRepository;
 	private final OtherInfoRepository otherInfoRepository;
-//	private final OtherInfo
+	private final OtherInfoQuestionRepository otherInfoQuestionRepository;
 	private final EmpReferencesRepository empReferencesRepository;
 	private final GovermentIssuedIdRepository govermentIssuedIdRepository;
 	private final ClearanceRepository clearanceRepository;
 	private final ServiceRecordRepository serviceRecordRepository;
 	private final ClearanceApproversRepository clearanceApproversRepository;
+	private final ServiceRecordReportRequestRepository serviceRecordReportRequestRepository;
+	private final ServiceRecordSignatoryRepository serviceRecordSignatoryRepository;
 	
 	private final ResourceLoader resourceLoader;
 	
+	@GetMapping("/viewPds/{employeeId}")	
+	public void viewAllEmployeeAppointmentReport(Model model, @PathVariable long employeeId, HttpServletRequest request, HttpServletResponse response) throws JRException, Exception {
+		
+	}
 	
 	@GetMapping("/viewPds/{employeeId}")	
+	public void viewPdsNew(Model model, @PathVariable long employeeId, HttpServletRequest request, HttpServletResponse response) throws JRException, Exception {
+		
+		Optional<Employee> optional = employeeRepository.findById(employeeId);
+		Employee employee = optional.orElseGet(() -> new Employee());
+		
+		List<FamilyBg> fbList = familyBgRepository.findByEmployeeId(employeeId);
+		List<EducationalBackground> eduList = educationalBackgroundRepository.findByEmployeeId(employeeId);
+		List<CivilServiceEligibility> csList = civilServiceEligibilityRepository.findByEmployeeId(employeeId);
+		List<WorkExperience> workExList = workExperienceRepository.findByEmployeeId(employeeId);
+		List<VoluntaryWork> voluntaryList = voluntaryWorkRepository.findByEmployeeId(employeeId);
+		List<LearningAndDevelopment> learningList = learningAndDevelopmentRepository.findByEmployeeId(employeeId);
+		List<OtherInfo> otherInfoList = otherInfoRepository.findByEmployeeId(employeeId);		
+		List<OtherInfoQuestion> otherInfoQuestionList = otherInfoQuestionRepository.findByEmployeeId(employeeId);
+		List<EmpReferences> refList = empReferencesRepository.findByEmployeeId(employeeId);
+		List<GovermentIssuedId> govList = govermentIssuedIdRepository.findByEmployeeId(employeeId);
+		
+		OtherInfoQuestion otherObj = new OtherInfoQuestion();
+		if(!otherInfoQuestionList.isEmpty()) {
+			otherObj = otherInfoQuestionList.get(0);
+		}
+		
+		List<ServiceRecordReportDto> reportList = new ArrayList<>(); 
+		ServiceRecordReportDto x = new ServiceRecordReportDto();
+		x.setStation("test");
+		
+		reportList.add(x);
+		
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(reportList);
+		
+		response.setContentType("application/pdf");
+
+		InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS1.jasper");
+		Map<String, Object> map = populateMapReport1(employee, fbList, eduList);
+		
+		InputStream reportStream2 = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS2.jasper");
+		Map<String, Object> map2 = populateMapReport2(csList, workExList);
+		
+		InputStream reportStream3 = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS3.jasper");
+		Map<String, Object> map3 = populateMapReport3(voluntaryList, learningList, otherInfoList);
+		
+		InputStream reportStream4 = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/PDS4.jasper");
+		Map<String, Object> map4 = populateMapReport4(otherObj, refList, govList);
+		
+		/////////
+		
+		JasperPrint jasperPrint1 = JasperFillManager.fillReport(reportStream, map, new JREmptyDataSource());
+		JasperPrint jasperPrint2 = JasperFillManager.fillReport(reportStream2, map2, new JREmptyDataSource());
+		JasperPrint jasperPrint3 = JasperFillManager.fillReport(reportStream3, map3, new JREmptyDataSource());
+		JasperPrint jasperPrint4 = JasperFillManager.fillReport(reportStream4, map4, new JREmptyDataSource());
+		
+		System.out.println("Number of pages in report 1: " + jasperPrint1.getPages().size());
+		System.out.println("Number of pages in report 2: " + jasperPrint2.getPages().size());
+		System.out.println("Number of pages in report 3: " + jasperPrint3.getPages().size());
+		System.out.println("Number of pages in report 4: " + jasperPrint4.getPages().size());
+
+		
+		List<JRPrintPage> pages2 = jasperPrint2.getPages();
+        for (JRPrintPage page : pages2) {
+            jasperPrint1.addPage(page);
+        }
+        
+        List<JRPrintPage> pages3 = jasperPrint3.getPages();
+        for (JRPrintPage page : pages3) {
+            jasperPrint1.addPage(page);
+        }
+        
+        List<JRPrintPage> pages4 = jasperPrint4.getPages();
+        for (JRPrintPage page : pages4) {
+            jasperPrint1.addPage(page);
+        }
+
+        JasperExportManager.exportReportToPdfStream(jasperPrint1, response.getOutputStream());
+
+	}
+	
+	
+	@GetMapping("/viewPdsxxxx/{employeeId}")	
 	public void viewPds(Model model, @PathVariable long employeeId, HttpServletRequest request, HttpServletResponse response) throws JRException, Exception {
 		
 		Optional<Employee> optional = employeeRepository.findById(employeeId);
@@ -187,8 +273,8 @@ public class ReportsController {
 		map.put("FormBg", bgImg);
 		
 		map.put("CS_ID_no.", "");
-		map.put("I.PI_Surname", "  " + emp.getLastName().toUpperCase());
-		map.put("I.PI_Firstname", "  " + emp.getFirstName().toUpperCase());
+		map.put("I.PI_Surname", "  " + emp.getLastName());
+		map.put("I.PI_Firstname", "  " + emp.getFirstName());
 		map.put("I.PI_NameExtension", "  " + emp.getSuffix());
 		map.put("I.PI_Middlename", "  " + emp.getMiddleName());
 		map.put("I.PI_Date_Of_Birth", "  " + formatDate(emp.getBirthdate()));
@@ -240,15 +326,35 @@ public class ReportsController {
 		}
 		
 		
-		map.put("I.PI_Height", "  " + emp.getHeight());
-		map.put("I.PI_Weight", "  " + emp.getWeight());
-		map.put("I.PI_Bloodtype", "  " + emp.getBloodType());
-		map.put("I.PI_GSIS_ID_NO.", "  " + emp.getGsisIdNo());
-		map.put("I.PI_Pagibig_ID_NO.", "  " + emp.getPagibigNo());
-		map.put("I.PI_PhilHealth_NO.", "  " + emp.getPhilhealthNo());
-		map.put("I.PI_SSS_NO.", "  " + emp.getSssNo());
-		map.put("I.PI_TIN_NO.", "  " + emp.getTin());
-		map.put("I.PI_Agency_Employee_NO.", "  " + emp.getEmpNo());
+		map.put("I.PI_Height", "  " + getStringValue(emp.getHeight()));
+		map.put("I.PI_Weight", "  " + getStringValue(emp.getWeight()));
+		map.put("I.PI_Bloodtype", "  " + getStringValue(emp.getBloodType()));
+		map.put("I.PI_GSIS_ID_NO.", "  " + getStringValue(emp.getGsisIdNo()));
+		map.put("I.PI_Pagibig_ID_NO.", "  " + getStringValue(emp.getPagibigNo()));
+		map.put("I.PI_PhilHealth_NO.", "  " + getStringValue(emp.getPhilhealthNo()));
+		map.put("I.PI_SSS_NO.", "  " + getStringValue(emp.getSssNo()));
+		map.put("I.PI_TIN_NO.", "  " + getStringValue(emp.getTin()));
+		map.put("I.PI_Agency_Employee_NO.", "  " + getStringValue(emp.getEmpNo()));
+		
+		//Residential Address
+		//Get Province Map
+		
+		
+		map.put("PI_Residential_House_No", "  " + getStringValue(emp.getHouseno1()));
+		map.put("PI_Residential_Street", "  " + getStringValue(emp.getStreet1()));
+		map.put("PI_Residential_Subdivision", "  " + getStringValue(emp.getSubdivision1()));
+		map.put("PI_Residential_Barangay", "  " + getStringValue(emp.getBrgy1()));
+		map.put("PI_Residential_City", "  " + getStringValue(emp.getCity1()));
+		map.put("PI_Residential_Province", "  " + getStringValueProvince(emp.getProvince1()));
+		map.put("PI_Residential_Zipcode", "  " + getStringValue(emp.getZipcode1()));
+		
+		map.put("PI_Permanent_House_No", "  " + getStringValue(emp.getHouseno2()));
+		map.put("PI_Permanent_Street", "  " + getStringValue(emp.getStreet2()));
+		map.put("PI_Permanent_Subdivision", "  " + getStringValue(emp.getSubdivision2()));
+		map.put("PI_Permanent_Barangay", "  " + getStringValue(emp.getBrgy2()));
+		map.put("PI_Permanent_City", "  " + getStringValue(emp.getCity2()));
+		map.put("PI_Permanent_Province", "  " + getStringValueProvince(emp.getProvince2()));
+		map.put("PI_Permanent_Zipcode", "  " + getStringValue(emp.getZipcode2()));
 		
 		//TODO Fix this
 		if("FILIPINO BY BIRTH".equalsIgnoreCase(emp.getCitizenship())) {
@@ -277,23 +383,10 @@ public class ReportsController {
 			map.put("I.PI_Citizenship_Indicate_Country", "");
 		}
 		
-		map.put("I.PI_Residential_House_Block_Lot_NO", "");
-		map.put("I.PI_Residential_Street", "");
-		map.put("I.PI_Residential_Subdivision_Village", "");
-		map.put("I.PI_Residential_Barangay", "");
-		map.put("I.PI_Residential_City", "");
-		map.put("I.PI_Residential_Province", "");
-		map.put("I.PI_Residential_ZIP_CODE", "");
-		map.put("I.PI_Permanent_House_Block_Lot_NO", "");
-		map.put("I.PI_Permanent_Street", "");
-		map.put("I.PI_Permanent_Subdivision_Village", "");
-		map.put("I.PI_Permanent_Barangay", "");
-		map.put("I.PI_Permanent_City", "");
-		map.put("I.PI_Permanent_Province", "");
-		map.put("I.PI_Permanent_ZIP_CODE", "");
-		map.put("I.PI_Telephone_NO", "  " + emp.getTelNo());
-		map.put("I.PI_Mobile_NO", "  " + emp.getMobileNo1());
-		map.put("I.PI_EmailAdd", "  " + emp.getEmail1());
+		
+		map.put("I.PI_Telephone_NO", "  " + emp.getTelNo() != null ? emp.getTelNo() : "");
+		map.put("I.PI_Mobile_NO", "  " + emp.getMobileNo1() != null ? emp.getMobileNo1() : "");
+		map.put("I.PI_EmailAdd", "  " + emp.getEmail1() != null ? emp.getEmail1() : "");
 		
 		int ctrForChild = 1;
 		boolean spousePopulated = false;
@@ -380,48 +473,146 @@ public class ReportsController {
 			if("ELEMENTARY".equalsIgnoreCase(eb.getDegreeLevel().getDegreeName())) {
 				elemPopulated = true;
 				map.put("III.EB_Elementary_School", " " + eb.getSchool().getSchoolName());
-				map.put("III.EB_Elementary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
-				map.put("III.EB_Elementary_Period_Of_Attendance_From", " " + eb.getStartDate());
-				map.put("III.EB_Elementary_Period_Of_Attendance_To", " " + eb.getEndDate());
+				
+				if(eb.getDegreeCourse() != null) {
+					if(eb.getDegreeCourse().getDegreeCourseName() != null) {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
+					} else {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+				}
+				
+				map.put("III.EB_Elementary_Period_Of_Attendance_From", " " + formatDateMonthYearOnly(eb.getStartDate()));
+				map.put("III.EB_Elementary_Period_Of_Attendance_To", " " + formatDateMonthYearOnly(eb.getEndDate()));
 				map.put("III.EB_Elementary_HighestLvl_UnitsEarned", " " + eb.getUnitsEarned());
 				map.put("III.EB_Elementary_Year_Graduated", " " + eb.getYearGraduated());
-				map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+				
+				if(eb.getScholarship() != null) {
+					if(eb.getScholarship().getScholarshipName() != null) {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+					} else {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+				}
+				
+				
 			} else if("SECONDARY".equalsIgnoreCase(eb.getDegreeLevel().getDegreeName())) {
 				secPopulated = true;
 				map.put("III.EB_Secondary_School", " " + eb.getSchool().getSchoolName());
-				map.put("III.EB_Secondary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
-				map.put("III.EB_Secondary_Period_Of_Attendance_From",  " " + eb.getStartDate());
-				map.put("III.EB_Secondary_Period_Of_Attendance_To", " " + eb.getEndDate());
+				
+				if(eb.getDegreeCourse() != null) {
+					if(eb.getDegreeCourse().getDegreeCourseName() != null) {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
+					} else {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+				}
+				
+				map.put("III.EB_Secondary_Period_Of_Attendance_From",  " " + formatDateMonthYearOnly(eb.getStartDate()));
+				map.put("III.EB_Secondary_Period_Of_Attendance_To", " " + formatDateMonthYearOnly(eb.getEndDate()));
 				map.put("III.EB_Secondary_HighestLvl_UnitsEarned", " " + eb.getUnitsEarned());
 				map.put("III.EB_Secondary_Year_Graduated", " " + eb.getYearGraduated());
-				map.put("III.EB_Secondary_Scholarship_Academic_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+				
+				if(eb.getScholarship() != null) {
+					if(eb.getScholarship().getScholarshipName() != null) {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+					} else {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+				}
 			} else if("VOCATIONAL".equalsIgnoreCase(eb.getDegreeLevel().getDegreeName())) {
 				vocPopulated = true;
 				map.put("III.EB_Vocational_TradeCourse_School", " " + eb.getSchool().getSchoolName());
-				map.put("III.EB_Vocational_TradeCourse_Basic_Education_Degree_Course",  " " + eb.getDegreeCourse().getDegreeCourseName());
-				map.put("III.EB_Vocational_TradeCourse_Period_Of_Attendance_From",  " " + eb.getStartDate());
-				map.put("III.EB_Vocational_TradeCourse_Period_Of_Attendance_To", " " + eb.getEndDate());
+				
+				if(eb.getDegreeCourse() != null) {
+					if(eb.getDegreeCourse().getDegreeCourseName() != null) {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
+					} else {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+				}
+				
+				map.put("III.EB_Vocational_TradeCourse_Period_Of_Attendance_From",  " " + formatDateMonthYearOnly(eb.getStartDate()));
+				map.put("III.EB_Vocational_TradeCourse_Period_Of_Attendance_To", " " + formatDateMonthYearOnly(eb.getEndDate()));
 				map.put("III.EB_Vocational_TradeCourse_HighestLvl_UnitsEarned", " " + eb.getUnitsEarned());
 				map.put("III.EB_Vocational_TradeCourse_Year_Graduated", " " + eb.getYearGraduated());
-				map.put("III.EB_Vocational_TradeCourse_Scholarship_Academic_Honors_Received", " " + eb.getScholarship().getScholarshipName());
+
+				if(eb.getScholarship() != null) {
+					if(eb.getScholarship().getScholarshipName() != null) {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+					} else {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+				}
 			} else if("COLLEGE".equalsIgnoreCase(eb.getDegreeLevel().getDegreeName())) {
 				collegePopulated = true;
 				map.put("III.EB_College_School", " " + eb.getSchool().getSchoolName());
-				map.put("III.EB_College_BasicEducation_Degree_Course",  " " + eb.getDegreeCourse().getDegreeCourseName());
-				map.put("III.EB_College_Period_Of_Attendance_From",  " " + eb.getStartDate());
-				map.put("III.EB_College_Period_Of_Attendance_To", " " + eb.getEndDate());
+				
+				if(eb.getDegreeCourse() != null) {
+					if(eb.getDegreeCourse().getDegreeCourseName() != null) {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
+					} else {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+				}
+				
+				map.put("III.EB_College_Period_Of_Attendance_From",  " " + formatDateMonthYearOnly(eb.getStartDate()));
+				map.put("III.EB_College_Period_Of_Attendance_To", " " + formatDateMonthYearOnly(eb.getEndDate()));
 				map.put("III.EB_College_HighestLvl_UnitsEarned", " " + eb.getUnitsEarned());
 				map.put("III.EB_College_Year_Graduated", " " + eb.getYearGraduated());
-				map.put("III.EB_College_Scholarship_Academic_Honors_Received", " " + eb.getScholarship().getScholarshipName());
+				
+				if(eb.getScholarship() != null) {
+					if(eb.getScholarship().getScholarshipName() != null) {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+					} else {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+				}
+								
 			} else {
 				gradopulated = true;
 				map.put("III.EB_GraduateStudies_School", " " + eb.getSchool().getSchoolName());
-				map.put("III.EB_GraduateStudies_BasicEducation_Degree_Course",  " " + eb.getDegreeCourse().getDegreeCourseName());
-				map.put("III.EB_GraduateStudies_Period_Of_Attendance_From",  " " + eb.getStartDate());
-				map.put("III.EB_GraduateStudies_Period_Of_Attendance_To ",  " " + eb.getEndDate());
+				
+				if(eb.getDegreeCourse() != null) {
+					if(eb.getDegreeCourse().getDegreeCourseName() != null) {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", " " + eb.getDegreeCourse().getDegreeCourseName());
+					} else {
+						map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_BasicEducation_Degree_Course", "");
+				}
+				
+				map.put("III.EB_GraduateStudies_Period_Of_Attendance_From",  " " + formatDateMonthYearOnly(eb.getStartDate()));
+				map.put("III.EB_GraduateStudies_Period_Of_Attendance_To ",  " " + formatDateMonthYearOnly(eb.getEndDate()));
 				map.put("III.EB_GraduateStudies_HighestLvl_UnitsEarned", " " + eb.getUnitsEarned());
 				map.put("III.EB_GraduateStudies_Year_Graduated", " " + eb.getYearGraduated());
-				map.put("III.EB_GraduateStudies_Scholarship_Academic_Honors_Received", " " + eb.getScholarship().getScholarshipName());
+				
+				if(eb.getScholarship() != null) {
+					if(eb.getScholarship().getScholarshipName() != null) {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", " " + eb.getScholarship().getScholarshipName());
+					} else {
+						map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+					}
+				} else {
+					map.put("III.EB_Elementary_Scholarship_Acad_Honors_Recieved", "");
+				}
 			}
 		}
 		
@@ -503,12 +694,459 @@ public class ReportsController {
 		return map;
 	}
 	
-	private Map<String, Object> populateMapReport2(List<CivilServiceEligibility> csList, List<WorkExperience> workExList, List<OtherInfo> otherInfoList) throws FileNotFoundException {
-		return null;
+	private Map<String, Object> populateMapReport2(List<CivilServiceEligibility> csList, List<WorkExperience> workExList) throws FileNotFoundException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		File file = ResourceUtils.getFile("classpath:static/images/PDS2.png");
+		String bgImg = file.getAbsolutePath();
+		
+		map.put("FormBg2", bgImg);
+		
+		int ctrForCS = 1;
+		for(CivilServiceEligibility cs : csList) {
+			map.put("IV.CSE_Career_Service_RA_1080_"+ctrForCS, " " + getStringValue(cs.getEligibility()) );
+			map.put("IV.CSE_Rating"+ctrForCS, " " + getStringValue(cs.getRating()) );
+			map.put("IV.CSE_Date_Of_Examination"+ctrForCS, " " + getStringValue(cs.getExamDate()) );
+			map.put("IV.CSE_Place_Of_Examination"+ctrForCS, " " + getStringValue(cs.getPlaceOfExam()) );
+			map.put("IV.CSE_License_Number_"+ctrForCS, " " + getStringValue(cs.getLicenseNo()) );
+			map.put("IV.CSE_License_Date_Of_Validity"+ctrForCS, " " + formatDateMonthYearOnly(cs.getLicenseValidityDate()) );
+			ctrForCS++;
+		}
+		
+		if(ctrForCS < 7) {
+			for(int x = ctrForCS; x <= 7; x++) {				
+				map.put("IV.CSE_Career_Service_RA_1080_"+x, "");
+				map.put("IV.CSE_Rating"+x, "");
+				map.put("IV.CSE_Date_Of_Examination"+x, "");
+				map.put("IV.CSE_Place_Of_Examination"+x, "");
+				map.put("IV.CSE_License_Number_"+x, "");
+				map.put("IV.CSE_License_Date_Of_Validity"+x, "");
+			}
+		}
+		
+		int ctrForWorkEx = 1;
+		for(WorkExperience we : workExList) {
+			map.put("V.WE_Inclusive_Dates_From"+ctrForWorkEx, " " + formatDateMonthYearOnly(we.getDateFrom()) );
+			map.put("V.WE_Inclusive_Dates_To"+ctrForWorkEx, " " + formatDateMonthYearOnly(we.getDateTo()) );
+			map.put("V.WE_Position_Title"+ctrForWorkEx, " " + getStringValue(we.getPositionTitle()) );
+			map.put("V.WE_Department_Agency_Office_Company"+ctrForWorkEx, " " + getStringValue(we.getDepartment()) );
+			map.put("V.WE_Montly_Salary"+ctrForWorkEx, " " + getStringValueFromBigDecimal(we.getSalary()) );
+			map.put("V.WE_Salary_Job_PayGrade"+ctrForWorkEx, " " + getStringValue(we.getSalaryGrade() + "") );
+			map.put("V.WE_Status_Of_Appointment"+ctrForWorkEx, " " + getStringValue(we.getAppointmentStatus()) );
+			map.put("V.WE_Gov_Service"+ctrForWorkEx, " " + getStringValue(we.getGovtOffice()) );
+			ctrForWorkEx++;
+		}
+		
+		if(ctrForWorkEx < 28) {
+			for(int x = ctrForWorkEx; x <= 28; x++) {				
+				map.put("V.WE_Inclusive_Dates_From"+x, "");
+				map.put("V.WE_Inclusive_Dates_To"+x, "");
+				map.put("V.WE_Position_Title"+x, "");
+				map.put("V.WE_Department_Agency_Office_Company"+x, "");
+				map.put("V.WE_Montly_Salary"+x, "");
+				map.put("V.WE_Salary_Job_PayGrade"+x, "");
+				map.put("V.WE_Status_Of_Appointment"+x, "");
+				map.put("V.WE_Gov_Service"+x, "");
+			}
+		}
+		
+		map.put("V.WE_SIGNATURE", "");
+		map.put("V.WE_DATE", "");
+		
+		
+		return map;
 	}
 	
-	private Map<String, Object> populateMapReport3(OtherInfoQuestion otherInfoQuestion, List<EmpReferences> referencesList, List<GovermentIssuedId> govIdList) throws FileNotFoundException {
-		return null;
+	private Map<String, Object> populateMapReport3(List<VoluntaryWork> voluntaryList, List<LearningAndDevelopment> learningList, List<OtherInfo> otherList) throws FileNotFoundException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		File file = ResourceUtils.getFile("classpath:static/images/PDS3.png");
+		String bgImg = file.getAbsolutePath();
+		
+		map.put("FormBg3", bgImg);
+		
+		int ctrForVw = 1;
+		for(VoluntaryWork vw : voluntaryList) {
+			map.put("VI.VW_Name_Address_Of_Org"+ctrForVw, " " + getStringValue(vw.getOrgName()) );
+			map.put("VI.VW_Inclusive_Dates_From"+ctrForVw, " " + formatDateMonthYearOnly(vw.getDateFrom()) );
+			map.put("VI.VW_Inclusive_Dates_To"+ctrForVw, " " + formatDateMonthYearOnly(vw.getDateTo()) );
+			map.put("VI.VW_Number_Of_Hours"+ctrForVw, " " + getStringValue(vw.getNoHours() + "") );
+			map.put("VI.VW_Position_Nature_Of_Work"+ctrForVw, " " + getStringValue(vw.getNatureOfWork()) );
+			ctrForVw++;
+		}
+		
+		if(ctrForVw < 7) {
+			for(int x = ctrForVw; x <= 7; x++) {				
+				map.put("VI.VW_Name_Address_Of_Org"+x, "");
+				map.put("VI.VW_Inclusive_Dates_From"+x, "");
+				map.put("VI.VW_Inclusive_Dates_To"+x, "");
+				map.put("VI.VW_Number_Of_Hours"+x, "");
+				map.put("VI.VW_Position_Nature_Of_Work"+x, "");
+			}
+		}
+		
+		int ctrForLd = 1;
+		for(LearningAndDevelopment ld : learningList) {
+			map.put("VII.LAD_Training_Programs"+ctrForLd, " " + getStringValue(ld.getTitleOfSeminar()) );
+			map.put("VII.LAD_Inclusive_Dates_Of_Attendance_From"+ctrForLd, " " + formatDateMonthYearOnly(ld.getDateFrom()) );
+			map.put("VII.LAD_Inclusive_Dates_Of_Attendance_To"+ctrForLd, " " + formatDateMonthYearOnly(ld.getDateTo()) );			
+			map.put("VII.LAD_Number_Of_Hours"+ctrForLd,  " " + getStringValue(ld.getNoHours() + "") );
+			map.put("VII.LAD_Type_Of_LD"+ctrForLd, " " + getStringValue(ld.getLearningType()) );
+			map.put("VII.Conducted_Sponsored_By"+ctrForLd, " " + getStringValue(ld.getProviders()) );
+			ctrForLd++;
+		}
+		
+		if(ctrForLd < 21) {
+			for(int x = ctrForLd; x <= 21; x++) {				
+				map.put("VII.LAD_Training_Programs"+x, "");
+				map.put("VII.LAD_Inclusive_Dates_Of_Attendance_From"+x, "");
+				map.put("VII.LAD_Inclusive_Dates_Of_Attendance_To"+x, "");	
+				map.put("VII.LAD_Number_Of_Hours"+x, "");
+				map.put("VII.LAD_Type_Of_LD"+x, "");
+				map.put("VII.Conducted_Sponsored_By"+x, "");
+			}
+		}
+		
+		int ctrForOtherInfo = 1;
+		for(OtherInfo oi : otherList) {
+			map.put("VIII.OI_Special_Skills_Hobbies"+ctrForOtherInfo, " " + getStringValue(oi.getSpecialSkill()) );
+			map.put("VIII.OI_NonAcademic_Distinctions_Recognitions"+ctrForOtherInfo, " " + getStringValue(oi.getNonAcademic()) );
+			map.put("VIII.OI_Membership_In_Association"+ctrForOtherInfo, " " + getStringValue(oi.getMembershipInAssociation()) );
+			ctrForOtherInfo++;
+		}
+		
+		if(ctrForOtherInfo < 7) {
+			for(int x = ctrForOtherInfo; x <= 7; x++) {				
+				map.put("VIII.OI_Special_Skills_Hobbies"+x, "");
+				map.put("VIII.OI_NonAcademic_Distinctions_Recognitions"+x, "");
+				map.put("VIII.OI_Membership_In_Association"+x, "");
+			}
+		}
+		
+		map.put("VIII.OI_Signature", "");
+		map.put("VIII.OI_Date", "");
+		
+		
+		return map;
+	}
+	
+	private Map<String, Object> populateMapReport4(OtherInfoQuestion otherInfoQuestion, List<EmpReferences> referencesList, List<GovermentIssuedId> govIdList) throws FileNotFoundException {
+		Map<String, Object> map = new HashMap<String, Object>();
+		File file = ResourceUtils.getFile("classpath:static/images/PDS4.png");
+		String bgImg = file.getAbsolutePath();
+		
+		map.put("FormBg4", bgImg);
+		
+		//34 A
+		if(otherInfoQuestion.getQuestionOneThird() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionOneThird())) {
+				map.put("VIII.OI_34_A_Yes", "X");
+				map.put("VIII.OI_34_A_No", "");
+			} else {
+				map.put("VIII.OI_34_A_Yes", "");
+				map.put("VIII.OI_34_A_No", "X");
+			}
+		} else {
+			map.put("VIII.OI_34_A_Yes", "");
+			map.put("VIII.OI_34_A_No", "");
+		}
+		
+		//34 B
+		if(otherInfoQuestion.getQuestionOneFourth() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionOneFourth())) {
+				map.put("VIII.OI_34_B_Yes", "X");
+				map.put("VIII.OI_34_B_No", "");
+				if(otherInfoQuestion.getQuestionOneFourthIfYes() != null 
+						&& otherInfoQuestion.getQuestionOneFourthIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionOneFourthIfYes())) {
+					map.put("VIII.OI_34_If_Yes", otherInfoQuestion.getQuestionOneFourthIfYes());
+				} else {
+					map.put("VIII.OI_34_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_34_B_Yes", "");
+				map.put("VIII.OI_34_B_No", "X");
+				map.put("VIII.OI_34_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_34_B_Yes", "");
+			map.put("VIII.OI_34_B_No", "");
+			map.put("VIII.OI_34_If_Yes", "");
+		}
+		
+		//35 A
+		if(otherInfoQuestion.getQuestionTwoA() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionTwoA())) {
+				map.put("VIII.OI_35_A_Yes", "X");
+				map.put("VIII.OI_35_A_No", "");
+				if(otherInfoQuestion.getQuestionTwoAIfYes() != null 
+						&& otherInfoQuestion.getQuestionTwoAIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionTwoAIfYes())) {
+					map.put("VIII.OI_35_A_If_Yes", otherInfoQuestion.getQuestionTwoAIfYes());
+				} else {
+					map.put("VIII.OI_35_A_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_35_A_Yes", "");
+				map.put("VIII.OI_35_A_No", "X");
+				map.put("VIII.OI_35_A_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_35_A_Yes", "");
+			map.put("VIII.OI_35_A_No", "");
+			map.put("VIII.OI_35_A_If_Yes", "");
+		}
+		
+		//35 B
+		if(otherInfoQuestion.getQuestionTwoB() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionTwoB())) {
+				map.put("VIII.OI_35_B_Yes", "X");
+				map.put("VIII.OI_35_B_No", "");
+				if(otherInfoQuestion.getQuestionTwoBIfYes() != null 
+						&& otherInfoQuestion.getQuestionTwoBIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionTwoBIfYes())) {
+					map.put("VIII.OI_35_Date_Filed", otherInfoQuestion.getQuestionTwoBMonth() + " " + otherInfoQuestion.getQuestionTwoBDay() + " " + otherInfoQuestion.getQuestionTwoBYear());
+					map.put("VIII.OI_35_Status_Of_Cases", otherInfoQuestion.getQuestionTwoBStatusCase());
+				} else {
+					map.put("VIII.OI_35_Date_Filed", "");
+					map.put("VIII.OI_35_Status_Of_Cases", "");
+				}
+			} else {
+				map.put("VIII.OI_35_B_Yes", "");
+				map.put("VIII.OI_35_B_No", "X");
+				map.put("VIII.OI_35_Date_Filed", "");
+				map.put("VIII.OI_35_Status_Of_Cases", "");
+			}
+		} else {
+			map.put("VIII.OI_35_B_Yes", "");
+			map.put("VIII.OI_35_B_No", "");
+			map.put("VIII.OI_35_Date_Filed", "");
+			map.put("VIII.OI_35_Status_Of_Cases", "");			
+		}
+		
+		//36	
+		if(otherInfoQuestion.getQuestionThree() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionThree())) {
+				map.put("VIII.OI_36_A_Yes", "X");
+				map.put("VIII.OI_36_A_No", "");
+				if(otherInfoQuestion.getQuestionThreeIfYes() != null 
+						&& otherInfoQuestion.getQuestionThreeIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionThreeIfYes())) {
+					map.put("VIII.OI_36_If_Yes", otherInfoQuestion.getQuestionThreeIfYes());
+				} else {
+					map.put("VIII.OI_36_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_36_A_Yes", "");
+				map.put("VIII.OI_36_A_No", "X");
+				map.put("VIII.OI_36_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_36_A_Yes", "");
+			map.put("VIII.OI_36_A_No", "");
+			map.put("VIII.OI_36_If_Yes", "");
+		}
+		
+		//37
+		if(otherInfoQuestion.getQuestionFour() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionFour())) {
+				map.put("VIII.OI_37_A_Yes", "X");
+				map.put("VIII.OI_37_A_No", "");
+				if(otherInfoQuestion.getQuestionFourIfYes() != null 
+						&& otherInfoQuestion.getQuestionFourIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionFourIfYes())) {
+					map.put("VIII.OI_37_A_If_Yes", otherInfoQuestion.getQuestionFourIfYes());
+				} else {
+					map.put("VIII.OI_37_A_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_37_A_Yes", "");
+				map.put("VIII.OI_37_A_No", "X");
+				map.put("VIII.OI_37_A_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_37_A_Yes", "");
+			map.put("VIII.OI_37_A_No", "");
+			map.put("VIII.OI_37_A_If_Yes", "");
+		}
+		
+		//38 A
+		if(otherInfoQuestion.getQuestionFive() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionFive())) {
+				map.put("VIII.OI_38_A_Yes", "X");
+				map.put("VIII.OI_38_A_No", "");
+				if(otherInfoQuestion.getQuestionFiveIfYes() != null 
+						&& otherInfoQuestion.getQuestionFiveIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionFiveIfYes())) {
+					map.put("VIII.OI_38_A_If_Yes", otherInfoQuestion.getQuestionFiveIfYes());
+				} else {
+					map.put("VIII.OI_38_A_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_38_A_Yes", "");
+				map.put("VIII.OI_38_A_No", "X");
+				map.put("VIII.OI_38_A_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_38_A_Yes", "");
+			map.put("VIII.OI_38_A_No", "");
+			map.put("VIII.OI_38_A_If_Yes", "");
+		}
+		
+		//38 B
+		if(otherInfoQuestion.getQuestionSix() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionSix())) {
+				map.put("VIII.OI_38_B_Yes", "X");
+				map.put("VIII.OI_38_B_No", "");
+				if(otherInfoQuestion.getQuestionSixIfYes() != null 
+						&& otherInfoQuestion.getQuestionSixIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionSixIfYes())) {
+					map.put("VIII.OI_38_B_If_Yes", otherInfoQuestion.getQuestionSixIfYes());
+				} else {
+					map.put("VIII.OI_38_B_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_38_B_Yes", "");
+				map.put("VIII.OI_38_B_No", "X");
+				map.put("VIII.OI_38_B_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_38_B_Yes", "");
+			map.put("VIII.OI_38_B_No", "");
+			map.put("VIII.OI_38_B_If_Yes", "");
+		}
+		
+		//39
+		if(otherInfoQuestion.getQuestionSevenA() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionSevenA())) {
+				map.put("VIII.OI_39_A_Yes", "X");
+				map.put("VIII.OI_39_A_No", "");
+				if(otherInfoQuestion.getQuestionSevenAIfYes() != null 
+						&& otherInfoQuestion.getQuestionSevenAIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionSevenAIfYes())) {
+					map.put("VIII.OI_39_A_If_Yes", otherInfoQuestion.getQuestionSevenAIfYes());
+				} else {
+					map.put("VIII.OI_39_A_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_39_A_Yes", "");
+				map.put("VIII.OI_39_A_No", "X");
+				map.put("VIII.OI_39_A_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_39_A_Yes", "");
+			map.put("VIII.OI_39_A_No", "");
+			map.put("VIII.OI_39_A_If_Yes", "");
+		}
+		
+		//40 C
+		if(otherInfoQuestion.getQuestionNine() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionNine())) {
+				map.put("VIII.OI_40_C_Yes", "X");
+				map.put("VIII.OI_40_C_No", "");
+				if(otherInfoQuestion.getQuestionNineIfYes() != null 
+						&& otherInfoQuestion.getQuestionNineIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionNineIfYes())) {
+					map.put("VIII.OI_40_C_If_Yes", otherInfoQuestion.getQuestionNineIfYes());
+				} else {
+					map.put("VIII.OI_40_C_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_40_C_Yes", "");
+				map.put("VIII.OI_40_C_No", "X");
+				map.put("VIII.OI_40_C_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_40_C_Yes", "");
+			map.put("VIII.OI_40_C_No", "");
+			map.put("VIII.OI_40_C_If_Yes", "");
+		}
+		
+		//40 A
+		if(otherInfoQuestion.getQuestionTen() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionTen())) {
+				map.put("VIII.OI_40_A_Yes", "X");
+				map.put("VIII.OI_40_A_No", "");
+				if(otherInfoQuestion.getQuestionTenIfYes() != null 
+						&& otherInfoQuestion.getQuestionTenIfYes().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionTenIfYes())) {
+					map.put("VIII.OI_40_A_If_Yes", otherInfoQuestion.getQuestionTenIfYes());
+				} else {
+					map.put("VIII.OI_40_A_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_40_A_Yes", "");
+				map.put("VIII.OI_40_A_No", "X");
+				map.put("VIII.OI_40_A_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_40_A_Yes", "");
+			map.put("VIII.OI_40_A_No", "");
+			map.put("VIII.OI_40_A_If_Yes", "");
+		}
+		
+		//40 B
+		if(otherInfoQuestion.getQuestionEight() != null) {
+			if("YES".equalsIgnoreCase(otherInfoQuestion.getQuestionEight())) {
+				map.put("VIII.OI_40_B_Yes", "X");
+				map.put("VIII.OI_40_B_No", "");
+				if(otherInfoQuestion.getQuestionEightId() != null 
+						&& otherInfoQuestion.getQuestionEightId().length() > 0 
+						&& !"null".equalsIgnoreCase(otherInfoQuestion.getQuestionEightId())) {
+					map.put("VIII.OI_40_B_If_Yes", otherInfoQuestion.getQuestionEightId());
+				} else {
+					map.put("VIII.OI_40_B_If_Yes", "");
+				}
+			} else {
+				map.put("VIII.OI_40_B_Yes", "");
+				map.put("VIII.OI_40_B_No", "X");
+				map.put("VIII.OI_40_B_If_Yes", "");
+			}
+		} else {
+			map.put("VIII.OI_40_B_Yes", "");
+			map.put("VIII.OI_40_B_No", "");
+			map.put("VIII.OI_40_B_If_Yes", "");
+		}
+		
+		
+		
+		//References
+		int ctrForRef = 1;
+		for(EmpReferences ref : referencesList) {
+			map.put("VIII.OI_41_References_Name"+ctrForRef, " " + getStringValue(ref.getReferenceName()) );
+			map.put("VIII.OI_41_References_Address"+ctrForRef, " " + getStringValue(ref.getCompanyAddress()) );
+			map.put("VIII.OI_41_References_Tel_No"+ctrForRef, " " + getStringValue(ref.getCompanyContactNo()) );
+			ctrForRef++;
+		}
+		
+		if(ctrForRef < 3) {
+			for(int x = ctrForRef; x <= 7; x++) {				
+				map.put("VIII.OI_41_References_Name"+x, "");
+				map.put("VIII.OI_41_References_Address"+x, "");
+				map.put("VIII.OI_41_References_Tel_No"+x, "");
+			}
+		}
+		
+		if (!govIdList.isEmpty()) {
+            // Return the first item in the list
+			GovermentIssuedId obj =  govIdList.get(0);
+			map.put("VIII.OI_42_Gov_ID", obj.getGovermentIssuedName());
+			map.put("VIII.OI_42_ID_License_Passport_No", obj.getIdNo());
+			map.put("VIII.OI_42_Date_Place_Of_Issurance", obj.getPlaceOfIssuance());
+			
+		} else {
+			map.put("VIII.OI_42_Gov_ID", "");
+			map.put("VIII.OI_42_ID_License_Passport_No", "");
+			map.put("VIII.OI_42_Date_Place_Of_Issurance", "");
+		}
+		
+		map.put("VIII.OI_42_Signature", "");
+		map.put("VIII.OI_42_Date_Accomplished", "");
+		map.put("VIII.OI_42_Thumbmark", "");
+		map.put("Subscribed_Sworn", "");
+		map.put("Person_Administering Oath", "");
+		
+		//map.put("", "");
+		
+		return map;
 	}
 	
 	@GetMapping("/viewEmployeeListReport")
@@ -516,6 +1154,68 @@ public class ReportsController {
 		
 	}
 	
+	@GetMapping("/viewServiceRecordReportNew/{recordId}")
+	public void viewServiceRecordReportNew(Model model, @PathVariable long recordId, 
+//			@PathVariable String signatory,
+//			@PathVariable String position,
+//			@PathVariable String notes,
+			HttpServletRequest request, HttpServletResponse response) throws JRException, Exception {
+		Optional<ServiceRecordReportRequest> optionalSrRequest = serviceRecordReportRequestRepository.findById(recordId);
+		ServiceRecordReportRequest srReportRequest = optionalSrRequest.orElseGet(() -> new ServiceRecordReportRequest());
+		
+		Optional<Employee> optional = employeeRepository.findById(srReportRequest.getEmployee().getId());
+		Employee employee = optional.orElseGet(() -> new Employee());
+		
+		List<ServiceRecord> list = serviceRecordRepository.findByEmployeeId(srReportRequest.getEmployee().getId());
+		
+		
+		List<ServiceRecordReportDto> reportList = new ArrayList<>(); 
+		
+		for(ServiceRecord sr : list) {
+			reportList.add(convertToDto(sr));
+		}
+		
+		Optional<ServiceRecordSignatory> srsOptional = serviceRecordSignatoryRepository.findAll().stream().findFirst();
+		
+		ServiceRecordSignatory srsObj = new ServiceRecordSignatory();
+		if(srsOptional.isPresent()) {
+			srsObj = srsOptional.get();		
+		}
+		
+		
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("Surname", employee.getLastName());
+		map.put("Given_Name", employee.getFirstName());	
+		map.put("Middle_Name", employee.getMiddleName());	
+		map.put("BirthDate", formatDate(employee.getBirthdate()));	
+		map.put("BirthPlace", employee.getBirthPlace());	
+		map.put("Purpose", srReportRequest.getNotes() != null ? srReportRequest.getNotes() : "");	
+		map.put("Officer", srsObj.getSignatory() != null ? srsObj.getSignatory() : "");	
+		map.put("OfficerPosition", srsObj.getPosition() != null ? srsObj.getPosition() : "");	
+		
+//		map.put("Officer", "");	
+//		map.put("OfficerPosition", "");	
+		map.put("signDate", formatDate(srReportRequest.getPrintDate().plusDays(1)));	
+		
+		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(reportList);
+		
+		response.setContentType("application/pdf");
+		
+		InputStream reportStream = Thread.currentThread().getContextClassLoader().getResourceAsStream( "jasper/reports/Service-Record-Form.jasper");
+		
+		
+		if(reportStream == null){
+			System.out.println("reportStream is NULL");
+		}
+		
+		if(response.getOutputStream() == null){
+			System.out.println("response.getOutputStream() is NULL");
+		}
+		
+		JasperRunManager.runReportToPdfStream(reportStream,	response.getOutputStream(), map, beanColDataSource);
+		
+	}
 	
 	@GetMapping("/viewServiceRecordReport/{employeeId}")
 	public void viewServiceRecordReport(Model model, @PathVariable long employeeId, HttpServletRequest request, HttpServletResponse response) throws JRException, Exception {
@@ -538,6 +1238,7 @@ public class ReportsController {
 		map.put("Purpose", "For Cooperative Membership");	
 		map.put("Officer", "RIZALINO A. ABUSMAN");	
 		map.put("OfficerPosition", "Administrative Officer V");	
+		map.put("signDate", formatDate(LocalDate.now()));	
 		
 		JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(reportList);
 		
@@ -584,29 +1285,14 @@ public class ReportsController {
 		map.put("Office_Of_Assignment", clearance.getEmployee().getDivision().getDivisionName());
 		map.put("Position_SG_Step", clearance.getEmployee().getPositionTitle().getPositionTitleName());
 		map.put("Name_Signature_Employee", empName.toUpperCase());
-		
-		Optional<Employee> emp1 = employeeRepository.findById(clearanceApprovers.getEmpId1());
-		
-		String immediateSupervisor = "";
-		
-		if(emp1.isPresent()) {
-			immediateSupervisor = emp1.get().getFullName().toUpperCase();		
-		}
-		
-//		map.put("Immediate_Supervisor", immediateSupervisor);
-		map.put("Immediate_Supervisor", "");
-		
-		
-		Optional<Employee> emp2 = employeeRepository.findById(clearanceApprovers.getEmpId2());
-		
-		String headOfOffice = "";
-		
-		if(emp2.isPresent()) {
-			headOfOffice = emp2.get().getFullName().toUpperCase();		
-		}
-		
-//		map.put("Head_Of_Office", headOfOffice);
-		map.put("Head_Of_Office", "LUCH R. GEMPIS JR.");
+						
+		String immediateSupervisor = clearanceApprovers.getImmediateSupervisor();
+				
+		map.put("Immediate_Supervisor", immediateSupervisor);
+				
+		String headOfOffice = clearanceApprovers.getHeadOfOffice();
+				
+		map.put("Head_Of_Office", headOfOffice);
 		
 		if("TRANSFER".equalsIgnoreCase(clearance.getPurpose())) {
 			map.put("Transfer", "X");
@@ -651,90 +1337,25 @@ public class ReportsController {
 		map.put("IV_CONPAC_With_Pending", "");
 		map.put("IV_CONPAC_With_Ongoing", "");
 		
-		String clearingOfficer1A = "";
+		String clearingOfficer1A = clearanceApprovers.getAdminPersonA();		
+		String clearingOfficer1B = clearanceApprovers.getAdminPersonB();		
+		String clearingOfficer1C = clearanceApprovers.getAdminPersonC();		
 		
-		Optional<Employee> emp3 = employeeRepository.findById(clearanceApprovers.getEmpId3());
-				
-		if(emp3.isPresent()) {
-			clearingOfficer1A = emp3.get().getFullName().toUpperCase();		
-		}
+		String clearingOfficer2A = clearanceApprovers.getLibraryPersonA();		
+		String clearingOfficer2B = clearanceApprovers.getLibraryPersonB();
 		
-		String clearingOfficer1B = "";
+		String clearingOfficer3A = clearanceApprovers.getFinancePersonA();		
+		String clearingOfficer3B = clearanceApprovers.getFinancePersonB();				
+		String clearingOfficer3C = clearanceApprovers.getFinancePersonC();		
 		
-		Optional<Employee> emp4 = employeeRepository.findById(clearanceApprovers.getEmpId4());
+		String clearingOfficer4A = clearanceApprovers.getProfessionalPersonA();	
 		
-		if(emp4.isPresent()) {
-			clearingOfficer1B = emp4.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer1C = "";
-		
-		Optional<Employee> emp5 = employeeRepository.findById(clearanceApprovers.getEmpId5());
-		
-		if(emp5.isPresent()) {
-			clearingOfficer1C = emp5.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer2A = "";
-		
-		Optional<Employee> emp6 = employeeRepository.findById(clearanceApprovers.getEmpId6());
-		
-		if(emp6.isPresent()) {
-			clearingOfficer2A = emp6.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer2B = "";
-		
-		Optional<Employee> emp7 = employeeRepository.findById(clearanceApprovers.getEmpId7());
-		
-		if(emp7.isPresent()) {
-			clearingOfficer2B = emp7.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer3A = "";
-		
-		Optional<Employee> emp8 = employeeRepository.findById(clearanceApprovers.getEmpId8());
-		
-		if(emp8.isPresent()) {
-			clearingOfficer3A = emp8.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer3B = "";
-		
-		Optional<Employee> emp9 = employeeRepository.findById(clearanceApprovers.getEmpId9());
-		
-		if(emp9.isPresent()) {
-			clearingOfficer3B = emp9.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer3C = "";
-		
-		Optional<Employee> emp10 = employeeRepository.findById(clearanceApprovers.getEmpId10());
-		
-		if(emp10.isPresent()) {
-			clearingOfficer3C = emp10.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer4A = "";
-		
-		Optional<Employee> emp11 = employeeRepository.findById(clearanceApprovers.getEmpId11());
-		
-		if(emp11.isPresent()) {
-			clearingOfficer4A = emp11.get().getFullName().toUpperCase();		
-		}
-		
-		String clearingOfficer5A = "";
-		
-		Optional<Employee> emp12 = employeeRepository.findById(clearanceApprovers.getEmpId12());
-		
-		if(emp12.isPresent()) {
-			clearingOfficer5A = emp12.get().getFullName().toUpperCase();		
-		}
+		String clearingOfficer5A = clearanceApprovers.getSection4Person();
 		
 		//1
 		if(clearingOfficer1A != null && clearingOfficer1A.length() > 0) {
-//			map.put("1A_Name_Clearing_Officer", clearingOfficer1A + "\n" + emp3.get().getPositionTitle().getPositionTitleName());
-			map.put("1A_Name_Clearing_Officer", "RIZALINO A. ABUSMAN\nAdministrative Officer V");
+			map.put("1A_Name_Clearing_Officer", clearingOfficer1A + "\n" + clearanceApprovers.getAdminPositionA());
+//			map.put("1A_Name_Clearing_Officer", "RIZALINO A. ABUSMAN\nAdministrative Officer V");
 			map.put("1A_Cleared", "");
 			map.put("1A_Not_Cleared", "");
 			map.put("1A_Signature", "");
@@ -746,8 +1367,8 @@ public class ReportsController {
 		}
 		
 		if(clearingOfficer1B != null && clearingOfficer1B.length() > 0) {
-//			map.put("1B_Name_Clearing_Officer", clearingOfficer1B + "\n" + emp4.get().getPositionTitle().getPositionTitleName());
-			map.put("1B_Name_Clearing_Officer", "ROSALINDA C. MANOJO\nAdministrative Officer V");
+			map.put("1B_Name_Clearing_Officer", clearingOfficer1B + "\n" + clearanceApprovers.getAdminPositionB());
+//			map.put("1B_Name_Clearing_Officer", "ROSALINDA C. MANOJO\nAdministrative Officer V");
 			map.put("1B_Cleared", "");
 			map.put("1B_Not_Cleared", "");
 			map.put("1B_Signature", "");
@@ -759,8 +1380,8 @@ public class ReportsController {
 		}
 		
 		if(clearingOfficer1C != null && clearingOfficer1C.length() > 0) {
-//			map.put("1C_Name_Clearing_Officer", clearingOfficer1C + "\n" + emp5.get().getPositionTitle().getPositionTitleName());
-			map.put("1C_Name_Clearing_Officer", "");
+			map.put("1C_Name_Clearing_Officer", clearingOfficer1C + "\n" + clearanceApprovers.getAdminPositionC());
+//			map.put("1C_Name_Clearing_Officer", "");
 			map.put("1C_Cleared", "");
 			map.put("1C_Not_Cleared", "");
 			map.put("1C_Signature", "");
@@ -773,8 +1394,8 @@ public class ReportsController {
 		
 		//2
 		if(clearingOfficer2A != null && clearingOfficer2A.length() > 0) {
-//			map.put("2A_Name_Clearing_Officer", clearingOfficer2A + "\n" + emp6.get().getPositionTitle().getPositionTitleName());
-			map.put("2A_Name_Clearing_Officer", "HECTOR R. PASCUAL\nAdministrative Officer V");
+			map.put("2A_Name_Clearing_Officer", clearingOfficer2A + "\n" + clearanceApprovers.getLibraryPositionA());
+//			map.put("2A_Name_Clearing_Officer", "HECTOR R. PASCUAL\nAdministrative Officer V");
 			map.put("2A_Cleared", "");
 			map.put("2A_Not_Cleared", "");
 			map.put("2A_Signature", "");
@@ -786,14 +1407,10 @@ public class ReportsController {
 		}
 		
 		if(clearingOfficer2B != null && clearingOfficer2B.length() > 0) {
-//			map.put("2B_Name_Clearing_Officer", clearingOfficer2B + "\n" + emp7.get().getPositionTitle().getPositionTitleName());
-//			map.put("2B_Cleared", "");
-//			map.put("2B_Not_Cleared", "");
-//			map.put("2B_Signature", "");
-			map.put("2B_Name_Clearing_Officer", "N/A");
-			map.put("2B_Cleared", "N/A");
-			map.put("2B_Not_Cleared", "N/A");
-			map.put("2B_Signature", "N/A");
+			map.put("2B_Name_Clearing_Officer", clearingOfficer2B + "\n" + clearanceApprovers.getLibraryPositionB());
+			map.put("2B_Cleared", "");
+			map.put("2B_Not_Cleared", "");
+			map.put("2B_Signature", "");
 		} else {
 			map.put("2B_Name_Clearing_Officer", "N/A");
 			map.put("2B_Cleared", "N/A");
@@ -803,14 +1420,10 @@ public class ReportsController {
 		
 		//3
 		if(clearingOfficer3A != null && clearingOfficer3A.length() > 0) {
-//			map.put("3A_Name_Clearing_Officer", clearingOfficer3A + "\n" + emp8.get().getPositionTitle().getPositionTitleName());
-//			map.put("3A_Cleared", "");
-//			map.put("3A_Not_Cleared", "");
-//			map.put("3A_Signature", "");
-			map.put("3A_Name_Clearing_Officer", "N/A");
-			map.put("3A_Cleared", "N/A");
-			map.put("3A_Not_Cleared", "N/A");
-			map.put("3A_Signature", "N/A");
+			map.put("3A_Name_Clearing_Officer", clearingOfficer3A + "\n" + clearanceApprovers.getFinancePositionA());
+			map.put("3A_Cleared", "");
+			map.put("3A_Not_Cleared", "");
+			map.put("3A_Signature", "");
 		} else {
 			map.put("3A_Name_Clearing_Officer", "N/A");
 			map.put("3A_Cleared", "N/A");
@@ -819,14 +1432,10 @@ public class ReportsController {
 		}
 		
 		if(clearingOfficer3B != null && clearingOfficer3B.length() > 0) {
-//			map.put("3B_Name_Clearing_Officer", clearingOfficer3B + "\n" + emp9.get().getPositionTitle().getPositionTitleName());
-//			map.put("3B_Cleared", "");
-//			map.put("3B_Not_Cleared", "");
-//			map.put("3B_Signature", "");
-			map.put("3B_Name_Clearing_Officer", "N/A");
-			map.put("3B_Cleared", "N/A");
-			map.put("3B_Not_Cleared", "N/A");
-			map.put("3B_Signature", "N/A");
+			map.put("3B_Name_Clearing_Officer", clearingOfficer3B + "\n" + clearanceApprovers.getFinancePositionB());
+			map.put("3B_Cleared", "");
+			map.put("3B_Not_Cleared", "");
+			map.put("3B_Signature", "");
 		} else {
 			map.put("3B_Name_Clearing_Officer", "N/A");
 			map.put("3B_Cleared", "N/A");
@@ -835,8 +1444,7 @@ public class ReportsController {
 		}
 		
 		if(clearingOfficer3C != null && clearingOfficer3C.length() > 0) {
-//			map.put("3C_Name_Clearing_Officer", clearingOfficer3C + "\n" + emp10.get().getPositionTitle().getPositionTitleName());
-			map.put("3C_Name_Clearing_Officer", "IMELDA R. GONZALES\nAdministrative Officer V");
+			map.put("3C_Name_Clearing_Officer", clearingOfficer3C + "\n" + clearanceApprovers.getFinancePositionC());
 			map.put("3C_Cleared", "");
 			map.put("3C_Not_Cleared", "");
 			map.put("3C_Signature", "");
@@ -849,8 +1457,7 @@ public class ReportsController {
 		
 		//4
 		if(clearingOfficer4A != null && clearingOfficer4A.length() > 0) {
-//			map.put("4A_Name_Clearing_Officer", clearingOfficer4A + "\n" + emp11.get().getPositionTitle().getPositionTitleName());
-			map.put("4A_Name_Clearing_Officer", "ROSALINDA C. MANOJO\nAdministrative Officer V");
+			map.put("4A_Name_Clearing_Officer", clearingOfficer4A + "\n" + clearanceApprovers.getProfessionalPositionA());
 			map.put("4A_Cleared", "");
 			map.put("4A_Not_Cleared", "");
 			map.put("4A_Signature", "");
@@ -863,8 +1470,8 @@ public class ReportsController {
 		
 		//5
 		if(clearingOfficer5A != null && clearingOfficer5A.length() > 0) {
-//			map.put("IV_CONPAC_A_Name_Clearing_Officer", clearingOfficer5A + "\nChief Administrative Officer");
-			map.put("IV_CONPAC_A_Name_Clearing_Officer", "CHARITO A. RUMBO\nChief Administrative Officer");
+			map.put("IV_CONPAC_A_Name_Clearing_Officer", clearingOfficer4A + "\n" + clearanceApprovers.getSection4Position());
+//			map.put("IV_CONPAC_A_Name_Clearing_Officer", "CHARITO A. RUMBO\nChief Administrative Officer");
 			map.put("IV_CONPAC_A_Cleared", "");
 			map.put("IV_CONPAC_A_Not_Cleared", "");
 			map.put("IV_CONPAC_A_Signature", "");
@@ -875,32 +1482,18 @@ public class ReportsController {
 			map.put("IV_CONPAC_A_Signature", "N/A");
 		}
 		
-		String emp13Str = "";
-		Optional<Employee> emp13 = employeeRepository.findById(clearanceApprovers.getEmpId13());
+		String footerSignatory2 = clearanceApprovers.getFooterPerson1();		
 		
-		if(emp13.isPresent()) {
-			emp13Str = emp13.get().getFullName().toUpperCase();		
-		}
-		
-		
-//		map.put("V_CERTIFICATION_NAME2", emp13Str);
-		map.put("V_CERTIFICATION_NAME2", "LUCH R. GEMPIS JR.");
-		map.put("V_CERTIFICATION_POSITION2", "City Gov't. Dept. Head III");
-		
-		String emp14Str = "";
-		Optional<Employee> emp14 = employeeRepository.findById(clearanceApprovers.getEmpId14());
-		
-		if(emp14.isPresent()) {
-			emp14Str = emp14.get().getFullName().toUpperCase();		
-		}
-		
+		map.put("V_CERTIFICATION_NAME2", footerSignatory2);
+//		map.put("V_CERTIFICATION_NAME2", "LUCH R. GEMPIS JR.");
+		map.put("V_CERTIFICATION_POSITION2", clearanceApprovers.getFooterPosition2());
 		map.put("V_CERTIFICATION_OFFICE2", "Secretary to the City Council");
 		
+		String footerSignatory1 = clearanceApprovers.getFooterPerson1();
 		
-		
-//		map.put("V_CERTIFICATION_NAME1", emp14Str);
-		map.put("V_CERTIFICATION_NAME1", "ROMEO N. FRANCIA");
-		map.put("V_CERTIFICATION_POSITION1", "Officer-in-Charge");
+		map.put("V_CERTIFICATION_NAME1", footerSignatory1);
+//		map.put("V_CERTIFICATION_NAME1", "ROMEO N. FRANCIA");
+		map.put("V_CERTIFICATION_POSITION1", clearanceApprovers.getFooterPosition1());
 		map.put("V_CERTIFICATION_OFFICE1", "Office of the Assistant Secretary");
 				
 		
@@ -932,8 +1525,25 @@ public class ReportsController {
 	}
 	
 	private static String formatDate(LocalDate localDate) {
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
-		return localDate.format(formatter);
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");
+		
+		if(localDate != null) {			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+			return localDate.format(formatter);
+		}
+		
+		return "";
+	}
+	
+	private static String formatDateMonthYearOnly(LocalDate localDate) {
+//		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy");		
+		
+		if(localDate != null) {			
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM");
+			return localDate.format(formatter);
+		}
+		
+		return "";
 	}
 	
 	private static ServiceRecordReportDto convertToDto(ServiceRecord serviceRecord) {
@@ -955,5 +1565,221 @@ public class ReportsController {
 		DecimalFormat decimalFormat = new DecimalFormat("#,###,###.00");
 		return decimalFormat.format(obj);
 	}
+	
+	public static Map<String, String> generateProvinceMap() {
+        Map<String, String> provinceMap = new HashMap<>();
+
+        // Add province data to the map
+        provinceMap.put("MM", "Metro Manila");
+        provinceMap.put("ABR", "Abra");
+        provinceMap.put("APA", "Apayao");
+        provinceMap.put("BEN", "Benguet");
+        provinceMap.put("IFU", "Ifugao");
+        provinceMap.put("KAL", "Kalinga");
+        provinceMap.put("MOU", "Mountain Province");
+        provinceMap.put("ILN", "Ilocos Norte");
+        provinceMap.put("ILS", "Ilocos Sur");
+        provinceMap.put("LUN", "La Union");
+        provinceMap.put("PAN", "Pangasinan");
+        provinceMap.put("BTN", "Batanes");
+        provinceMap.put("CAG", "Cagayan");
+        provinceMap.put("ISA", "Isabela");
+        provinceMap.put("NUV", "Nueva Vizcaya");
+        provinceMap.put("QUI", "Quirino");
+        provinceMap.put("AUR", "Aurora");
+        provinceMap.put("BAN", "Bataan");
+        provinceMap.put("BUL", "Bulacan");
+        provinceMap.put("NUE", "Nueva Ecija");
+        provinceMap.put("PAM", "Pampanga");
+        provinceMap.put("TAR", "Tarlac");
+        provinceMap.put("ZMB", "Zambales");
+        provinceMap.put("BTG", "Batangas");
+        provinceMap.put("CAV", "Cavite");
+        provinceMap.put("LAG", "Laguna");
+        provinceMap.put("QUE", "Quezon");
+        provinceMap.put("RIZ", "Rizal");
+        provinceMap.put("MAD", "Marinduque");
+        provinceMap.put("MDC", "Occidental Mindoro");
+        provinceMap.put("MDR", "Oriental Mindoro");
+        provinceMap.put("PLW", "Palawan");
+        provinceMap.put("ROM", "Romblon");
+        provinceMap.put("ALB", "Albay");
+        provinceMap.put("CAN", "Camarines Norte");
+        provinceMap.put("CAS", "Camarines Sur");
+        provinceMap.put("CAT", "Catanduanes");
+        provinceMap.put("MAS", "Masbate");
+        provinceMap.put("SOR", "Sorsogon");
+        provinceMap.put("AKL", "Aklan");
+        provinceMap.put("ANT", "Antique");
+        provinceMap.put("CAP", "Capiz");
+        provinceMap.put("GUI", "Guimaras");
+        provinceMap.put("ILI", "Iloilo");
+        provinceMap.put("NEC", "Negros Occidental");
+        provinceMap.put("BOH", "Bohol");
+        provinceMap.put("CEB", "Cebu");
+        provinceMap.put("NER", "Negros Oriental");
+        provinceMap.put("SIG", "Siquijor");
+        provinceMap.put("BIL", "Biliran");
+        provinceMap.put("EAS", "Eastern Samar");
+        provinceMap.put("LEY", "Leyte");
+        provinceMap.put("NSA", "Northern Samar");
+        provinceMap.put("WSA", "Samar");
+        provinceMap.put("SLE", "Southern Leyte");
+        provinceMap.put("ZAN", "Zamboanga del Norte");
+        provinceMap.put("ZAS", "Zamboanga del Sur");
+        provinceMap.put("ZSI", "Zamboanga Sibugay");
+        provinceMap.put("BUK", "Bukidnon");
+        provinceMap.put("CAM", "Camiguin");
+        provinceMap.put("LAN", "Lanao del Norte");
+        provinceMap.put("MSC", "Misamis Occidental");
+        provinceMap.put("MSR", "Misamis Oriental");
+        provinceMap.put("COM", "Compostela Valley");
+        provinceMap.put("DAV", "Davao del Norte");
+        provinceMap.put("DAS", "Davao del Sur");
+        provinceMap.put("DAC", "Davao Occidental");
+        provinceMap.put("DAO", "Davao Oriental");
+        provinceMap.put("NCO", "Cotabato");
+        provinceMap.put("SAR", "Sarangani");
+        provinceMap.put("SCO", "South Cotabato");
+        provinceMap.put("SUK", "Sultan Kudarat");
+        provinceMap.put("AGN", "Agusan del Norte");
+        provinceMap.put("AGS", "Agusan del Sur");
+        provinceMap.put("DIN", "Dinagat Islands");
+        provinceMap.put("SUN", "Surigao del Norte");
+        provinceMap.put("SUR", "Surigao del Sur");
+        provinceMap.put("BAS", "Basilan");
+        provinceMap.put("LAS", "Lanao del Sur");
+        provinceMap.put("MAG", "Maguindanao");
+        provinceMap.put("SLU", "Sulu");
+        provinceMap.put("TAW", "Tawi-tawi");
+
+        return provinceMap;
+    }
+	
+	private static String getStringValueFromBigDecimal(BigDecimal val) {
+		if(val != null) {
+			DecimalFormat decimalFormat = new DecimalFormat("#,###,###.##");
+			return decimalFormat.format(val);
+		} else {
+			return "";
+		}		
+	}
+	
+	private static String getStringValue(String val) {
+		if(val != null) {
+			if("null".equalsIgnoreCase(val.trim())) {
+				return "";
+			} else {
+				return val;
+			}
+		} else {
+			return "";
+		}		
+	}
+	
+	private static String getStringValueProvince(String val) {
+		Map<String, String> provinceMap = generateProvinceMap();
+		
+		if(val != null) {
+			if("null".equalsIgnoreCase(val.trim())) {
+				return "";
+			} else {
+				return provinceMap.get(val);
+			}
+		} else {
+			return "";
+		}		
+	}
+	
+	//Convert Amount to Words
+	// Array for numbers less than 20
+    private static final String[] belowTwenty = {
+            "", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine",
+            "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+            "Seventeen", "Eighteen", "Nineteen"
+    };
+
+    // Array for tens
+    private static final String[] tens = {
+            "", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"
+    };
+
+    // Array for big numbers
+    private static final String[] bigNumbers = {
+            "", "Thousand", "Million", "Billion"
+    };
+
+    // Convert a number less than 1000 to words
+    private static String convertLessThanThousand(int num) {
+        String current;
+
+        if (num % 100 < 20) {
+            current = belowTwenty[num % 100];
+            num /= 100;
+        } else {
+            current = belowTwenty[num % 10];
+            num /= 10;
+
+            current = tens[num % 10] + (current.isEmpty() ? "" : " " + current);
+            num /= 10;
+        }
+
+        if (num == 0) return current;
+        return belowTwenty[num] + " Hundred" + (current.isEmpty() ? "" : " and " + current);
+    }
+
+    // Convert the integer part to words
+    private static String convertIntegerPart(int num) {
+        if (num == 0) return "Zero";
+
+        String prefix = "";
+        if (num < 0) {
+            num = -num;
+            prefix = "Negative ";
+        }
+
+        String current = "";
+        int place = 0;
+
+        do {
+            int n = num % 1000;
+            if (n != 0) {
+                String s = convertLessThanThousand(n);
+                current = s + (bigNumbers[place].isEmpty() ? "" : " " + bigNumbers[place]) + (current.isEmpty() ? "" : " " + current);
+            }
+            place++;
+            num /= 1000;
+        } while (num > 0);
+
+        return prefix + current.trim();
+    }
+
+    // Convert the fractional part to words
+    private static String convertFractionalPart(int num) {
+        return convertLessThanThousand(num);
+    }
+
+    // Convert the entire amount to words
+    public static String convertAmountInWords(double amount) {
+        int integerPart = (int) amount;
+        int fractionalPart = (int) Math.round((amount - integerPart) * 100);
+
+        String integerPartInWords = convertIntegerPart(integerPart);
+        String formattedAmount = new DecimalFormat("#,###,###.00").format(amount);
+
+        if (fractionalPart == 0) {
+            return String.format("%s (%s)", integerPartInWords, formattedAmount);
+        } else {
+            String fractionalPartInWords = convertFractionalPart(fractionalPart);
+            return String.format("%s and %s/100 (%s)", integerPartInWords, fractionalPartInWords, formattedAmount);
+        }
+    }
+
+    public static void main(String[] args) {
+        double amount1 = 12345.67;
+        double amount2 = 12345.00;
+        System.out.println("Amount in words: " + convertAmountInWords(amount1)); // Should include fractional part and formatted amount
+        System.out.println("Amount in words: " + convertAmountInWords(amount2)); // Should exclude fractional part but include formatted amount
+    }
 
 }

@@ -111,6 +111,24 @@ public class Employee extends Person  implements UserDetails {
     private String userType;
     
     private String profilePhoto;
+    
+    
+    private String houseno1;
+    private String houseno2;
+    private String street1;
+    private String street2;
+    private String subdivision1;
+    private String subdivision2;
+    private String brgy1;
+    private String brgy2;
+    private String city1;
+    private String city2;
+    private String province1;
+    private String province2;
+    private String zipcode1;
+    private String zipcode2;
+    
+    
 	
 	@Transient
 	private MultipartFile photoFile;

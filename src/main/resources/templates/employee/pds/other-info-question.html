@@ -69,45 +69,53 @@
 													<div class="form-group">
 					
 														<div class="row mt-3">
-					                                        <p>1.) Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau of office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed</p>
+					                                        <p>34.) Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau of office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed</p>
 															<div class="col-sm-6">
 																<label for="questionOneThird">a. within the third degree?</label>
 																					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'YES'}" value="YES" onclick="disableDetails('questionOneThird')"/>&nbsp;YES
+																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'YES'}" value="YES" />&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'NO'}" value="NO"  onclick="disabledDetails('questionOneThird')">&nbsp;NO
+																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'NO'}" value="NO"  />&nbsp;NO
 																</p>
 																
+																<!--
 					                                            <div class="col-sm-12">
 					                                                <label for="questionOneThirdIfYes">If YES, give details:</label>
 					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThirdIfYes')}" th:errors="*{questionOneThirdIfYes}"></span>
 					                                                <input type="text" th:field="*{questionOneThirdIfYes}"  id="questionOneThirdIfYes" name="questionOneThirdIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionOneThird == 'NO'}">
 					                                            </div>
+					                                            -->
 															</div>
 															<div class="col-sm-6">
 																<label for="questionOneFourth">b. within the fourth degree?</label>
 																					
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneFourth" id="questionOneFourthYes" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'YES'}" value="YES" onclick="disableDetails('questionOneFourth')"/>&nbsp;YES
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthYes" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'YES'}" value="YES" />&nbsp;YES
 																</p>
 																
 																<p class=" d-flex align-items-center">
-																	<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'NO'}" value="NO"  onclick="disabledDetails('questionOneFourth')">&nbsp;NO
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'NO'}" value="NO"  />&nbsp;NO
 																</p>
 																
-					                                            <div class="col-sm-12">
-					                                                <label for="questionOneFourthIfYes">If YES, give details:</label>
-					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourthIfYes')}" th:errors="*{questionOneFourthIfYes}"></span>
-					                                                <input type="text" th:field="*{questionOneFourthIfYes}" id="questionOneFourthIfYes" name="questionOneFourthIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionOneFourth == 'NO'}">
-					                                            </div>
+					                                            
 															</div>
 														</div>
 														
 														<div class="row mt-3">
-					                                        <p class="col-sm-12">2.) </p>
+															<div class="col-sm-12">
+					                                                <label for="questionOneFourthIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourthIfYes')}" th:errors="*{questionOneFourthIfYes}"></span>
+					                                                <input type="text" th:field="*{questionOneFourthIfYes}" id="questionOneFourthIfYes" name="questionOneFourthIfYes" class="form-control" />
+					                                        </div>
+														</div>	
+														
+														
+														
+														<div class="row mt-3">
+					                                        <p class="col-sm-12">35.) </p>
 															<div class="col-sm-6">
 																<label for="questionTwoA">a. Have you ever been found guilty of any administrative offense?</label>
 																					
@@ -188,7 +196,7 @@
 														</div>
 														
 														<div class="row mt-3">
-					                                        <p>3.) Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</p>
+					                                        <p>36.) Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
 																<p class=" d-flex align-items-center">
@@ -208,7 +216,7 @@
 														</div>
 					
 														<div class="row mt-3">
-					                                        <p>4.) Have you ever been seperated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term,finished contract or phased out (abolition) in the public or private sector?</p>
+					                                        <p>37.) Have you ever been seperated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term,finished contract or phased out (abolition) in the public or private sector?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
 																<p class=" d-flex align-items-center">
@@ -228,7 +236,7 @@
 														</div>
 					
 														<div class="row mt-3">
-					                                        <p>5.) Have you ever been a candidate in national or local election held within the last year (except Barangay Election)?</p>
+					                                        <p>38 A.) Have you ever been a candidate in national or local election held within the last year (except Barangay Election)?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
 																<p class=" d-flex align-items-center">
@@ -248,7 +256,7 @@
 														</div>
 					
 														<div class="row mt-3">
-					                                        <p>6.) Have you resigned from the government service during the three (3) month period before the last election to promote/actively campaign for a national or local candidate?</p>
+					                                        <p>38 B.) Have you resigned from the government service during the three (3) month period before the last election to promote/actively campaign for a national or local candidate?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
 																<p class=" d-flex align-items-center">
@@ -268,7 +276,7 @@
 														</div>
 					
 														<div class="row mt-3">
-					                                        <p>7.) Have you acquired the status of immigrant or permanent resident of another country?</p>
+					                                        <p>39.) Have you acquired the status of immigrant or permanent resident of another country?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
 																<p class=" d-flex align-items-center">
@@ -288,8 +296,30 @@
 														</div>
 														
 														<div class="row mt-3">
-					                                        <p>8.) Are you a person with disability?</p>
+															 <p>40.) Pursuant to: (a) Indigenous Peoples Act (RA 8371; (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act 2000 (RA 8972), please answer the following items:</p>
+														</div>
+														<div class="row mt-3">
+					                                        <p>a.) Are you a member of any indigenous group?</p>
 															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTen')}" th:errors="*{questionTen}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTen" id="questionTenYes" th:field="*{questionTen}" th:checked="${otherInfoQuestion.questionTen == 'YES'}" value="YES" onclick="disableDetails('questionTen')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTen" id="questionTenNo" th:field="*{questionTen}" th:checked="${otherInfoQuestion.questionTen == 'NO'}" value="NO"  onclick="disabledDetails('questionTen')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionTenIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTenIfYes')}" th:errors="*{questionTenIfYes}"></span>
+					                                                <input type="text" th:field="*{questionTenIfYes}"  id="questionTenIfYes" name="questionTenIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionTen == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+														<div class="row mt-3">
+					                                       <p>b. Are you a person with disability?</p>
+															<div class="col-sm-12">															
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEight')}" th:errors="*{questionEight}"></span>
 																<p class=" d-flex align-items-center">
 																	<input type="radio" name="questionEight" id="questionEightYes" th:field="*{questionEight}" th:checked="${otherInfoQuestion.questionEight == 'YES'}" value="YES" onclick="disableDetails('questionEight')"/>&nbsp;YES
@@ -324,7 +354,7 @@
 														</div>
 														
 														<div class="row mt-3">
-					                                        <p>9.) Are you a solo parent?</p>
+					                                        <p>c.) Are you a solo parent?</p>
 															<div class="col-sm-12">
 																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
 																<p class=" d-flex align-items-center">
@@ -347,8 +377,7 @@
 												</div>
 					
 												<div class="modal-footer">
-													<button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-													<button type="submit" class="btn bg-primary">Save Info</button>
+													<button type="submit" class="btn bg-primary" id="submitBtn">Save Info</button>
 												</div>
 											</form>
 										</div>
@@ -424,6 +453,17 @@
 				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
 				$("#myPersonalInfoNav").addClass("active");
+				
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				$('textarea').prop('readonly', true);
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
+				$('input[type="radio"]').prop('disabled', true);
 								
 				$("#showMode").val("PROFILE");
 			} else {

@@ -238,6 +238,7 @@
 			                                                 th:data-row-birthdate="${familyBg.getBirthdate()}"
 			                                                 th:data-row-suffix="${familyBg.getSuffix()}"
 			                                                 th:data-row-gender="${familyBg.getGender()}"
+			                                                 th:data-row-age="${familyBg.getAge()}"
 			                                                 th:data-row-id="${familyBg.getId()}"												 
 															data-toggle="modal" data-target="#modal_form_vertical"
 			                                                >View Record</button>
@@ -337,6 +338,7 @@
 	            var birthdate = $(this).attr('data-row-birthdate');
 	            var suffix = $(this).attr('data-row-suffix');
 	            var gender = $(this).attr('data-row-gender');
+	            var age = $(this).attr('data-row-age');
 	                    
 	            
 	            $("#modal_form_vertical").find("#id").val(id);
@@ -354,6 +356,7 @@
 	            $("#modal_form_vertical").find("#birthdate").val(birthdate);
 	            $("#modal_form_vertical").find("#suffix").val(suffix);
 	            $("#modal_form_vertical").find("#gender").val(gender);
+	            $("#modal_form_vertical").find("#age").val(age);
 	            
 	            if(relationship === 'SPOUSE'){
 					$(".spouseField").show();

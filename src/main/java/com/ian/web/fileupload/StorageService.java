@@ -30,6 +30,19 @@ public class StorageService {
                 fileDownloadUri, file.getSize());
     }
     
+    public FileDTO uploadFile201(MultipartFile file, String fileName, long empId) throws Exception {
+        String[] uploadedFile = this.storageStrategy.uploadFile201(file, fileName, empId);
+        String fileDownloadUri = uploadedFile[0];
+        //String fileName = uploadedFile[1];
+        log.info("fileDownloadUri, {0}" + fileDownloadUri);
+        log.info("filename, {0}" + fileName);
+
+        return new FileDTO(
+                fileName,
+                file.getContentType(),
+                fileDownloadUri, file.getSize());
+    }
+    
     public ResponseEntity<Object> downloadFile(String fileUrl, HttpServletRequest request) throws Exception {
         return this.storageStrategy.downloadFile(fileUrl, request);
     }

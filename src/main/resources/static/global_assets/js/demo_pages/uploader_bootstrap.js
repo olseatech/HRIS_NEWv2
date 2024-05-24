@@ -100,6 +100,30 @@ var FileUpload = function() {
             fileActionSettings: fileActionSettings
         });
 
+		$('.file-input-preview-manila').fileinput({
+            browseLabel: 'Browse',
+            browseIcon: '<i class="icon-file-plus mr-2"></i>',
+            uploadIcon: '<i class="icon-file-upload2 mr-2"></i>',
+            removeIcon: '<i class="icon-cross2 font-size-base mr-2"></i>',
+            layoutTemplates: {
+                icon: '<i class="icon-file-check"></i>',
+                modal: modalTemplate
+            },
+            initialPreview: [
+            	//contextRoot + '/global_assets/images/pie-chart.png',
+            	//contextRoot + '/global_assets/images/placeholders/placeholder.jpg',
+            ],
+            initialPreviewConfig: [
+                //{caption: 'Jane.jpg', size: 930321, key: 1, url: contextRoot + '/global_assets/images/pie-chart.png', showDrag: false},
+                //{caption: 'Anna.jpg', size: 1218822, key: 2, url: '{$url}', showDrag: false}
+            ],
+            initialPreviewAsData: true,
+            overwriteInitial: false,
+            maxFileSize: 100,
+            previewZoomButtonClasses: previewZoomButtonClasses,
+            previewZoomButtonIcons: previewZoomButtonIcons,
+            fileActionSettings: fileActionSettings
+        });
 
         //
         // Basic example

@@ -65,7 +65,7 @@
 											</div>
 											<div class="col-sm-4">
 												<label for="degreeCourse">Degree/Course</label>
-												<select th:field="*{degreeCourse.id}" id="degreeCourse" class="form-control required-field-hrisp">
+												<select th:field="*{degreeCourse.id}" id="degreeCourse" class="form-control">
 													<option selected value="">SELECT VALUE</option>
 													<option th:each="degreeCourse : ${degreeCourseList}" th:value="${degreeCourse.id}" th:text="${degreeCourse.degreeCourseName}">degreeCourseName</option>
 										   		</select>

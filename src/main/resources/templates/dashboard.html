@@ -42,6 +42,80 @@
 					<div class="tab-content w-100 order-2 order-md-1">
 						<div class="tab-pane fade active show" id="activity">							
 							<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
+							
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">									
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Number of Actual Employees</h5>
+											<div class="header-elements">
+												<div class="list-icons">
+							                		<a class="list-icons-item" data-action="collapse"></a>
+							                		<a class="list-icons-item" data-action="reload"></a>
+							                		<a class="list-icons-item" data-action="remove"></a>
+							                	</div>
+						                	</div>
+										</div>
+			
+										<div class="card-body">
+											<div class="chart-container">
+												<div class="chart has-fixed-height" id="pie_donut_by_status"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">									
+									<!-- Basic pie -->
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Number of Actual Employees</h5>
+											<div class="header-elements">
+												<div class="list-icons">
+							                		<a class="list-icons-item" data-action="collapse"></a>
+							                		<a class="list-icons-item" data-action="reload"></a>
+							                		<a class="list-icons-item" data-action="remove"></a>
+							                	</div>
+						                	</div>
+										</div>
+			
+										<div class="card-body">
+											<div class="chart-container">
+												<div class="chart has-fixed-height" id="pie_basic_by_division"></div>
+											</div>
+										</div>
+									</div>
+									<!-- /basic pie -->
+								</div>
+								
+								
+							</div>
+							
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">									
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Number of Actual Employees</h5>
+											<div class="header-elements">
+												<div class="list-icons">
+							                		<a class="list-icons-item" data-action="collapse"></a>
+							                		<a class="list-icons-item" data-action="reload"></a>
+							                		<a class="list-icons-item" data-action="remove"></a>
+							                	</div>
+						                	</div>
+										</div>
+			
+										<div class="card-body">
+											<div class="chart-container">
+												<div class="chart has-fixed-height" id="pie_donut_by_gender"></div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--
 							<div class="row">			
 								<div class="col-lg-12 offset-lg-0">
 									
@@ -73,11 +147,11 @@
 												</table>
 											</div>
 										</div>
-									</div>		
-									<!-- card -->								
-			
+									</div>	
 								</div>		
 							</div>
+							-->
+							
 							</th:block>
 							<!-- /row -->
 							<div class="row">			
@@ -217,6 +291,31 @@
 									</ul>
 								</div>
 							</div>
+							
+							
+							<th:block th:if="${session.actorObj == null ? false : session.actorObj.userType == 'ROLE_ADMIN'}">
+							<!-- Birthday -->
+							<div class="card">
+								<div class="card-header header-elements-inline">
+									<h6 class="card-title">Birthday Celebrants</h6>
+								</div>
+	
+								<div class="card-body">	
+									<ul class="media-list">
+										<li class="media">
+											<div class="mr-3">
+												<a href="#" class="btn bg-transparent border-danger text-danger rounded-round border-2 btn-icon"><i class="fas fa-birthday-cake"></i></a>
+											</div>
+											
+											<div class="media-body">
+												Ian Alfred Orozco <br><span class="font-weight-semibold text-danger">Jan 27, 1982</span>
+											</div>	
+										</li>										
+									</ul>
+								</div>
+							</div>							
+							<!-- /Birthday -->
+							</th:block>
 						</div>
 						<!-- /sidebar content -->
 					</div>
@@ -252,15 +351,66 @@
 	    /*<![CDATA[*/
 	    var loggedInId = /*[[${session.actorObj.id}]]*/ null;
 	    /*]]>*/
+	    
+	    
 	
 	    $(document).ready(function() {			
 			
-			getEmployeeStatusCount();
-			getNewClerances();
+			getEmployeeCountByStatus();
+			getEmployeeCountByDivision();
+			getEmployeeCountByGender();
+			getNewClerances();	
+			getBirthdayListEmployees();	
 			
 			
+			function getBirthdayListEmployees(){
+				let url = contextRoot + '/employee-bdaylist';
+				
+				$.ajax({
+	                url: url,
+	                type: 'GET',
+	                dataType: 'json',
+	                success: function(response) {
+	                    // Render statusCounts into table
+	                    //renderTable(response);
+	                    renderEmployeeBirthdayList(response);
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('Error fetching statusCounts:', error);
+	                }
+	            });
+            
+				
+			}
 			
-			function getEmployeeStatusCount(){
+			function renderEmployeeBirthdayList(data) {
+			    const mediaList = document.querySelector('.media-list');
+			    mediaList.innerHTML = ''; // Clear existing list items
+			    
+			    if (data.length === 0) {
+			        const li = document.createElement('li');
+			        li.textContent = 'No Celebrants for this month';
+			        mediaList.appendChild(li);
+			    } else {
+			    
+				    data.forEach(item => {
+				        const li = document.createElement('li');
+				        li.classList.add('media');
+				        
+				        li.innerHTML = `
+				            <div class="mr-3">
+				                <a href="#" class="btn bg-transparent border-danger text-danger rounded-round border-2 btn-icon"><i class="fas fa-birthday-cake"></i></a>
+				            </div>
+				            <div class="media-body">
+				                ${item}
+				            </div>`;
+				        
+				        mediaList.appendChild(li);
+				    });
+				}
+			}	
+			
+			function getEmployeeCountByStatus(){
 				let url = contextRoot + '/employee-status/count';
 				
 				$.ajax({
@@ -269,7 +419,48 @@
 	                dataType: 'json',
 	                success: function(response) {
 	                    // Render statusCounts into table
-	                    renderTable(response);
+	                    //renderTable(response);
+	                    showEmployeeCountByStatus(response);
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('Error fetching statusCounts:', error);
+	                }
+	            });
+            
+				
+			}
+			
+			function getEmployeeCountByDivision(){
+				let url = contextRoot + '/employee-division/count';
+				
+				$.ajax({
+	                url: url,
+	                type: 'GET',
+	                dataType: 'json',
+	                success: function(response) {
+	                    // Render statusCounts into table
+	                    //renderTable(response);
+	                    showEmployeeCountByDivision(response);
+	                },
+	                error: function(xhr, status, error) {
+	                    console.error('Error fetching statusCounts:', error);
+	                }
+	            });
+            
+				
+			}
+			
+			function getEmployeeCountByGender(){
+				let url = contextRoot + '/employee-gender/count';
+				
+				$.ajax({
+	                url: url,
+	                type: 'GET',
+	                dataType: 'json',
+	                success: function(response) {
+	                    // Render statusCounts into table
+	                    //renderTable(response);
+	                    showEmployeeCountByGender(response);
 	                },
 	                error: function(xhr, status, error) {
 	                    console.error('Error fetching statusCounts:', error);
@@ -470,6 +661,309 @@
 				alert(3);
 		}
 
+	</script>
+	
+	<script th:inline="javascript">	
+		
+		
+		function showEmployeeCountByStatus(data) {
+			
+			var pie_donut_element = document.getElementById('pie_donut_by_status');
+			var legendData = extractLegendLabels(data); //Object.keys(data);
+			var seriesData = formatChartData(data);
+
+	        //
+	        // Charts configuration
+	        //
+	
+	        if (pie_donut_element) {
+	
+	            // Initialize chart
+	            var pie_donut = echarts.init(pie_donut_element);
+	
+	
+	            //
+	            // Chart config
+	            //
+	
+	            // Options
+	            pie_donut.setOption({
+	
+	                // Colors
+	                color: [
+	                    '#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80',
+	                    '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
+	                    '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
+	                    '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089'
+	                ],
+	
+	                // Global text styles
+	                textStyle: {
+	                    fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+	                    fontSize: 13
+	                },
+	
+	                // Add title
+	                title: {
+	                    text: 'By Employee Status',
+	                    subtext: 'No. of employees per employment status.',
+	                    left: 'center',
+	                    textStyle: {
+	                        fontSize: 17,
+	                        fontWeight: 500
+	                    },
+	                    subtextStyle: {
+	                        fontSize: 12
+	                    }
+	                },
+	
+	                // Add tooltip
+	                tooltip: {
+	                    trigger: 'item',
+	                    backgroundColor: 'rgba(0,0,0,0.75)',
+	                    padding: [10, 15],
+	                    textStyle: {
+	                        fontSize: 13,
+	                        fontFamily: 'Roboto, sans-serif'
+	                    },
+	                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+	                },
+	
+	                // Add legend
+	                legend: {
+	                    orient: 'vertical',
+	                    top: 'center',
+	                    left: 0,
+	                    data: legendData,
+	                    itemHeight: 8,
+	                    itemWidth: 8
+	                },
+	
+	                // Add series
+	                series: [{
+	                    name: 'Status',
+	                    type: 'pie',
+	                    radius: ['50%', '70%'],
+	                    center: ['60%', '57.5%'],
+	                    itemStyle: {
+	                        normal: {
+	                            borderWidth: 1,
+	                            borderColor: '#fff'
+	                        }
+	                    },
+	                    data: seriesData,
+	                }]
+	            });
+	        }
+			
+		}
+		
+		
+		function formatChartData(data) {
+		    return Object.keys(data).map(key => {
+		        return { value: data[key], name: key + ' (' + data[key] + ')' }; // Adjust the name format as needed
+		    });
+		}
+		
+		function extractLegendLabels(data) {
+		    return Object.keys(data).map(key => key + ' (' + data[key] + ')');
+		}
+		
+		function showEmployeeCountByDivision(data) {
+			// Define element
+	        var pie_basic_element = document.getElementById('pie_basic_by_division');
+			//var legendData = Object.keys(data).map(label => label + ' (' + data[label] + ')');
+			var legendData = extractLegendLabels(data); //Object.keys(data);
+			var seriesData = formatChartData(data);
+	
+	        //
+	        // Charts configuration
+	        //
+	
+	        if (pie_basic_element) {
+	
+	            // Initialize chart
+	            var pie_basic = echarts.init(pie_basic_element);
+	
+	
+	            //
+	            // Chart config
+	            //
+	
+	            // Options
+	            pie_basic.setOption({
+	
+	                // Colors
+	                color: [
+	                    '#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80',
+	                    '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
+	                    '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
+	                    '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089'
+	                ],
+	
+	                // Global text styles
+	                textStyle: {
+	                    fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+	                    fontSize: 13
+	                },
+	
+	                // Add title
+	                title: {
+	                    text: 'By Division',
+	                    subtext: 'No. of employees per division',
+	                    left: 'center',
+	                    textStyle: {
+	                        fontSize: 17,
+	                        fontWeight: 500
+	                    },
+	                    subtextStyle: {
+	                        fontSize: 12
+	                    }
+	                },
+	
+	                // Add tooltip
+	                tooltip: {
+	                    trigger: 'item',
+	                    backgroundColor: 'rgba(0,0,0,0.75)',
+	                    padding: [10, 15],
+	                    textStyle: {
+	                        fontSize: 13,
+	                        fontFamily: 'Roboto, sans-serif'
+	                    },
+	                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+	                },
+	
+	                // Add legend
+	                legend: {
+	                    orient: 'vertical',
+	                    top: 'center',
+	                    left: 0,
+	                    //data: ['IE', 'Opera', 'Safari', 'Firefox', 'Chrome'],
+	                    data: legendData,
+	                    itemHeight: 8,
+	                    itemWidth: 8
+	                },
+	
+	                // Add series
+	                series: [{
+	                    name: 'Division',
+	                    type: 'pie',
+	                    radius: '70%',
+	                    center: ['60%', '57.5%'],
+	                    itemStyle: {
+	                        normal: {
+	                            borderWidth: 1,
+	                            borderColor: '#fff'
+	                        }
+	                    },
+	                    data : seriesData
+	                    //data: [
+	                    //    {value: 335, name: 'IExxx'},
+	                    //    {value: 310, name: 'Operaxxx'},
+	                    //    {value: 234, name: 'Safari'},
+	                    //    {value: 135, name: 'Firefox'},
+	                    //    {value: 1548, name: 'Chrome'}
+	                    //]
+	                }]
+	            });
+	        }
+		}
+		
+		
+		function showEmployeeCountByGender(data) {
+			
+			var pie_donut_element = document.getElementById('pie_donut_by_gender');
+			var legendData = extractLegendLabels(data); //Object.keys(data);
+			var seriesData = formatChartData(data);
+
+	        //
+	        // Charts configuration
+	        //
+	
+	        if (pie_donut_element) {
+	
+	            // Initialize chart
+	            var pie_donut = echarts.init(pie_donut_element);
+	
+	
+	            //
+	            // Chart config
+	            //
+	
+	            // Options
+	            pie_donut.setOption({
+	
+	                // Colors
+	                color: [
+	                    '#2ec7c9','#b6a2de','#5ab1ef','#ffb980','#d87a80',
+	                    '#8d98b3','#e5cf0d','#97b552','#95706d','#dc69aa',
+	                    '#07a2a4','#9a7fd1','#588dd5','#f5994e','#c05050',
+	                    '#59678c','#c9ab00','#7eb00a','#6f5553','#c14089'
+	                ],
+	
+	                // Global text styles
+	                textStyle: {
+	                    fontFamily: 'Roboto, Arial, Verdana, sans-serif',
+	                    fontSize: 13
+	                },
+	
+	                // Add title
+	                title: {
+	                    text: 'By Employee Gender',
+	                    subtext: 'No. of employees per gender.',
+	                    left: 'center',
+	                    textStyle: {
+	                        fontSize: 17,
+	                        fontWeight: 500
+	                    },
+	                    subtextStyle: {
+	                        fontSize: 12
+	                    }
+	                },
+	
+	                // Add tooltip
+	                tooltip: {
+	                    trigger: 'item',
+	                    backgroundColor: 'rgba(0,0,0,0.75)',
+	                    padding: [10, 15],
+	                    textStyle: {
+	                        fontSize: 13,
+	                        fontFamily: 'Roboto, sans-serif'
+	                    },
+	                    formatter: "{a} <br/>{b}: {c} ({d}%)"
+	                },
+	
+	                // Add legend
+	                legend: {
+	                    orient: 'vertical',
+	                    top: 'center',
+	                    left: 0,
+	                    data: legendData,
+	                    itemHeight: 8,
+	                    itemWidth: 8
+	                },
+	
+	                // Add series
+	                series: [{
+	                    name: 'Status',
+	                    type: 'pie',
+	                    radius: ['50%', '70%'],
+	                    center: ['60%', '57.5%'],
+	                    itemStyle: {
+	                        normal: {
+	                            borderWidth: 1,
+	                            borderColor: '#fff'
+	                        }
+	                    },
+	                    data: seriesData,
+	                }]
+	            });
+	        }
+			
+		}
+		
+		
+		
 	</script>
 
 </body>
