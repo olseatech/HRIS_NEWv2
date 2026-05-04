@@ -27,10 +27,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ian.web.common.model.Person;
 import com.ian.web.employee.familybg.FamilyBg;
+import com.ian.web.systemsettings.district.District;
 import com.ian.web.systemsettings.division.Division;
 import com.ian.web.systemsettings.employee_status.EmployeeStatus;
 import com.ian.web.systemsettings.position_title.PositionTitle;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -41,9 +43,12 @@ import lombok.NoArgsConstructor;
 @Table(uniqueConstraints = {
         @UniqueConstraint(name = "unique_username_employee", columnNames = "username")
 })
-@NoArgsConstructor 
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
+@JsonIgnoreProperties({"password", "confirmPassword", "authorities",
+        "accountNonExpired", "accountNonLocked", "credentialsNonExpired", "enabled",
+        "photoFile", "familyBgList", "pdsCountDto"})
 public class Employee extends Person  implements UserDetails {
 	
 	private static final long serialVersionUID = 1L;
@@ -96,6 +101,10 @@ public class Employee extends Person  implements UserDetails {
     private String status = "ACTIVE";
     
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "district_id")
+    private District district;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "division_id")
     private Division division;
     
@@ -126,9 +135,7 @@ public class Employee extends Person  implements UserDetails {
     private String province1;
     private String province2;
     private String zipcode1;
-    private String zipcode2;
-    
-    
+    private String zipcode2;    
 	
 	@Transient
 	private MultipartFile photoFile;
@@ -138,38 +145,6 @@ public class Employee extends Person  implements UserDetails {
 	
 	@Transient
 	private PdsCountDto pdsCountDto;
-
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_educational_background", referencedColumnName = "id")
-//    private List<EducationalBackground> educationalBackgrounds;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_work_experience", referencedColumnName = "id")
-//    private List<WorkExperience> workExperiences;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_voluntary_experience", referencedColumnName = "id")
-//    private List<VoluntaryWork> voluntaryWorks;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-//    @JoinColumn(name = "employee_other_info", referencedColumnName = "id")
-//    private List<OtherInfo> otherInfos;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_references", referencedColumnName = "id")
-//    private List<EmpReferences> empReferences;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_eligibility", referencedColumnName = "id")
-//    private List<CivilServiceEligibility> civilServiceEligibilities;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_learning_development", referencedColumnName = "id")
-//    private List<LearningAndDevelopment> learningAndDevelopments;
-//
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "employee_government_id", referencedColumnName = "id")
-//    private List<GovermentIssuedId> govermentIssuedIds;
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -192,6 +167,66 @@ public class Employee extends Person  implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Employee{");
+        sb.append("id=").append(id);
+        sb.append(", showMode='").append(showMode).append('\'');
+        sb.append(", empHashCode='").append(empHashCode).append('\'');
+        sb.append(", empNo='").append(empNo).append('\'');
+        sb.append(", username='").append(username).append('\'');
+        sb.append(", assumptiondate=").append(assumptiondate);
+        sb.append(", plantillaNo='").append(plantillaNo).append('\'');
+        sb.append(", titleSuffix='").append(titleSuffix).append('\'');
+        sb.append(", civilStatus='").append(civilStatus).append('\'');
+        sb.append(", height='").append(height).append('\'');
+        sb.append(", weight='").append(weight).append('\'');
+        sb.append(", religion='").append(religion).append('\'');
+        sb.append(", bloodType='").append(bloodType).append('\'');
+        sb.append(", gsisBpNo='").append(gsisBpNo).append('\'');
+        sb.append(", gsisPolicyNo='").append(gsisPolicyNo).append('\'');
+        sb.append(", gsisIdNo='").append(gsisIdNo).append('\'');
+        sb.append(", pagibigNo='").append(pagibigNo).append('\'');
+        sb.append(", philhealthNo='").append(philhealthNo).append('\'');
+        sb.append(", sssNo='").append(sssNo).append('\'');
+        sb.append(", tin='").append(tin).append('\'');
+        sb.append(", citizenship='").append(citizenship).append('\'');
+        sb.append(", countryOfOrigin='").append(countryOfOrigin).append('\'');
+        sb.append(", birthPlace='").append(birthPlace).append('\'');
+        sb.append(", telNo='").append(telNo).append('\'');
+        sb.append(", email1='").append(email1).append('\'');
+        sb.append(", email2='").append(email2).append('\'');
+        sb.append(", mobileNo1='").append(mobileNo1).append('\'');
+        sb.append(", mobileNo2='").append(mobileNo2).append('\'');
+        sb.append(", status='").append(status).append('\'');
+        sb.append(", district=").append(district);
+        sb.append(", division=").append(division);
+        sb.append(", employeeStatus=").append(employeeStatus);
+        sb.append(", positionTitle=").append(positionTitle);
+        sb.append(", userType='").append(userType).append('\'');
+        sb.append(", profilePhoto='").append(profilePhoto).append('\'');
+        sb.append(", houseno1='").append(houseno1).append('\'');
+        sb.append(", houseno2='").append(houseno2).append('\'');
+        sb.append(", street1='").append(street1).append('\'');
+        sb.append(", street2='").append(street2).append('\'');
+        sb.append(", subdivision1='").append(subdivision1).append('\'');
+        sb.append(", subdivision2='").append(subdivision2).append('\'');
+        sb.append(", brgy1='").append(brgy1).append('\'');
+        sb.append(", brgy2='").append(brgy2).append('\'');
+        sb.append(", city1='").append(city1).append('\'');
+        sb.append(", city2='").append(city2).append('\'');
+        sb.append(", province1='").append(province1).append('\'');
+        sb.append(", province2='").append(province2).append('\'');
+        sb.append(", zipcode1='").append(zipcode1).append('\'');
+        sb.append(", zipcode2='").append(zipcode2).append('\'');
+        sb.append(", photoFile=").append(photoFile);
+        sb.append(", familyBgList=").append(familyBgList);
+        sb.append(", pdsCountDto=").append(pdsCountDto);
+        sb.append('}');
+        return sb.toString();
     }
 	
 }

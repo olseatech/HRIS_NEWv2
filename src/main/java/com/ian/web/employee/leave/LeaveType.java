@@ -1,0 +1,78 @@
+package com.ian.web.employee.leave;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import lombok.*;
+
+/**
+ * Configurable leave type (Vacation Leave, Sick Leave, etc.).
+ * Not hard-coded — HR Admin manages these via System Settings.
+ */
+@Entity
+@Table(name = "leave_type")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class LeaveType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    /** Short code used in reports: VL, SL, FL, SPL, ML, PL, SLBWOP, etc. */
+    @NotBlank
+    @Column(unique = true, length = 20)
+    private String leaveCode;
+
+    @NotBlank
+    private String leaveName;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    /** Maximum days that can be accrued per calendar year (0 = unlimited / LWOP). */
+    private double maxDaysPerYear;
+
+    /** Days earned per month of service (0 = not accrual-based, e.g. Maternity). */
+    private double accrualPerMonth;
+
+    /** Maximum unused balance allowed to carry over to next year. */
+    private double carryOverMax;
+
+    /** Whether the leave type is commutable to cash. */
+    private boolean commutable;
+
+    /** Whether this leave type counts as Leave Without Pay when balance is 0. */
+    private boolean lwopType;
+
+    /** Whether a medical certificate is required. */
+    private boolean requiresMedCert;
+
+    /**
+     * Comma-separated employment type eligibility filter,
+     * e.g. "PERMANENT,CASUAL" — empty means all types eligible.
+     */
+    @Column(length = 500)
+    private String eligibleEmploymentTypes;
+
+    /** Whether this leave type is currently active/selectable. */
+    private boolean active = true;
+
+    /** Display sort order in forms and reports. */
+    private int sortOrder;
+
+    /**
+     * Month (1–12) on which annual balance resets to 0 (e.g. 1 = January for SPL).
+     * Null means no annual reset.
+     */
+    private Integer annualResetMonth;
+
+    /**
+     * Days of return-of-service obligation for study leave (SdL).
+     * 0 means no obligation.
+     */
+    private int serviceObligationDays;
+
+    @Transient
+    private String showMode;
+}
