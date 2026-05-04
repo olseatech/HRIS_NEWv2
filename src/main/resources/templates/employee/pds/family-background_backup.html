@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+	<title>Dashboard</title>
+
+
+</head>
+
+<body>
+
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+
+					
+	<!-- Page content -->
+	<div class="page-content">
+	
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">
+							
+							<div class="page-title d-flex">
+								<h4><span class="font-weight-semibold">Family Background Information</span></h4>
+								<a href="#" class="header-elements-toggle text-default d-md-none"><i class="icon-more"></i></a>
+							</div>			
+							
+							<form id="employeeForm" th:action="@{/editEmployee}" method="post" th:object="${employee}">					
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header header-elements-inline bg-primary">
+											<h6 class="card-title">Spouse Information</h6>
+										</div>
+										<div class="card-body">
+											
+												<input type="hidden" th:field="*{id}" name="id" id="id">
+												<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
+												<div class="modal-body">													
+													<div class="form-group">
+														<div class="row">
+															<div class="col-sm-4">
+																<label for="firstName">First Name</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+																<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control required-field-hrisp" >
+															</div>							                
+											                
+															<div class="col-sm-4">
+																<label for="lastName">Last Name</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+																<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control required-field-hrisp" >
+															</div>
+															
+															<div class="col-sm-4">
+																<label for="middleName">Middle Name</label>
+																<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control required-field-hrisp" >
+															</div>
+											            </div>
+													</div>
+													
+													<div class="form-group">
+														<div class="row">   
+															<div class="col-sm-4">
+																<label for="suffix">Suffix</label>
+																<input type="text" class="form-control" id="suffix" name="suffix" th:field="*{suffix}" placeholder="Sample Jr. Sr."/>
+															</div>
+															
+															<div class="col-sm-4">
+																<label for="birthdate">Birthdate</label>
+																<input type="date" class="form-control required-field-hrisp" id="birthdate" name="birthdate" th:field="*{birthdate}" />
+															</div>
+															
+															<div class="col-sm-4">
+																<label for="age">Age</label>
+																<input type="text" class="form-control" id="age" placeholder="Age" readonly/>
+															</div>											 
+															
+											           </div>
+													</div>
+													
+													<div class="form-group">
+														<div class="row">   
+																										
+															<div class="col-sm-4">
+																<label for="telNo">TIN</label>
+																<input type="text" class="form-control" id="telNo" name="telNo" th:field="*{telNo}" placeholder="TIN"/>
+															</div>
+															 
+															<div class="col-sm-4">
+																<label for="mobileNo1">Occupation</label>
+																<input id="mobileNo1" name="mobileno1" title="enter your mobile number" th:field="*{mobileNo1}" placeholder="Occupation" type="text" class="form-control">
+															</div>
+											                    
+															<div class="col-sm-4">
+																<label for="email1">Employer/Business Name</label>
+																<input id="email1" name="email1" title="enter your email." th:field="*{email1}" placeholder="Employer/Business Name" type="text" class="form-control" >
+															</div>
+											           </div>
+													</div>
+													
+													<div class="form-group">
+														<div class="row">
+															<div class="col-sm-4">
+																<label for="gender">Telephone (Office)</label>
+																<input type="text" class="form-control" id="telNo" name="telNo" placeholder="Telephone (Office)"/>
+															</div>							                
+											                
+															<div class="col-sm-4">
+																<label for="civilStatus">Employment Status</label>
+																<select class="form-control" name="civilStatus" id="civilStatus" th:field="*{civilStatus}">
+																	<option value="">SELECT VALUE</option>
+																	<option value="UNEMPLOYED">UNEMPLOYED</option>
+																	<option value="EMPLOYED LOCALLY">EMPLOYED LOCALLY</option>
+																	<option value="EMPLOYED ABROAD">EMPLOYED ABROAD</option>
+																	<option value="BUSINESS OWNER">BUSINESS OWNER</option>
+																</select>
+															</div>
+											                    
+															<div class="col-sm-4">
+																<label for="citizenship">Contact Number (Personal)</label>
+																<input type="text" class="form-control" id="telNo" name="telNo" placeholder="Contact Number (Personal)"/>
+															</div>
+											            </div>
+													</div>
+													
+													<div class="form-group">
+														<div class="row">   
+															<div class="col-sm-12">
+																<label for="birthdate">Business Address</label>
+																<input type="text" class="form-control" id="telNo" name="telNo" placeholder="Business Address"/>
+															</div>
+														</div>
+													</div>																			
+													
+												</div>											
+											
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header header-elements-inline bg-primary">
+											<h6 class="card-title">Fathers Information</h6>
+										</div>
+										<div class="card-body">
+											<div class="form-group">
+												<div class="row">
+													<div class="col-sm-3">
+														<label for="firstName">First Name</label>
+														<span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+														<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control required-field-hrisp" >
+													</div>							                
+											                
+													<div class="col-sm-3">
+														<label for="lastName">Last Name</label>
+														<span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+														<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control required-field-hrisp" >
+													</div>
+															
+													<div class="col-sm-3">
+														<label for="middleName">Middle Name</label>
+														<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control required-field-hrisp" >
+													</div>
+													
+													<div class="col-sm-3">
+														<label for="suffix">Suffix</label>
+														<input type="text" class="form-control" id="suffix" name="suffix" th:field="*{suffix}" placeholder="Sample Jr. Sr."/>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header header-elements-inline bg-primary">
+											<h6 class="card-title">Mothers Information</h6>
+										</div>
+										<div class="card-body">
+											<div class="row">
+													<div class="col-sm-3">
+														<label for="firstName">First Name</label>
+														<span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+														<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control required-field-hrisp" >
+													</div>							                
+											                
+													<div class="col-sm-3">
+														<label for="lastName">Last Name</label>
+														<span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+														<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control required-field-hrisp" >
+													</div>
+															
+													<div class="col-sm-3">
+														<label for="middleName">Middle Name</label>
+														<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control required-field-hrisp" >
+													</div>
+													
+													<div class="col-sm-3">
+														<label for="suffix">Suffix</label>
+														<input type="text" class="form-control" id="suffix" name="suffix" th:field="*{suffix}" placeholder="Sample Jr. Sr."/>
+													</div>
+												</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row" style="margin-bottom: 40px;;">
+								<div class="col-md-12">
+									<button type="button" class="btn bg-success" onclick="returnToList();">Save Records</button>
+									<button type="submit" class="btn bg-violet">Add Children</button>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header header-elements-inline bg-primary">
+											<h6 class="card-title">Children Information</h6>
+										</div>
+										<div class="card-body">
+											
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							
+							</form>
+							
+														
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					<!-- Right component Profile Pic -->
+					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+
+						<!-- Main sidebar -->
+						<div th:replace="fragments/common::right-profile-content"></div>
+						<!-- /Main sidebar -->
+		
+					</div>
+					<!-- /right sidebar component -->
+
+				</div>
+				<!-- /inner container -->
+
+			</div>
+			<!-- /content area -->
+						
+			
+
+		</div>
+		<!-- /main content -->
+		
+		
+
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">
+		function returnToList(){
+			//Redirect to Patient Record
+			let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+			window.location.href = contextRoot + "/employee-list";
+		}
+	</script>
+	
+	<script th:inline="javascript">		
+	
+	    $(document).ready(function() {
+			
+			// start update profile photo
+			const fileSelect = document.getElementById('fileSelect');
+		    const profilePhoto = document.getElementById('profilePhoto');
+			fileSelect.addEventListener('click', (e) => {
+	        	if (profilePhoto) {
+	        		profilePhoto.click();
+	        	}
+	        }, false);
+		    profilePhoto.addEventListener('change', previewImage, false);
+		    
+        	let uploadUrl = /*[[${#request.getContextPath() + '/file/upload/profilePhoto'}]]*/'';
+        	let fileUploadForm = document.getElementById('fileUploadForm');
+		    fileUploadForm.onsubmit = async (e) => {
+		    	e.preventDefault();
+		    	let fd = new FormData(fileUploadForm);
+		    	
+		    	let response = await fetch(uploadUrl, {
+		    		method: 'POST',
+		    		body: fd
+		    	});
+		    	
+		    	if(response.ok){
+		    		swal({
+						title: "Success!",
+						text: "Profile Photo successfully saved.",
+						icon: "success",
+						buttons: false,
+			            timer: 2000,
+					}).then(() => window.location.reload());
+		    	} else {
+		    		swal({
+						title: "Upload Failure!",
+						text: "Profile Photo not uploaded successfully.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		    	}
+		    };
+		    
+		    function previewImage() {
+				let input = document.getElementById('profilePhoto');
+				let img = document.getElementById('photoPreview');
+				if (input.files && input.files[0]) {
+	        		var reader = new FileReader();
+	        		reader.onload = function(e) {
+	        			img.src = e.target.result;
+	        		}
+	        		reader.readAsDataURL(input.files[0]);
+	        	}
+			}
+			// end update profile photo
+	    	
+	    	$('#consultation-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false, 
+				
+			});
+			
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+				
+				$("#empNo").prop("readOnly", true);
+				$("#assumptiondate").prop("readOnly", true);
+				$("#plantillaNo").prop("readOnly", true);
+				
+				$("#showMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#showMode").val("HRADMIN");
+			}
+	    		    				
+			
+
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+			
+			if(msgCode === 'EMP-NOT-FOUND'){
+				swal({
+					title: "Employee not found!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 3000,
+				})
+				.then((value) => {
+					let contextPath = /*[[${#request.getContextPath()}]]*/'';
+					window.location.href = contextPath + "/dashboard";
+				});
+
+	    	} else if(msgCode === 'ERROR'){
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'EDIT-SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+			
+			$('#employeeForm').submit(function(event) {
+		        var emptyFields = [];
+		        $('.required-field-hrisp').each(function() {
+		            if ($(this).val().trim() === '') {
+		                emptyFields.push($(this));
+		            }
+		        });
+		
+		        if (emptyFields.length > 0) {
+		            event.preventDefault();
+		            //var alertMessage = "Please fill out the following fields:\n";
+		            //$.each(emptyFields, function(index, field) {
+		            //    alertMessage += "- " + field.attr('name') + "\n";
+		            //});
+		            //alert(alertMessage);
+		            // Focus on the first empty field
+		            
+		            swal({
+						title: "Error!",
+						text: "Mandatory fields marked in RED are mandatory.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		            emptyFields[0].focus();
+		        }
+		    });
+		    
+		    
+
+	    });
+
+		$(document).on("click", ".cancelConsultation", function(){
+
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to cancel the appointment?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				  //No Response
+				  console.log("will delete no");
+
+			  } else {
+			  	 console.log("will delete yes");
+				 var id = $(this).attr('data-row-id');
+				 $("#cancelConsultationForm").find("#consultationId").val(id);
+				 $("#cancelConsultationForm").submit();
+			  }
+			});
+
+		});
+
+	</script>
+
+</body>
+</html>

@@ -1,0 +1,553 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    <title>My Leave — HRIS</title>
+</head>
+<body>
+
+<div th:replace="fragments/common::main-navbar"></div>
+
+<div class="page-content">
+    <div th:replace="fragments/common::main-sidebarnav"></div>
+
+    <div class="content-wrapper">
+
+        <!-- Page header -->
+        <div class="page-header">
+            <div class="page-header-content header-elements-md-inline">
+                <div class="page-title d-flex">
+                    <h4>
+                        <i class="icon-calendar3 mr-2 text-primary"></i>
+                        <span class="font-weight-semibold">My Leave</span>
+                        <small class="ml-2 text-muted"
+                               th:text="${employee != null ? employee.displayName : ''}"></small>
+                        <span th:if="${returnedCount != null and returnedCount > 0}"
+                              class="badge badge-danger ml-2"
+                              th:text="${returnedCount} + ' Returned'"></span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+             FILE LEAVE MODAL — CSC Form No. 6 (Section A & B)
+        ============================================================ -->
+        <div id="modalFileLeave" class="modal fade" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h5 class="modal-title">
+                            <i class="icon-calendar3 mr-2"></i>
+                            File a Leave Application
+                            <small class="text-white-50 ml-2 font-weight-normal">CSC Form No. 6</small>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <form th:action="@{/my-leave-apply}" method="post" id="leaveApplicationForm">
+                        <div class="modal-body">
+
+                            <!-- Section A: Employee Information (read-only display) -->
+                            <div class="card bg-light border-0 mb-3">
+                                <div class="card-body py-2 px-3">
+                                    <div class="row">
+                                        <div class="col-sm-4">
+                                            <small class="text-muted d-block">Name</small>
+                                            <span class="font-weight-semibold"
+                                                  th:text="${employee?.displayName}"></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <small class="text-muted d-block">Position</small>
+                                            <span th:text="${employee?.positionTitle?.positionTitleName}"></span>
+                                        </div>
+                                        <div class="col-sm-4">
+                                            <small class="text-muted d-block">Division / Office</small>
+                                            <span th:text="${employee?.division?.divisionName}"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <h6 class="font-weight-semibold border-bottom pb-1 mb-3">
+                                Section B — Details of Application
+                            </h6>
+
+                            <!-- Leave Type -->
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">
+                                    Leave Type <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="leaveTypeId" id="leaveTypeSelect" required
+                                            onchange="updateLeaveSubTypeFields(this)">
+                                        <option value="">-- Select Leave Type --</option>
+                                        <option th:each="lt : ${leaveTypes}"
+                                                th:value="${lt.id}"
+                                                th:data-code="${lt.leaveCode}"
+                                                th:text="${lt.leaveName + ' (' + lt.leaveCode + ')'}">
+                                        </option>
+                                    </select>
+                                    <small th:if="${leaveTypes == null or #lists.isEmpty(leaveTypes)}"
+                                           class="text-danger">
+                                        No leave types configured. Contact HR.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <!-- Vacation Leave sub-type (shown for VL) -->
+                            <div class="form-group row" id="vlSubTypeRow" style="display:none;">
+                                <label class="col-sm-4 col-form-label">
+                                    Details of Vacation Leave <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <select name="leaveSubType" id="vlSubType" class="form-control">
+                                        <option value="WITHIN_PHILIPPINES">Within the Philippines</option>
+                                        <option value="ABROAD">Abroad</option>
+                                    </select>
+                                    <input type="text" name="leaveDetails" id="vlDetails"
+                                           class="form-control mt-1"
+                                           placeholder="Specify destination (if abroad) or place"/>
+                                </div>
+                            </div>
+
+                            <!-- Sick Leave sub-type (shown for SL) -->
+                            <div class="form-group row" id="slSubTypeRow" style="display:none;">
+                                <label class="col-sm-4 col-form-label">
+                                    Details of Sick Leave <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <select name="leaveSubType" id="slSubType" class="form-control">
+                                        <option value="IN_HOSPITAL">In Hospital</option>
+                                        <option value="OUT_PATIENT">Out-Patient</option>
+                                    </select>
+                                    <input type="text" name="leaveDetails" id="slDetails"
+                                           class="form-control mt-1"
+                                           placeholder="Specify illness / nature of sickness"/>
+                                </div>
+                            </div>
+
+                            <!-- Other leave details (shown for all other types) -->
+                            <div class="form-group row" id="otherDetailsRow" style="display:none;">
+                                <label class="col-sm-4 col-form-label">
+                                    Specify Type of Leave <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="text" name="leaveDetails" id="otherDetails"
+                                           class="form-control"
+                                           placeholder="Specify details for this leave type"/>
+                                </div>
+                            </div>
+
+                            <!-- Date range -->
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">
+                                    Inclusive Dates <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-4">
+                                    <label class="text-muted small">From</label>
+                                    <input type="date" name="dateFrom" class="form-control" required
+                                           id="inputDateFrom"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="text-muted small">To</label>
+                                    <input type="date" name="dateTo" class="form-control" required
+                                           id="inputDateTo"/>
+                                </div>
+                            </div>
+
+                            <!-- Number of working days (computed) -->
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Number of Working Days</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input type="text" id="computedDays" class="form-control"
+                                               readonly placeholder="Auto-calculated"/>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    onclick="calculateDays()">
+                                                Calculate
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">Mon–Fri only. Holidays excluded by HR after approval.</small>
+                                </div>
+                            </div>
+
+                            <!-- Expected return date -->
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Expected Return Date</label>
+                                <div class="col-sm-4">
+                                    <input type="date" name="expectedReturnDate" class="form-control"/>
+                                </div>
+                            </div>
+
+                            <!-- Reason / Purpose -->
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">
+                                    Reason / Purpose <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <textarea name="reason" class="form-control" rows="3" required
+                                              placeholder="Briefly describe the purpose or reason for your leave application."></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Commutation request -->
+                            <div class="form-group row">
+                                <div class="col-sm-8 offset-sm-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               name="requestedCommutation"
+                                               id="reqCommutation" value="true"/>
+                                        <label class="form-check-label" for="reqCommutation">
+                                            Request money value / commutation of leave credits
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Balance indicator -->
+                            <div class="alert alert-info py-2 px-3 small">
+                                <i class="icon-info22 mr-1"></i>
+                                Working days (Mon–Fri) are computed automatically. Public holidays
+                                will be excluded by HR after approval. Submit early to allow processing time.
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn bg-primary">
+                                <i class="icon-checkmark3 mr-1"></i> Submit Application
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- /FILE LEAVE MODAL -->
+
+        <div class="content pt-0">
+
+            <!-- Flash messages -->
+            <div th:if="${uxmessage != null and uxmessage.code == 'ERROR'}"
+                 class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                <i class="icon-cross2 mr-2"></i>
+                <span th:text="${uxmessage.message}"></span>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+            <div th:if="${uxmessage != null and uxmessage.code == 'SUCCESS'}"
+                 class="alert alert-success alert-dismissible fade show mb-3" role="alert">
+                <i class="icon-checkmark3 mr-2"></i>
+                <span th:text="${uxmessage.message}"></span>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+
+            <!-- RETURNED application alert -->
+            <div th:if="${returnedCount != null and returnedCount > 0}"
+                 class="alert alert-warning mb-3">
+                <i class="icon-warning2 mr-2"></i>
+                <strong th:text="${returnedCount} + ' leave application(s) were returned for correction.'"></strong>
+                Please review and re-submit the returned application(s) below.
+            </div>
+
+            <!-- ============================================================
+                 TOP ROW: Balance summary + File Leave button
+            ============================================================ -->
+            <div class="row mb-3">
+
+                <!-- Leave Balance Cards -->
+                <div class="col-lg-9">
+                    <div class="card h-100">
+                        <div class="card-header bg-transparent d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 font-weight-semibold">
+                                <i class="icon-wallet mr-1 text-primary"></i>
+                                Leave Balances
+                                <span class="badge badge-light ml-1" th:text="${currentYear}"></span>
+                            </h6>
+                            <small class="text-muted">Credited monthly on the 1st</small>
+                        </div>
+                        <div class="card-body py-2">
+                            <div class="row">
+                                <div class="col-6 col-sm-4 col-md-3 mb-2"
+                                     th:each="bal : ${balances}">
+                                    <div class="card mb-0 border text-center py-2"
+                                         th:classappend="${bal.balance le 0} ? ' border-danger' : ' border-success'">
+                                        <small class="font-weight-semibold text-uppercase text-muted"
+                                               th:text="${bal.leaveType != null ? bal.leaveType.leaveCode : 'N/A'}">VL</small>
+                                        <div class="font-weight-bold mt-1" style="font-size:1.5rem;"
+                                             th:text="${bal.balance}"
+                                             th:classappend="${bal.balance le 0} ? ' text-danger' : ' text-success'">
+                                            0
+                                        </div>
+                                        <small class="text-muted">days left</small>
+                                        <hr class="my-1"/>
+                                        <small class="text-muted d-block" th:text="'Earned: ' + bal.totalEarned"></small>
+                                        <small class="text-muted d-block" th:text="'Used: ' + bal.totalUsed"></small>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 text-center py-4"
+                                     th:if="${#lists.isEmpty(balances)}">
+                                    <i class="icon-info3 text-info" style="font-size:2rem;"></i>
+                                    <p class="mt-2 mb-1 font-weight-semibold">No leave balances yet</p>
+                                    <p class="text-muted small">
+                                        Leave credits are accrued monthly. Contact HR if you believe this is an error.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- File Leave CTA -->
+                <div class="col-lg-3">
+                    <div class="card h-100">
+                        <div class="card-body text-center d-flex flex-column justify-content-center py-4">
+                            <i class="icon-calendar3 text-primary" style="font-size:2.5rem;"></i>
+                            <h6 class="mt-3 font-weight-semibold">File a Leave</h6>
+                            <p class="text-muted small mb-3">
+                                Submit a leave request for HR approval.
+                            </p>
+                            <button class="btn btn-primary"
+                                    data-toggle="modal" data-target="#modalFileLeave">
+                                <i class="icon-plus2 mr-1"></i> File Leave
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ============================================================
+                 LEAVE APPLICATIONS TABLE
+            ============================================================ -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header header-elements-inline">
+                            <h5 class="card-title">
+                                <i class="icon-list mr-1"></i> My Leave Applications
+                            </h5>
+                            <div class="header-elements">
+                                <button class="btn btn-sm btn-outline-primary"
+                                        data-toggle="modal" data-target="#modalFileLeave">
+                                    <i class="icon-plus2 mr-1"></i> New Application
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Empty state -->
+                        <div th:if="${#lists.isEmpty(applications)}"
+                             class="card-body text-center py-5">
+                            <i class="icon-file-empty2 text-muted" style="font-size:3rem;"></i>
+                            <h6 class="mt-3 text-muted">No leave applications yet</h6>
+                            <p class="text-muted small mb-3">
+                                Click <strong>File Leave</strong> to submit your first application.
+                            </p>
+                            <button class="btn btn-primary"
+                                    data-toggle="modal" data-target="#modalFileLeave">
+                                <i class="icon-plus2 mr-1"></i> File Your First Leave
+                            </button>
+                        </div>
+
+                        <!-- Applications table -->
+                        <div th:unless="${#lists.isEmpty(applications)}" class="table-responsive">
+                            <table class="table table-basic table-hover table-sm mb-0"
+                                   id="table-my-leave">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Leave Type</th>
+                                    <th>Dates</th>
+                                    <th class="text-center">Days</th>
+                                    <th>Status</th>
+                                    <th>HR Remarks</th>
+                                    <th>Filed On</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="app : ${applications}"
+                                    th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}"
+                                    th:classappend="${statusName == 'RETURNED'} ? ' table-warning' : ''">
+                                    <td class="text-muted small" th:text="${app.id}"></td>
+                                    <td>
+                                        <span class="font-weight-semibold d-block"
+                                              th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown'}"></span>
+                                        <small class="text-muted d-block" th:text="${app.leaveType != null ? app.leaveType.leaveCode : ''}"></small>
+                                        <small th:if="${app.leaveSubType != null}"
+                                               class="text-muted d-block"
+                                               th:text="${app.leaveSubType}"></small>
+                                    </td>
+                                    <td>
+                                        <small class="d-block" th:text="${app.dateFrom}"></small>
+                                        <small class="text-muted">to</small>
+                                        <small class="d-block" th:text="${app.dateTo}"></small>
+                                    </td>
+                                    <td class="text-center font-weight-semibold"
+                                        th:text="${app.numberOfDays}"></td>
+                                    <td>
+                                        <span th:text="${app.status}"
+                                              th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                               statusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                               statusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                               statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                               statusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                                                             ' badge badge-light'}">
+                                        </span>
+                                        <small th:if="${statusName == 'APPROVED' and !app.withPay}"
+                                               class="d-block text-danger font-weight-bold small">LWOP</small>
+                                        <small th:if="${statusName == 'APPROVED' and app.withPay}"
+                                               class="d-block text-success small"
+                                               th:text="'With Pay — ' + app.finalDaysWithPay + ' days'"></small>
+                                    </td>
+                                    <td class="small text-muted" th:text="${app.remarks}"></td>
+                                    <td class="small"
+                                        th:text="${app.appliedDateTime != null ? app.appliedDateTime.toLocalDate() : ''}">
+                                    </td>
+                                    <td class="text-center">
+                                        <!-- Cancel (PENDING only) -->
+                                        <form th:if="${statusName == 'PENDING'}"
+                                              th:action="@{|/my-leave-cancel/${app.id}|}"
+                                              method="post" style="display:inline;"
+                                              onsubmit="return confirm('Cancel this leave application?');">
+                                            <button type="submit" class="btn btn-xs btn-outline-danger">Cancel</button>
+                                        </form>
+                                        <!-- Resubmit (RETURNED only) -->
+                                        <button th:if="${statusName == 'RETURNED'}"
+                                                type="button"
+                                                class="btn btn-xs btn-warning text-white btnResubmit"
+                                                th:data-id="${app.id}"
+                                                th:data-reason="${app.reason}"
+                                                th:data-subtype="${app.leaveSubType}"
+                                                th:data-details="${app.leaveDetails}">
+                                            <i class="icon-redo2 mr-1"></i> Re-submit
+                                        </button>
+                                        <!-- No action for terminal states -->
+                                        <span th:if="${statusName == 'APPROVED' or
+                                                       statusName == 'DISAPPROVED' or
+                                                       statusName == 'CANCELLED'}"
+                                              class="text-muted small">—</span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/common::footer"></div>
+    </div>
+</div>
+
+<!-- RE-SUBMIT MODAL (for RETURNED applications) -->
+<div id="modalResubmit" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Re-submit Leave Application</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="resubmitForm" method="post">
+                <div class="modal-body">
+                    <div class="alert alert-info py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        This application was returned for correction.
+                        Update the fields below if needed and re-submit.
+                    </div>
+                    <div class="form-group">
+                        <label>Updated Reason / Purpose <span class="text-danger">*</span></label>
+                        <textarea name="reason" id="resubmitReason" class="form-control"
+                                  rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Updated Leave Details</label>
+                        <input type="text" name="leaveDetails" id="resubmitDetails"
+                               class="form-control"
+                               placeholder="Destination, hospital name, or specific details"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="icon-redo2 mr-1"></i> Re-submit for Review
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+$(document).ready(function () {
+    $("#myLeaveNav").addClass("active");
+
+    let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code}]]*/'';
+    let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+    if (msgCode === 'ERROR') {
+        swal({ title: "Error", text: msgDesc, icon: "error", buttons: false, timer: 3000 });
+    } else if (msgCode === 'SUCCESS') {
+        swal({ title: "Success", text: msgDesc, icon: "success", buttons: false, timer: 2200 });
+    }
+
+    if ($.fn.DataTable) {
+        var dtOrderMyLeave = []; dtOrderMyLeave.push([0, 'desc']);
+        $('#table-my-leave').DataTable({
+            pageLength: 15,
+            order: dtOrderMyLeave,
+            columnDefs: [{ orderable: false, targets: [7] }]
+        });
+    }
+
+    // Resubmit button
+    $(document).on('click', '.btnResubmit', function () {
+        let id      = $(this).data('id');
+        let reason  = $(this).data('reason');
+        let details = $(this).data('details');
+        $('#resubmitForm').attr('action', '/my-leave-resubmit/' + id);
+        $('#resubmitReason').val(reason || '');
+        $('#resubmitDetails').val(details || '');
+        $('#modalResubmit').modal('show');
+    });
+});
+
+// Show/hide leave sub-type fields based on selected leave type
+function updateLeaveSubTypeFields(sel) {
+    let code = sel.options[sel.selectedIndex].getAttribute('data-code') || '';
+    $('#vlSubTypeRow, #slSubTypeRow, #otherDetailsRow').hide();
+    if (code === 'VL') {
+        $('#vlSubTypeRow').show();
+    } else if (code === 'SL') {
+        $('#slSubTypeRow').show();
+    } else if (code !== '') {
+        $('#otherDetailsRow').show();
+    }
+}
+
+// Simple working-day calculator (Mon–Fri count)
+function calculateDays() {
+    let from = new Date($('#inputDateFrom').val());
+    let to   = new Date($('#inputDateTo').val());
+    if (isNaN(from) || isNaN(to) || to < from) {
+        $('#computedDays').val('');
+        return;
+    }
+    let count = 0;
+    let cur = new Date(from);
+    while (cur <= to) {
+        let d = cur.getDay();
+        if (d !== 0 && d !== 6) count++;
+        cur.setDate(cur.getDate() + 1);
+    }
+    $('#computedDays').val(count + ' working day(s)');
+}
+
+$('#inputDateFrom, #inputDateTo').on('change', calculateDays);
+</script>
+</body>
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+	<title>Dashboard</title>
+
+
+</head>
+
+<body>
+
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+
+					
+	<!-- Page content -->
+	<div class="page-content">
+	
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			  
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">							
+							
+							<!-- /row -->
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">
+			
+										<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">New Clearance Application List</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+								                		<a class="list-icons-item" data-action="collapse"></a>
+								                		<a class="list-icons-item" data-action="reload"></a>
+								                		<a class="list-icons-item" data-action="remove"></a>
+								                	</div>
+							                	</div>
+											</div>
+
+											<div class="card-body">
+												List of all new clearance applications.
+											</div>
+
+								<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
+						
+						
+											
+									<div class="datatable-scroll">
+										
+										<table class="table table-bordered table-hover datatable-highlight dataTable no-footer" id="clearancesTable1" role="grid" aria-describedby="DataTables_Table_2_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">Employee Name</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Submission Date</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Effectivity Data</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Job Title: activate to sort column ascending">Purpose</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+													
+													<th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
+													
+												</tr>
+											</thead>
+											<tbody>							
+												
+											</tbody>
+										</table>
+										
+									</div>
+									</div>
+				</div>
+			
+								</div>		
+							</div>
+							<!-- /row -->
+							
+							<!-- /row -->
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">
+			
+										<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">Approved Clearance Application List</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+								                		<a class="list-icons-item" data-action="collapse"></a>
+								                		<a class="list-icons-item" data-action="reload"></a>
+								                		<a class="list-icons-item" data-action="remove"></a>
+								                	</div>
+							                	</div>
+											</div>
+
+											<div class="card-body">
+												List of all approved clearance applications.
+											</div>
+
+								<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
+						
+						
+											
+									<div class="datatable-scroll">
+										
+										<table class="table table-bordered table-hover datatable-highlight dataTable no-footer" id="clearancesTable2" role="grid" aria-describedby="DataTables_Table_2_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">Employee Name</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Submission Date</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Effectivity Data</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Job Title: activate to sort column ascending">Purpose</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+																										
+												</tr>
+											</thead>
+											<tbody>							
+												
+											</tbody>
+										</table>
+										
+									</div>
+									</div>
+				</div>
+			
+								</div>		
+							</div>
+							<!-- /row -->
+							
+							<!-- /row -->
+							<div class="row">			
+								<div class="col-lg-12 offset-lg-0">
+			
+										<div class="card">
+											<div class="card-header header-elements-inline">
+												<h5 class="card-title">Disapproved Clearance Application List</h5>
+												<div class="header-elements">
+													<div class="list-icons">
+								                		<a class="list-icons-item" data-action="collapse"></a>
+								                		<a class="list-icons-item" data-action="reload"></a>
+								                		<a class="list-icons-item" data-action="remove"></a>
+								                	</div>
+							                	</div>
+											</div>
+
+											<div class="card-body">
+												List of all disapproved clearance applications.
+											</div>
+
+								<div id="DataTables_Table_2_wrapper" class="dataTables_wrapper no-footer">
+						
+						
+											
+									<div class="datatable-scroll">
+										
+										<table class="table table-bordered table-hover datatable-highlight dataTable no-footer" id="clearancesTable3" role="grid" aria-describedby="DataTables_Table_2_info">
+											<thead>
+												<tr role="row">
+													<th class="sorting_asc" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-sort="ascending" aria-label="First Name: activate to sort column descending">Employee Name</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Submission Date</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Last Name: activate to sort column ascending">Effectivity Data</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Job Title: activate to sort column ascending">Purpose</th>
+													<th class="sorting" tabindex="0" aria-controls="DataTables_Table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending">Status</th>
+													
+													<th class="text-center sorting_disabled" rowspan="1" colspan="1" aria-label="Actions" style="width: 100px;">Actions</th>
+													
+												</tr>
+											</thead>
+											<tbody>
+											</tbody>
+										</table>
+										
+									</div>
+									</div>
+				</div>
+			
+								</div>		
+							</div>
+							<!-- /row -->
+							
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					
+
+				</div>
+				<!-- /inner container -->
+
+			</div>
+			<!-- /content area -->
+						
+			
+
+		</div>
+		<!-- /main content -->
+		
+		
+
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">		
+		
+		let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+	
+	    $(document).ready(function() {			
+			
+			getNewClerances();		
+			getApprovedClerances();
+			getDisApprovedClerances();
+			
+			function getNewClerances(){
+				console.log("Getting list of clearances.");
+				
+				let clearanceUrl = contextRoot + '/clearance-list/SUBMITTED';
+				
+				$.ajax({
+					type: "GET",
+					url: clearanceUrl,
+					dataType: "json",
+					success: function(clearances) {
+						//console.log("Clearances by status:", clearances);
+						var count = clearances.length;
+	                	//console.log("Number of clearances: " + count);
+	                	$("#clearanceCount").html(count)
+						renderNewClearanceTable(clearances);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching clearances:", error);
+					}
+				});
+			}
+			
+			function getApprovedClerances(){
+				console.log("Getting list of clearances.");
+				
+				let clearanceUrl = contextRoot + '/clearance-list/APPROVED';
+				
+				$.ajax({
+					type: "GET",
+					url: clearanceUrl,
+					dataType: "json",
+					success: function(clearances) {
+						//console.log("Clearances by status:", clearances);
+						var count = clearances.length;
+	                	//console.log("Number of clearances: " + count);
+	                	$("#clearanceCount").html(count)
+						renderApprovedClearanceTable(clearances);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching clearances:", error);
+					}
+				});
+			}
+			
+			function getDisApprovedClerances(){
+				console.log("Getting list of clearances.");
+				
+				let clearanceUrl = contextRoot + '/clearance-list/DISAPPROVED';
+				
+				$.ajax({
+					type: "GET",
+					url: clearanceUrl,
+					dataType: "json",
+					success: function(clearances) {
+						//console.log("Clearances by status:", clearances);
+						var count = clearances.length;
+	                	//console.log("Number of clearances: " + count);
+	                	$("#clearanceCount").html(count)
+						renderDisApprovedClearanceTable(clearances);
+					},
+					error: function(xhr, status, error) {
+						console.error("Error fetching clearances:", error);
+					}
+				});
+			}
+			
+			function renderNewClearanceTable(clearances) {
+                var tableBody = $("#clearancesTable1 tbody");
+                tableBody.empty(); // Clear existing table rows
+
+                $.each(clearances, function(index, clearance) {
+                    var row = "<tr>" +
+                        "<td>" + clearance.employee.displayName + "</td>" +
+                        "<td>" + clearance.transDate + "</td>" +
+                        "<td>" + clearance.effectiveDate + "</td>" +
+                        "<td>" + clearance.purpose + "</td>" +
+                        "<td>" + clearance.status + "</td>" +
+                        `       						   
+						<td class="text-center">
+							<div class="list-icons">
+								<div class="dropdown">
+									<a href="#" class="list-icons-item" data-toggle="dropdown" aria-expanded="false">
+										<i class="icon-menu9"></i>
+									</a>
+						
+									<div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(22px, 19px, 0px);">
+										<a href="#" class="dropdown-item" onclick="approvedClearance(${clearance.id})"><i class="icon-checkmark-circle2"></i> Approve Clearance</a>
+										<a href="#" class="dropdown-item" onclick="disApprovedClearance()"><i class="icon-close2"></i> DisApprove Clearance</a>	
+										<a href="/hrisp/viewClearanceForm/${clearance.id}" class="dropdown-item" target="_blank"><i class="icon-file-pdf"></i> View Clearance Form</a>									
+									</div>
+								</div>
+							</div>
+						</td>	        						
+	        		
+	        			` +
+                        "</tr>";
+                    tableBody.append(row);
+                });
+            }
+            
+            function renderApprovedClearanceTable(clearances) {
+                var tableBody = $("#clearancesTable2 tbody");
+                tableBody.empty(); // Clear existing table rows
+
+                $.each(clearances, function(index, clearance) {
+                    var row = "<tr>" +
+                        "<td>" + clearance.employee.displayName + "</td>" +
+                        "<td>" + clearance.transDate + "</td>" +
+                        "<td>" + clearance.effectiveDate + "</td>" +
+                        "<td>" + clearance.purpose + "</td>" +
+                        "<td>" + clearance.status + "</td>" +                        
+                        "</tr>";
+                    tableBody.append(row);
+                });
+            }
+            
+            function renderDisApprovedClearanceTable(clearances) {
+                var tableBody = $("#clearancesTable3 tbody");
+                tableBody.empty(); // Clear existing table rows
+
+                $.each(clearances, function(index, clearance) {
+                    var row = "<tr>" +
+                        "<td>" + clearance.employee.displayName + "</td>" +
+                        "<td>" + clearance.transDate + "</td>" +
+                        "<td>" + clearance.effectiveDate + "</td>" +
+                        "<td>" + clearance.purpose + "</td>" +
+                        "<td>" + clearance.status + "</td>" +                        
+                        "</tr>";
+                    tableBody.append(row);
+                });
+            }
+			
+			            
+	    	
+	    	
+	    		    				
+			$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+			$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+			$("#clearanceListNav").addClass("active");
+
+	    	
+	    	
+
+	    });
+	    
+	    
+
+		function approvedClearance(id) {
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to approve this clearance application?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((selectNo) => {
+			  if (selectNo) {
+				  //No Response
+				  console.log("selected no");
+
+			  } else {
+			  	 console.log("selected yes");
+			  	 let url = contextRoot + '/process-clearance/' + id + '/APPROVED';
+			
+				$.ajax({
+		            type: "POST",
+		            url: url,
+		            //dataType: "json",
+		            success: function(response) {
+						console.log(response);
+						
+		                swal({
+							title: "Success!",
+							text: "Clearance successfully approved.",
+							icon: "success",
+							buttons: false,
+				            timer: 2000,
+						})
+						.then((value) => {										
+							window.location.href = contextRoot + '/clearance-list';
+						});
+						
+						
+		            },
+		            error: function(xhr, status, error) {
+		                // Handle error response
+		                console.error("Error approving clearance:", error);
+		            }
+		        });
+			  }
+			  
+			});
+			
+			
+		}
+			
+		function disApprovedClearance(id) {
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to disapprove this clearance application?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((selectNo) => {
+			  if (selectNo) {
+				  //No Response
+				  console.log("selected no");
+
+			  } else {
+			  	 console.log("selected yes");
+			  	 let url = contextRoot + '/process-clearance/' + id + '/DISAPPROVED';
+			
+				$.ajax({
+		            type: "POST",
+		            url: url,
+		            //dataType: "json",
+		            success: function(response) {
+						console.log(response);
+						
+		                swal({
+							title: "Success!",
+							text: "Clearance successfully disapproved.",
+							icon: "success",
+							buttons: false,
+				            timer: 2000,
+						})
+						.then((value) => {										
+							window.location.href = contextRoot + '/clearance-list';
+						});
+						
+						
+		            },
+		            error: function(xhr, status, error) {
+		                // Handle error response
+		                console.error("Error approving clearance:", error);
+		            }
+		        });
+			  }
+			  
+			});
+		}
+
+	</script>
+
+</body>
+</html>

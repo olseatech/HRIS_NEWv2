@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    <title>Employee Leave — HRIS</title>
+</head>
+<body>
+
+<div th:replace="fragments/common::main-navbar"></div>
+
+<div class="page-content">
+    <div th:replace="fragments/common::main-sidebarnav"></div>
+
+    <div class="content-wrapper">
+
+        <div class="page-header">
+            <div class="page-header-content header-elements-md-inline">
+                <div class="page-title d-flex">
+                    <h4>
+                        <span class="font-weight-semibold"
+                              th:text="${employee != null ? employee.displayName + ' — Leave Record' : 'Employee Leave'}"></span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- FILE LEAVE MODAL (admin on behalf) -->
+        <div id="modalFileLeave" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h5 class="modal-title">File Leave Application</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <!-- th:object removed — same NPE fix as my-leave.html -->
+                    <form th:action="@{/addLeaveAdmin}" method="post">
+                        <input type="hidden" name="employeeId"
+                               th:value="${newApplication != null and newApplication.employee != null ? newApplication.employee.id : ''}"/>
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Leave Type <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <select class="form-control" name="leaveTypeId" required>
+                                        <option value="">-- Select Leave Type --</option>
+                                        <option th:each="leaveTypeItem : ${leaveTypes}"
+                                                th:value="${leaveTypeItem.id}"
+                                                th:text="${leaveTypeItem.leaveName + ' (' + leaveTypeItem.leaveCode + ')'}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Date From <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="dateFrom"
+                                           th:value="${newApplication != null ? newApplication.dateFrom : ''}"
+                                           class="form-control" required/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Date To <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <input type="date" name="dateTo"
+                                           th:value="${newApplication != null ? newApplication.dateTo : ''}"
+                                           class="form-control" required/>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Reason / Purpose</label>
+                                <div class="col-sm-8">
+                                    <textarea name="reason" class="form-control" rows="2" placeholder="Purpose of leave"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn bg-primary">File Application</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="content pt-0">
+
+            <!-- Error / not-found message -->
+            <div th:if="${uxmessage != null and uxmessage.code == 'ERROR'}" class="alert alert-danger">
+                <i class="icon-cross2 mr-2"></i> <span th:text="${uxmessage.message}"></span>
+            </div>
+
+            <div th:if="${employee != null}">
+
+                <!-- Breadcrumb back to employee -->
+                <div class="mb-2">
+<a th:href="@{|/employee/${employee.id}/${employee.showMode}/${employee.empHashCode}|}"
+                       class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-arrow-left8 mr-1"></i> Back to Employee Profile
+                    </a>
+                    <a th:href="@{/leave-management}" class="btn btn-sm btn-outline-info ml-1">
+                        <i class="icon-list mr-1"></i> All Leave Applications
+                    </a>
+                    <button class="btn btn-sm btn-primary ml-1" data-toggle="modal" data-target="#modalFileLeave">
+                        <i class="icon-plus2 mr-1"></i> File Leave
+                    </button>
+                </div>
+
+                <!-- Balance Cards -->
+                <div class="row mb-3">
+                    <div class="col-sm-12">
+                        <div class="card">
+                            <div class="card-header bg-transparent"><h6 class="mb-0 font-weight-semibold">
+                                Leave Balances — <span th:text="${currentYear}"></span></h6></div>
+                            <div class="card-body p-2">
+                                <div th:if="${balances == null or balances.isEmpty()}" class="text-muted text-center p-3">
+                                    No leave balance records yet. Balances are created on first accrual.
+                                </div>
+                                <div class="row" th:unless="${balances == null or balances.isEmpty()}">
+                                    <div class="col-sm-3 mb-2" th:each="bal : ${balances}">
+                                        <div class="card card-body text-center py-2 border">
+                                            <small class="text-muted text-uppercase font-weight-semibold"
+                                                   th:text="${bal.leaveType != null ? bal.leaveType.leaveCode : ''}"></small>
+                                            <h4 class="mb-0 font-weight-semibold text-primary"
+                                                th:text="${bal.balance}"></h4>
+                                            <small class="text-muted"
+                                                   th:text="${'Earned: ' + bal.totalEarned + '  Used: ' + bal.totalUsed}"></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Applications table -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card p-3">
+                            <div class="card-header header-elements-inline">
+                                <h5 class="card-title">Leave Applications</h5>
+                            </div>
+                            <table class="table table-basic table-hover table-sm" id="table-emp-leave">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Leave Type</th>
+                                    <th>Date From</th>
+                                    <th>Date To</th>
+                                    <th class="text-center">Days</th>
+                                    <th>Reason</th>
+                                    <th>Status</th>
+                                    <th>Filed</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="app : ${applications}"
+                                    th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
+                                    <td th:text="${app.id}"></td>
+                                    <td th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></td>
+                                    <td th:text="${app.dateFrom}"></td>
+                                    <td th:text="${app.dateTo}"></td>
+                                    <td class="text-center font-weight-semibold" th:text="${app.numberOfDays}"></td>
+                                    <td th:text="${app.reason}"></td>
+                                    <td>
+                                        <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
+                                              th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                               statusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                               statusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                               statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                               statusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                               statusName == 'CANCELLED'   ? ' badge badge-dark'      :
+                                                                                            ' badge badge-light'}">
+                                        </span>
+                                        <small th:if="${statusName == 'APPROVED' and !app.withPay}"
+                                               class="d-block text-danger font-weight-semibold">LWOP</small>
+                                    </td>
+                                    <td th:text="${app.appliedDateTime != null ? app.appliedDateTime.toLocalDate() : ''}"></td>
+                                    <td class="text-center text-nowrap">
+                                        <!-- Endorse (PENDING only) -->
+                                        <button th:if="${statusName == 'PENDING'}"
+                                                type="button" class="btn btn-xs btn-info btnEndorse"
+                                                th:data-id="${app.id}" title="Endorse">
+                                            <i class="icon-forward3"></i>
+                                        </button>
+                                        <!-- Approve (PENDING or ENDORSED) -->
+                                        <form th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                              th:action="@{|/leave-approve/${app.id}|}"
+                                              method="post"
+                                              style="display:inline"
+                                              onsubmit="return confirm('Approve this leave application?');">
+                                            <button type="submit" class="btn btn-xs btn-success ml-1" title="Approve">
+                                                <i class="icon-checkmark3"></i>
+                                            </button>
+                                        </form>
+                                        <!-- Disapprove (PENDING or ENDORSED) -->
+                                        <form th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                              th:action="@{|/leave-disapprove/${app.id}|}"
+                                              method="post"
+                                              style="display:inline"
+                                              onsubmit="return confirm('Disapprove this leave application?');">
+                                            <button type="submit" class="btn btn-xs btn-danger ml-1" title="Disapprove">
+                                                <i class="icon-cross2"></i>
+                                            </button>
+                                        </form>
+                                        <!-- Return for correction (PENDING or ENDORSED) -->
+                                        <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                                type="button" class="btn btn-xs btn-outline-warning ml-1 btnReturn"
+                                                th:data-id="${app.id}" title="Return for Correction">
+                                            <i class="icon-undo2"></i>
+                                        </button>
+                                        <!-- History (always visible) -->
+<a th:href="@{|/leave-history/${app.id}|}"
+                                           class="btn btn-xs btn-outline-primary ml-1" title="View History">
+                                            <i class="icon-history"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:replace="fragments/common::footer"></div>
+    </div>
+</div>
+
+<!-- ENDORSE MODAL -->
+<div id="modalEndorse" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white">Endorse Leave Application</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="formEndorse" method="post">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Supervisor Recommendation</label>
+                        <div class="col-sm-8">
+                            <select name="recommendation" class="form-control" required>
+                                <option value="">— Select —</option>
+                                <option value="FOR_APPROVAL">For Approval</option>
+                                <option value="FOR_DISAPPROVAL">For Disapproval</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Days With Pay</label>
+                        <div class="col-sm-8">
+                            <input type="number" name="certDaysWithPay" class="form-control" step="0.001" min="0" value="0"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Days Without Pay</label>
+                        <div class="col-sm-8">
+                            <input type="number" name="certDaysWithoutPay" class="form-control" step="0.001" min="0" value="0"/>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-sm-4 col-form-label">Remarks</label>
+                        <div class="col-sm-8">
+                            <textarea name="remarks" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn bg-info text-white">
+                        <i class="icon-forward3 mr-1"></i> Endorse
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- RETURN MODAL -->
+<div id="modalReturn" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title">Return for Correction</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="formReturn" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-weight-semibold">Reason / Remarks <span class="text-danger">*</span></label>
+                        <textarea name="remarks" class="form-control" rows="3"
+                                  placeholder="Explain what needs correction..." required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn bg-warning">
+                        <i class="icon-undo2 mr-1"></i> Return
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+        $("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+        $("#leaveManagementNav").addClass("active");
+
+        let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code}]]*/'';
+        let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+        if (msgCode === 'ERROR') {
+            swal({title: "Error!", text: msgDesc, icon: "error", buttons: false, timer: 2500});
+        } else if (msgCode === 'SUCCESS') {
+            swal({title: "Success!", text: msgDesc, icon: "success", buttons: false, timer: 2000});
+        }
+
+        var dtOrderEmpLeave = []; dtOrderEmpLeave.push([7, 'desc']);
+        $('#table-emp-leave').DataTable({
+            lengthMenu: [10, 25, 50],
+            order: dtOrderEmpLeave,
+            columnDefs: [{ orderable: false, targets: 8 }]
+        });
+
+        // Endorse button
+        $(document).on('click', '.btnEndorse', function () {
+            let id = $(this).data('id');
+            $('#formEndorse').attr('action', '/leave-endorse/' + id);
+            $('#modalEndorse').modal('show');
+        });
+        $('#modalEndorse').on('hidden.bs.modal', function () {
+            $('#formEndorse')[0].reset();
+        });
+
+        // Return for correction button
+        $(document).on('click', '.btnReturn', function () {
+            let id = $(this).data('id');
+            $('#formReturn').attr('action', '/leave-return/' + id);
+            $('#modalReturn').modal('show');
+        });
+        $('#modalReturn').on('hidden.bs.modal', function () {
+            $('#formReturn')[0].reset();
+        });
+    });
+</script>
+</body>
+</html>

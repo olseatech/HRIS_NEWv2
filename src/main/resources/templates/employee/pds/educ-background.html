@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+	<title>Dashboard</title>
+
+
+</head>
+
+<body>
+
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+
+					
+	<!-- Page content -->
+	<div class="page-content">
+	
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+
+			  
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">							
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header header-elements-inline bg-primary">
+										<h6 class="card-title">Educational Background</h6>
+										</div>
+										<div class="card-body">
+											<form th:action="@{/save-educational-background/{id}(id=${employee.getId()})}" th:object="${educationalBackground}" method="post" class="form-horizontal"  >
+												<input type="text" th:field="*{id}" id="id" hidden>
+												<!-- START EDUCATION DETAILS -->
+												<div class="row">
+													<div class="col-sm-4">
+														<h4>Education Details</h4>
+													</div>
+													<div class="col-sm-8">
+														<div class="form-group">
+															<label for="degreeLevelId">Degree Level</label>
+															<select class="form-control" name="degreeLevelId" th:field="*{degreeLevelId}" id="degreeLevelId">
+																<option value=0 class="form-control" disabled selected>--Select Option--</option>
+																<option th:each="degreeLevel: ${listOfDegreeLevels}" th:value="${degreeLevel.id}" th:text="${degreeLevel.degreeName}"></option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="schoolId">Name of School</label>
+															<select th:field="*{schoolId}" class="form-control" name="schoolId" id="schoolId">
+																<option value=0 class="form-control" disabled selected>--Select Option--</option>
+																<option th:each="school: ${listOfSchools}" th:value="${school.id}" th:text="${school.schoolName}"></option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="degreeCourseId">Degree Course</label>
+															<select th:field="*{degreeCourseId}" class="form-control" name="degreeCourseId" id="degreeCourseId">
+																<option value=0 class="form-control" disabled selected>--Select Option--</option>
+																<option th:each="degree: ${listOfDegreeCourses}" th:value="${degree.id}" th:text="${degree.degreeCourse}"  th:data-row-abbreviation="${degree.abbreviation}"></option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="degreeAbbreviation">Degree Abbreviation</label>
+															<input type="text" name="degreeAbbreviation" id="degreeAbbreviation" class="form-control" disabled>
+														</div>
+													</div>
+												</div>
+												<hr />
+												<!-- END OF EDUCATION DETAILS -->
+
+												<!-- START PERIOD OF ATTENDANCE -->
+												<div class="row">
+													<div class="col-sm-4">
+														<h4>Period Of Attendance</h4>
+													</div>
+													<div class="col-sm-8">
+														
+														<!-- START OF DATE START -->
+														<div class="form-group row">
+
+															<div class="col-sm-6">
+																<label for="startDate">Date Start</label>
+															<input type="date" name="startDate" id="startDate" class="form-control"
+															th:field="*{startDate}"
+															>
+															</div>
+
+															<div class="col-sm-6">
+																<label for="endDate">Date End</label>
+																<input type="date" name="endDate" id="endDate" class="form-control"
+																th:field="*{endDate}"
+																>
+															</div>
+
+														</div>
+														<!-- END OF DATE START -->
+														
+														<div class="form-group">
+															<label for="unitsEarned">Highest Level / Units Earned</label>
+															<input type="text" name="unitsEarned" id="unitsEarned" class="form-control" th:field="*{unitsEarned}">
+														</div>
+														<div class="form-group">
+															<label for="yearGraduated">Year Graduated</label>
+															<input type="text" name="yearGraduated" id="yearGraduated" class="form-control"
+															th:field="*{yearGraduated}">
+														</div>
+														<div class="form-group">
+															<label for="scholarshipId">Scholarship</label>
+															<select class="form-control" name="scholarshipId" id="scholarshipId" th:field="*{scholarshipId}">
+																<option 
+																value=0 class="form-control" disabled selected>--Select Option--</option>
+																<option th:each="scholarship: ${listOfScholarships}" th:value="${scholarship.id}" th:text="${scholarship.scholarshipName}"></option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="academicHonorsId">Academic Honors Received</label>
+															<select class="form-control" name="academicHonorsId" id="academicHonorsId" th:field="*{academicHonorsId}">
+																<option 
+																value=0 class="form-control" disabled selected>--Select Option--</option>
+																<option th:each="academicHonor: ${listOfAcademicHonors}" th:value="${academicHonor.id}" th:text="${academicHonor.academicHonorsName}"></option>
+															</select>
+														</div>
+														<div class="form-group">
+															<label for="remarks">Remarks</label>
+															<textarea name="remarks" id="remarks" class="form-control" style="resize: none;" th:field="*{remarks}"></textarea>
+														</div>
+
+													</div>
+												</div>
+												<hr />
+												<!-- END OF PERIOD OF ATTENDANCE -->
+
+												<!-- START ATTACHMENTS -->
+												<div class="row">
+													<div class="col-12 d-flex justify-content-between">
+														<h4>Attachment</h4>
+														<button class="btn btn-success" id="addAttachment"><i class="icon-add"></i>&nbsp;Add Attachment</button>
+													</div>
+													<div class="col-12">
+														<table class="table table-basic col-12">
+															<thead>
+																<tr>
+																	<th>Name of Attachment</th>
+																	<th>Date of Attachment</th>
+																	<th>File</th>
+																	<th>Actions</th>
+																</tr>
+															</thead>
+															<tbody id="attachmentList">
+																<tr id="0">
+																	<td>
+																		<input type="text" name="nameOfAttachment" id="nameOfAttachment" class="form-control" placeholder="ex. Diploma">
+																	</td>
+																	<td>
+																		<input type="date" name="dateOfAttachment" id="dateOfAttachment" class="form-control">
+																	</td>
+																	<td>
+																		<input type="file" name="fileAttachment" id="fileAttachment" class="form-control">
+																	</td>
+																	<td>
+																		<button class="btn btn-dark">View</button>
+																		<!-- <button class="btn btn-danger">Remove</button> -->
+																	</td>
+																</tr>
+															</tbody>
+														</table>
+													</div>
+												</div>
+												<hr />
+												<!-- END OF ATTACHMENTS -->
+												<div class="row justify-content-center mt-4">
+													<input type="submit" value="Save Record" class="btn btn-success">
+												</div>
+											</form>
+											
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-md-12">
+									<div class="card">
+										<div class="card-header">
+											<h1>Education List</h1>
+											<hr/>
+										</div>
+										<div class="card-body col-12">
+											<table class="table table-basic table-responsive col-12">
+												<thead class="bg-dark">
+													<tr>
+														<th class="text-uppercase">level</th>
+														<th class="text-uppercase">name of school</th>
+														<th class="text-uppercase">degree / course</th>
+														<th class="text-uppercase">period of attendance</th>
+														<th class="text-uppercase">highest level / units earned</th>
+														<th class="text-uppercase">year graduated</th>
+														<th class="text-uppercase">scholarship</th>
+														<th class="text-uppercase">academic honors received</th>
+														<th class="text-uppercase">actions</th>
+													</tr>
+												</thead>
+												<tbody>
+													<th:block th:each="education: ${listOfEducationalBackground}">
+														<tr>
+															<td th:text="${education.getDegreeLevel().getDegreeName()}"></td>
+															<td th:text="${education.getSchool().getSchoolName()}"></td>
+															<td th:text="${education.getDegreeCourse().getDegreeCourse()}"></td>
+															<td th:text='${education.getDateToString()}'></td>
+															<td th:text="${education.getUnitsEarned()}"></td>
+															<td th:text="${education.getYearGraduated()}"></td>
+															<td th:text="${education.getScholarship().getScholarshipName()}"></td>
+															<td th:text="${education.getAcademicHonors().getAcademicHonorsName()}"></td>
+															<td>
+																<button class="btn btn-primary">Update</button>
+															</td>
+														</tr>
+													</th:block>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					<!-- Right component Profile Pic -->
+					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+
+						<!-- Sidebar content -->
+						<div class="sidebar-content">
+							<input type="file" name="profilePhoto" id="profilePhoto" accept="image/*" class="inputfile" />
+							<!-- User card -->
+							<div class="card">
+								<div class="card-body text-center">
+									<div class="card-img-actions d-inline-block mb-3 ">
+										
+										<img th:src="|@{*{#authentication.principal.profilePhoto == null ? '/images/avatar.png' : #authentication.principal.profilePhoto}}|" width="170" height="170" class="rounded-circle" alt="">
+										
+										
+										<div class="card-img-actions-overlay card-img rounded-circle">
+											<button id="fileSelect" class="btn btn-outline bg-white text-white border-white border-2 btn-icon rounded-round">
+												<i class="icon-camera"></i>
+											</button>											
+										</div>
+										
+									</div>
+									<h6 class="font-weight-semibold mt-0 mb-0 text-uppercase" sec:authentication="principal.fullName">Hanna Dorman</h6>
+										<div class="text-left mt-1">
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">POSITION: </span>HR ADMIN</span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">DIVISION: </span>PERSONNEL</span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">ASSUMPTION DATE: </span>OCT 16, 2005</span>
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">BIRTHDAY: </span>JAN 27, 1982 <span class="text-muted text-uppercase ml-1"><span class="font-weight-semibold">AGE: </span>42</span></span>
+											
+											<span class="d-block text-muted text-uppercase"><span class="font-weight-semibold">MOBILE: </span>09062794574</span>
+											
+										</div>
+									
+										    		
+						    	</div>
+					    	</div>
+					    	<!-- /user card -->
+					    	
+					    	<div class="card">
+								<div class="card-header bg-transparent header-elements-inline">
+									<span class="card-title font-weight-semibold">Personal Data Sheet</span>
+									<div class="header-elements">
+										<div class="list-icons">
+					                		<a class="list-icons-item" data-action="collapse"></a>
+				                		</div>
+			                		</div>
+								</div>
+
+								<div class="card-body p-0" style="">
+									<ul class="nav nav-sidebar my-2">
+										<li class="nav-item">
+											<a th:href="@{/employee/{id}(id=${employee.getId()})}" class="nav-link">
+												<i class="icon-checkmark3 text-success"></i>
+												 Personal Information
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/educational-background/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEducationalBackgrounds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Educational Background
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/eligibility/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getCivilServiceEligibilities().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Eligibility
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/work-experience/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getWorkExperiences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Work Experience
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/voluntary-work/{id}(id=${employee.getId()})}" class="nav-link">
+												<i  th:class="${employee.getVoluntaryWorks().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Voluntary Work
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/learning-development/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getLearningAndDevelopments().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												Learning &amp; Development
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/other-info/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getOtherInfos().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Other Info
+											</a>
+										</li>
+										
+										<li class="nav-item">
+											<a href="#" class="nav-link">
+												<i class="icon-cross2 text-danger-400"></i>
+												 Other Information Questions
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/references/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getEmpReferences().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 References
+											</a>
+										</li>
+										<li class="nav-item">
+											<a th:href="@{/government-issuedId/{id}(id=${employee.getId()})}" class="nav-link">
+												<i th:class="${employee.getGovermentIssuedIds().size() > 0 ? 'icon-checkmark3 text-success-400' : 'icon-cross2 text-danger-400'}"></i>
+												 Government Issued Id
+											</a>
+										</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<!-- /sidebar content -->
+					</div>
+					<!-- /right sidebar component -->
+
+				</div>
+				<!-- /inner container -->
+			</div>
+			<!-- /content area -->
+		</div>
+		<!-- /main content -->
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">		
+	
+	    $(document).ready(function() {
+	    	$('#consultation-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false, 
+				
+			});
+	    		    				
+			$(".nav-link").removeClass("active");	    	  	
+			$("#emrDashboardNav").addClass("active");
+
+	    	let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code} ]]*/'';
+			let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+
+	    	if(msgCode === 'ERROR'){
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+
+	    });
+
+		$(document).on("click", ".cancelConsultation", function(){
+			swal({
+			  title: "Confirmation?",
+			  text: "Are you sure you want to cancel the appointment?",
+			  icon: "info",
+			  buttons: ["Yes", "No"],
+			  dangerMode: false,
+			})
+			.then((willDelete) => {
+			  if (willDelete) {
+				  //No Response
+				  console.log("will delete no");
+
+			  } else {
+			  	 console.log("will delete yes");
+				 var id = $(this).attr('data-row-id');
+				 $("#cancelConsultationForm").find("#consultationId").val(id);
+				 $("#cancelConsultationForm").submit();
+			  }
+			});
+
+		});
+
+	</script>
+	<script >	
+		const attachmentList = $("#attachmentList");
+
+		$(document).on("click", "#addAttachment", (e)=> {
+			e.preventDefault();
+			let id = attachmentList.find('tr').length;
+			const tableRow = $('<tr>').attr("id",`attachment-item-${id}`);
+			attachmentList.append(createNewTableRow(tableRow,id));
+		});
+		const createNewTableRow = (tr,id) => {
+			return createTableData(tr,id);
+		};
+		const createTableData = (tr,id) => {
+			const tableNameOfAttachment = $("<td>");
+			const nameOfAttachment = $("<input>").attr("type", "text").attr("placeholder","ex. Diploma");
+			nameOfAttachment.addClass("form-control");
+			tableNameOfAttachment.append(nameOfAttachment);
+
+			const tableDateOfAttachment = $("<td>");
+			const dateOfAttachment = $("<input>").attr("type", "date");
+			dateOfAttachment.addClass("form-control");
+			tableDateOfAttachment.append(dateOfAttachment);
+
+			const tableFileAttachment = $("<td>");
+			const fileAttachment = $("<input>").attr("type", "file");
+			fileAttachment.addClass("form-control");
+			tableFileAttachment.append(fileAttachment);
+
+			const tableButtons = $("<td>");
+			const btnView = $("<button>").text("View").addClass("btn btn-dark mr-1");
+			const btnRemove = $("<button>").text("Remove").addClass("btn btn-danger").attr("onclick", `deleteTableRow(${id})`);
+			tableButtons.append(btnView);
+			tableButtons.append(btnRemove);
+
+
+			tr.append(tableNameOfAttachment);
+			tr.append(tableDateOfAttachment);
+			tr.append(tableFileAttachment);
+			tr.append(tableButtons);
+			return tr; // Return the table row
+		};
+		const deleteTableRow = (id) => {
+			const tr = $(`#attachment-item-${id}`); // Use # to indicate ID selector
+			console.log(tr, " ", id);
+			tr.remove();
+		};
+		
+		$(document).on("change", "#degreeCourseId", (e) => {
+			const value = $(e.target).find(':selected').data('row-abbreviation');
+			console.log(value);
+			$('#degreeAbbreviation').val(value);
+		});
+	</script>
+
+</body>
+</html>

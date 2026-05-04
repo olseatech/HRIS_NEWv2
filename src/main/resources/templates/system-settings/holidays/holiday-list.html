@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    <title>Public Holidays — HRIS</title>
+</head>
+<body>
+
+<div th:replace="fragments/common::main-navbar"></div>
+
+<div class="page-content">
+    <div th:replace="fragments/common::main-sidebarnav"></div>
+
+    <div class="content-wrapper">
+
+        <div class="page-header">
+            <div class="page-header-content header-elements-md-inline">
+                <div class="page-title d-flex">
+                    <h4>
+                        <i class="icon-calendar5 mr-2 text-primary"></i>
+                        <span class="font-weight-semibold">Public Holidays</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADD / EDIT MODAL -->
+        <div id="modalHoliday" class="modal fade" tabindex="-1">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary">
+                        <h5 class="modal-title" id="modalHolidayTitle">Add Public Holiday</h5>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <form th:action="@{/addPublicHoliday}" method="post" th:object="${newHoliday}" id="holidayForm">
+                        <input type="hidden" th:field="*{id}" id="hId"/>
+                        <div class="modal-body">
+
+                            <!-- Validation errors -->
+                            <div th:if="${msg != null and msg.code == 'ERROR'}" class="alert alert-danger alert-dismissible">
+                                <i class="icon-cross2 mr-2"></i>
+                                <span th:text="${msg.message}"></span>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Holiday Date <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <span class="text-danger small" th:if="${#fields.hasErrors('holidayDate')}"
+                                          th:errors="*{holidayDate}"></span>
+                                    <input type="date" th:field="*{holidayDate}" id="hDate"
+                                           class="form-control" required/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Holiday Name <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <span class="text-danger small" th:if="${#fields.hasErrors('holidayName')}"
+                                          th:errors="*{holidayName}"></span>
+                                    <input type="text" th:field="*{holidayName}" id="hName"
+                                           class="form-control" placeholder="e.g. New Year's Day" required maxlength="150"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Holiday Type <span class="text-danger">*</span></label>
+                                <div class="col-sm-8">
+                                    <select th:field="*{holidayType}" id="hType" class="form-control" required>
+                                        <option value="">— Select Type —</option>
+                                        <option value="REGULAR">Regular Holiday</option>
+                                        <option value="SPECIAL_NW">Special Non-Working Holiday</option>
+                                        <option value="SPECIAL_W">Special Working Holiday</option>
+                                    </select>
+                                    <small class="form-text text-muted">
+                                        Regular &amp; Special Non-Working holidays are excluded from leave day counts.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Remarks</label>
+                                <div class="col-sm-8">
+                                    <input type="text" th:field="*{remarks}" id="hRemarks"
+                                           class="form-control" placeholder="Optional remarks" maxlength="255"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-8 offset-sm-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" th:field="*{excludeFromLeave}" id="hExclude"
+                                               class="form-check-input"/>
+                                        <label class="form-check-label" for="hExclude">
+                                            Exclude from leave working-day computation
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn bg-primary">
+                                <i class="icon-floppy-disk mr-1"></i> Save Holiday
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- END MODAL -->
+
+        <div class="content pt-0">
+
+            <!-- Flash messages -->
+            <div th:if="${msg != null and msg.code == 'EDIT-SUCCESS'}" class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                <i class="icon-checkmark2 mr-2"></i>
+                <span th:text="${msg.message}"></span>
+            </div>
+
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">Holiday Calendar</h5>
+                    <div class="header-elements">
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#modalHoliday"
+                                onclick="resetHolidayForm()">
+                            <i class="icon-plus2 mr-1"></i> Add Holiday
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-basic table-hover table-sm mb-0" id="table-holidays">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Holiday Name</th>
+                            <th>Type</th>
+                            <th>Excluded from Leave</th>
+                            <th>Remarks</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="holiday : ${holidays}">
+                            <td class="font-weight-semibold" th:text="${holiday.holidayDate}"></td>
+                            <td th:text="${holiday.holidayName}"></td>
+                            <td>
+                                <span th:text="${holiday.holidayType}"
+                                      th:classappend="${holiday.holidayType == 'REGULAR'     ? ' badge badge-primary'   :
+                                                       holiday.holidayType == 'SPECIAL_NW'  ? ' badge badge-warning'   :
+                                                                                              ' badge badge-secondary'}">
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <i th:classappend="${holiday.excludeFromLeave ? 'icon-checkmark text-success' : 'icon-cross text-muted'}"></i>
+                            </td>
+                            <td>
+                                <small class="text-muted" th:text="${holiday.remarks}"></small>
+                            </td>
+                            <td class="text-center text-nowrap">
+                                <!-- Edit button — loads existing data into modal via JS -->
+                                <button type="button" class="btn btn-xs btn-outline-primary btnEditHoliday"
+                                        data-toggle="modal" data-target="#modalHoliday"
+                                        th:data-id="${holiday.id}"
+                                        th:data-date="${holiday.holidayDate}"
+                                        th:data-name="${holiday.holidayName}"
+                                        th:data-type="${holiday.holidayType}"
+                                        th:data-exclude="${holiday.excludeFromLeave}"
+                                        th:data-remarks="${holiday.remarks}"
+                                        title="Edit">
+                                    <i class="icon-pencil7"></i>
+                                </button>
+                                <!-- Delete -->
+                                <a th:href="@{|/deletePublicHoliday/${holiday.id}|}"
+                                   class="btn btn-xs btn-outline-danger ml-1"
+                                   title="Delete"
+                                   onclick="return confirm('Delete this holiday?');">
+                                    <i class="icon-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${holidays == null or holidays.isEmpty()}">
+                            <td colspan="6" class="text-center text-muted py-4">
+                                No holidays recorded. Click "Add Holiday" to get started.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="fragments/common::footer"></div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+$(document).ready(function () {
+    $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+    $("#systemSettingsNav").addClass("nav-item-expanded nav-item-open");
+    $("#publicHolidaysNav").addClass("active");
+
+    let msgCode = /*[[${msg == null ? '' : msg.code}]]*/'';
+    if (msgCode === 'EDIT-SUCCESS') {
+        swal({title: "Success!", text: "Holiday saved.", icon: "success", buttons: false, timer: 2000});
+    }
+
+    // Open form if there are validation errors
+    let hasErrors = /*[[${msg != null and msg.code == 'ERROR'}]]*/ false;
+    if (hasErrors) {
+        $('#modalHoliday').modal('show');
+    }
+
+    var dtOrder = [];
+    dtOrder.push([0, 'asc']);
+    $('#table-holidays').DataTable({
+        lengthMenu: [10, 25, 50, 100],
+        order: dtOrder,
+        columnDefs: [{ orderable: false, targets: 5 }]
+    });
+
+    // Edit button handler
+    $(document).on('click', '.btnEditHoliday', function () {
+        let btn = $(this);
+        $('#modalHolidayTitle').text('Edit Public Holiday');
+        $('#hId').val(btn.data('id'));
+        $('#hDate').val(btn.data('date'));
+        $('#hName').val(btn.data('name'));
+        $('#hType').val(btn.data('type'));
+        $('#hExclude').prop('checked', btn.data('exclude') === true || btn.data('exclude') === 'true');
+        $('#hRemarks').val(btn.data('remarks') || '');
+        // Point form to edit endpoint
+        $('#holidayForm').attr('action', /*[[@{/editPublicHoliday}]]*/ '/editPublicHoliday');
+        $('#modalHoliday').modal('show');
+    });
+});
+
+function resetHolidayForm() {
+    $('#modalHolidayTitle').text('Add Public Holiday');
+    $('#hId').val('');
+    $('#hDate').val('');
+    $('#hName').val('');
+    $('#hType').val('');
+    $('#hExclude').prop('checked', true); // default: exclude from leave
+    $('#hRemarks').val('');
+    $('#holidayForm').attr('action', /*[[@{/addPublicHoliday}]]*/ '/addPublicHoliday');
+}
+</script>
+</body>
+</html>

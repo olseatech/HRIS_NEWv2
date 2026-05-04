@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+	<title>Dashboard</title>
+</head>
+<body>
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+	<!-- Page content -->
+	<div class="page-content">
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+			<!-- Vertical form modal -->
+			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title">Other Information</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						<form id="employeeForm" method="post" th:action="@{/addOtherInfo}" th:object="${otherInfo}">
+							<input type="hidden" th:field="*{id}" name="id" id="id">
+							<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
+							<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
+							<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
+							<div class="modal-body">
+								
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-12">
+											<label for="specialSkill">Special Skill And Hobby</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('specialSkill')}" th:errors="*{specialSkill}"></span>
+											<input id="specialSkill" name="specialSkill" th:field="*{specialSkill}" placeholder="Special Skill And Hobby" type="text" class="form-control required-field-hrisp" >
+										</div>											
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="row">											
+										<div class="col-sm-12">
+											<label for="nonAcademic">Non Academic Distinction / Recognition</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('nonAcademic')}" th:errors="*{nonAcademic}"></span>
+											<input id="nonAcademic" name="nonAcademic" th:field="*{nonAcademic}" placeholder="Non Academic Distinction / Recognition" type="text" class="form-control required-field-hrisp" >
+										</div>	
+										
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="row">
+										<div class="col-sm-12">
+											<label for="membershipInAssociation">Membership In Association / Organization</label>
+											<span class="validationError text-danger" th:if="${#fields.hasErrors('membershipInAssociation')}" th:errors="*{membershipInAssociation}"></span>
+											<input id="membershipInAssociation" name="membershipInAssociation" th:field="*{membershipInAssociation}" placeholder="Membership In Association / Organization" type="text" class="form-control required-field-hrisp" >
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="modal-footer">
+								<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
+								<button id="submitBtn" type="submit" class="btn bg-primary">Save Info</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		    <!-- /Vertical form modal -->
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">
+							
+							
+							
+							<!-- Dashboard content -->
+							<div class="row mt-3">
+								<div class="col-xl-12">
+									
+									
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Other Information</h5>
+											<div class="header-elements">
+												<div class="list-icons">				                				
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
+									           	</div>
+											</div>
+										</div>
+					
+										<div class="card-body">
+											List of All Other Information. Type to search desired other information.
+										</div>
+					
+										<table class="table table-bordered table-hover datatable-highlight">
+											<thead>
+												<tr>
+													<th width="150px;">&nbsp;</th>
+													<th>Special Skill And Hobby</th>
+													<th>Non Academic Distinction / Recognition</th>
+													<th>Membership In Association / Organization</th>	
+												</tr>
+											</thead>
+											<tbody>
+												<th:block th:each="otherInfo: ${otherInfoList}">
+													<tr>
+														
+														<td class="text-center">
+															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
+															th:data-row-specialSkill="${otherInfo.getSpecialSkill()}"
+															th:data-row-nonAcademic="${otherInfo.getNonAcademic()}"
+															th:data-row-membershipInAssociation="${otherInfo.getMembershipInAssociation()}"
+															th:data-row-id="${otherInfo.getId()}"
+															data-toggle="modal" data-target="#modal_form_vertical"
+			                                                >View Record</button>
+														</td>														
+														
+														<td th:text="${otherInfo.getSpecialSkill()}"></td>
+														<td th:text="${otherInfo.getNonAcademic()}"></td>
+														<td th:text="${otherInfo.getMembershipInAssociation()}"></td>
+
+													</tr>
+												</th:block>		
+
+											</tbody>
+										</table>
+									</div>
+									
+									
+											
+								</div>
+							</div>
+							<!-- /dashboard content -->
+							
+														
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					<!-- Right component Profile Pic -->
+					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+
+						<!-- Main sidebar -->
+						<div th:replace="fragments/common::right-profile-content"></div>
+						<!-- /Main sidebar -->
+		
+					</div>
+					<!-- /right sidebar component -->
+
+				</div>
+				<!-- /inner container -->
+
+			</div>
+			<!-- /content area -->
+		</div>
+		<!-- /main content -->
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">		
+	
+	    $(document).ready(function() {
+	    	
+	    	$('#consultation-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false, 
+				
+			});
+	    		    				
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+				
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				$('textarea').prop('readonly', true);
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
+								
+				$("#showMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#showMode").val("HRADMIN");
+			}
+
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+
+	    	if(msgCode === 'ERROR'){
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'EDIT-SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+
+	    });
+
+		$(document).on("click", ".showDetails", function() {
+
+			var id = $(this).attr('data-row-id');
+			var specialSkill = $(this).attr('data-row-specialSkill');
+			var nonAcademic = $(this).attr('data-row-nonAcademic');
+			var membershipInAssociation = $(this).attr('data-row-membershipInAssociation');
+			
+					
+			$("#modal_form_vertical").find("#id").val(id);
+			$("#modal_form_vertical").find("#specialSkill").val(specialSkill);
+			$("#modal_form_vertical").find("#nonAcademic").val(nonAcademic);
+			$("#modal_form_vertical").find("#membershipInAssociation").val(membershipInAssociation);
+		});
+
+
+		
+
+	</script>
+
+</body>
+</html>

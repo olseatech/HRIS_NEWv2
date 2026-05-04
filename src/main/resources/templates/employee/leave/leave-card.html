@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    <title>Leave Card - HRIS</title>
+</head>
+<body>
+
+<div th:replace="fragments/common::main-navbar"></div>
+
+<div class="page-content">
+    <div th:replace="fragments/common::main-sidebarnav"></div>
+
+    <div class="content-wrapper">
+
+        <div class="page-header">
+            <div class="page-header-content header-elements-md-inline">
+                <div class="page-title d-flex">
+                    <h4>
+                        <i class="icon-vcard mr-2 text-primary"></i>
+                        <span class="font-weight-semibold"
+                              th:text="${(employee != null ? employee.displayName : 'Employee') + ' - Leave Card ' + year}"></span>
+                    </h4>
+                </div>
+                <div class="header-elements d-none d-md-flex">
+                    <a th:href="@{/leave-report(year=${year})}" class="btn btn-sm btn-outline-secondary">
+                        <i class="icon-arrow-left8 mr-1"></i> Back to Report
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content pt-0">
+
+            <div class="card mb-3">
+                <div class="card-body py-2">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <small class="text-muted d-block">Employee No.</small>
+                            <span class="font-weight-semibold" th:text="${employee != null ? employee.empNo : ''}"></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <small class="text-muted d-block">Name</small>
+                            <span class="font-weight-semibold" th:text="${employee != null ? employee.displayName : ''}"></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <small class="text-muted d-block">Division</small>
+                            <span th:text="${employee != null and employee.division != null ? employee.division.divisionName : '-'}"></span>
+                        </div>
+                        <div class="col-sm-3">
+                            <small class="text-muted d-block">Position</small>
+                            <span th:text="${employee != null and employee.positionTitle != null ? employee.positionTitle.positionTitleName : '-'}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <a th:if="${employee != null}" th:href="@{|/leave-card/${employee.id}/${year - 1}|}"
+                   class="btn btn-sm btn-outline-secondary">
+                    <i class="icon-arrow-left8 mr-1"></i> <span th:text="${year - 1}"></span>
+                </a>
+                <span th:unless="${employee != null}" class="btn btn-sm btn-outline-secondary disabled">
+                    <i class="icon-arrow-left8 mr-1"></i> <span th:text="${year - 1}"></span>
+                </span>
+                <h5 class="mb-0 font-weight-semibold text-primary" th:text="${year}"></h5>
+                <a th:if="${employee != null}" th:href="@{|/leave-card/${employee.id}/${year + 1}|}"
+                   class="btn btn-sm btn-outline-secondary">
+                    <span th:text="${year + 1}"></span> <i class="icon-arrow-right8 ml-1"></i>
+                </a>
+                <span th:unless="${employee != null}" class="btn btn-sm btn-outline-secondary disabled">
+                    <span th:text="${year + 1}"></span> <i class="icon-arrow-right8 ml-1"></i>
+                </span>
+            </div>
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title">Leave Balance Summary</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-bordered mb-0">
+                        <thead class="thead-light text-center">
+                        <tr>
+                            <th>Leave Type</th>
+                            <th>Total Earned</th>
+                            <th>Total Used</th>
+                            <th>Balance</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="bal : ${balances}">
+                            <td>
+                                <span th:text="${bal.leaveType != null ? bal.leaveType.leaveName : 'Unknown Leave Type'}"></span>
+                                <small class="text-muted ml-1" th:text="${bal.leaveType != null ? '(' + bal.leaveType.leaveCode + ')' : ''}"></small>
+                            </td>
+                            <td class="text-center" th:text="${bal.totalEarned}"></td>
+                            <td class="text-center" th:text="${bal.totalUsed}"></td>
+                            <td class="text-center font-weight-semibold"
+                                th:classappend="${bal.balance <= 0 ? ' text-danger' : ' text-success'}"
+                                th:text="${bal.balance}"></td>
+                        </tr>
+                        <tr th:if="${balances == null or balances.isEmpty()}">
+                            <td colspan="4" class="text-center text-muted py-3">No balance records for this year.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card mb-3" th:if="${ledger != null and !ledger.isEmpty()}">
+                <div class="card-header">
+                    <h5 class="card-title">Leave Ledger</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0" id="table-ledger">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Leave Type</th>
+                            <th>Transaction</th>
+                            <th class="text-right">Days</th>
+                            <th>Reference</th>
+                            <th>Remarks</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="entry : ${ledger}">
+                            <td th:text="${entry.transactionDate}"></td>
+                            <td th:text="${entry.leaveType != null ? entry.leaveType.leaveCode : '-'}"></td>
+                            <td>
+                                <span th:text="${entry.transactionType}"
+                                      th:classappend="${entry.transactionType.name() == 'CREDIT'      ? ' badge badge-success'   :
+                                                       entry.transactionType.name() == 'DEBIT'       ? ' badge badge-danger'    :
+                                                       entry.transactionType.name() == 'ADJUSTMENT'  ? ' badge badge-info'      :
+                                                       entry.transactionType.name() == 'VOID'        ? ' badge badge-secondary' :
+                                                                                                       ' badge badge-light'}">
+                                </span>
+                            </td>
+                            <td class="text-right font-weight-semibold"
+                                th:classappend="${entry.days < 0 ? ' text-danger' : ' text-success'}"
+                                th:text="${entry.days}"></td>
+                            <td th:text="${entry.reference}"></td>
+                            <td th:text="${entry.remarks}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Applications - <span th:text="${year}" class="text-primary"></span></h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-sm table-hover mb-0" id="table-card-apps">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Leave Type</th>
+                            <th>Date From</th>
+                            <th>Date To</th>
+                            <th class="text-center">Days</th>
+                            <th>Sub-Type / Details</th>
+                            <th>Status</th>
+                            <th>With Pay</th>
+                            <th class="text-center">History</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="app : ${applications}"
+                            th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
+                            <td th:text="${app.id}"></td>
+                            <td>
+                                <span th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></span>
+                                <small class="text-muted ml-1" th:text="${app.leaveType != null ? '(' + app.leaveType.leaveCode + ')' : ''}"></small>
+                            </td>
+                            <td th:text="${app.dateFrom}"></td>
+                            <td th:text="${app.dateTo}"></td>
+                            <td class="text-center font-weight-semibold" th:text="${app.numberOfDays}"></td>
+                            <td>
+                                <span th:if="${app.leaveSubType != null}" th:text="${app.leaveSubType}"></span>
+                                <small th:if="${app.leaveDetails != null and !app.leaveDetails.isBlank()}"
+                                       class="d-block text-muted" th:text="${app.leaveDetails}"></small>
+                            </td>
+                            <td>
+                                <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
+                                      th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                       statusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                       statusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                       statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                       statusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                       statusName == 'CANCELLED'   ? ' badge badge-dark'      :
+                                                                                        ' badge badge-light'}">
+                                </span>
+                            </td>
+                            <td>
+                                <span th:if="${statusName == 'APPROVED'}"
+                                      th:text="${app.withPay ? 'With Pay' : 'LWOP'}"
+                                      th:classappend="${app.withPay ? ' text-success' : ' text-danger font-weight-semibold'}">
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <a th:href="@{|/leave-history/${app.id}|}"
+                                   class="btn btn-xs btn-outline-primary" title="View Audit Trail">
+                                    <i class="icon-history"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${applications == null or applications.isEmpty()}">
+                            <td colspan="9" class="text-center text-muted py-3">No applications for this year.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="fragments/common::footer"></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+    $("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+    $("#leaveReportNav").addClass("active");
+
+    var dtOrderLedger = []; dtOrderLedger.push([0, 'desc']);
+    var dtOrderApps = []; dtOrderApps.push([2, 'desc']);
+    $('#table-ledger').DataTable({lengthMenu: [10, 25, 50], order: dtOrderLedger});
+    $('#table-card-apps').DataTable({lengthMenu: [10, 25, 50], order: dtOrderApps});
+});
+</script>
+</body>
+</html>

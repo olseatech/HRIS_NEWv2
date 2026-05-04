@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    
+	<title>Dashboard</title>
+
+
+</head>
+
+<body>
+
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+
+					
+	<!-- Page content -->
+	<div class="page-content">
+	
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+			
+			<!-- Vertical form modal -->
+			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
+					<div class="modal-dialog modal-lg">
+						<div class="modal-content">
+							<div class="modal-header bg-primary">
+								<h5 class="modal-title">Family Member Information</h5>
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+							</div>
+
+							<form id="employeeForm" th:action="@{/addFamilyBg}" method="post" th:object="${familyBg}">
+								<input type="hidden" th:field="*{id}" name="id" id="id">
+								<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
+								<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
+								<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
+								<div class="modal-body">
+									
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4">
+												<select class="form-control" name="relationship" id="relationship" th:field="*{relationship}">
+													<option value="">SELECT VALUE</option>
+													<option value="SPOUSE">SPOUSE</option>
+													<option value="FATHER">FATHER</option>
+													<option value="MOTHER">MOTHER</option>
+													<option value="CHILDREN">CHILDREN</option>
+												</select>
+											</div>	
+										</div>
+									</div>
+									
+									<div class="form-group">
+										<div class="row">
+											<div class="col-sm-4">
+												<label for="firstName">First Name</label>
+												<span class="validationError text-danger" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+												<input id="firstName" name="firstName" th:field="*{firstName}" placeholder="First Name" type="text" class="form-control required-field-hrisp" >
+											</div>							                
+										               
+											<div class="col-sm-4">
+												<label for="lastName">Last Name</label>
+												<span class="validationError text-danger" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+												<input id="lastName" name="lastName" th:field="*{lastName}" placeholder="Last Name" type="text" class="form-control required-field-hrisp" >
+											</div>
+															
+											<div class="col-sm-4">
+												<label for="middleName">Middle Name</label>
+												<input id="middleName" name="middleName" th:field="*{middleName}" placeholder="Middle Name" type="text" class="form-control required-field-hrisp" >
+											</div>
+										</div>
+									</div>
+													
+									<div class="form-group">
+										<div class="row">   
+											<div class="col-sm-2">
+												<label for="suffix">Suffix</label>
+												<input type="text" class="form-control" id="suffix" name="suffix" th:field="*{suffix}" placeholder="Sample Jr. Sr."/>
+											</div>
+															
+											<div class="col-sm-4">
+												<label for="birthdate">Birthdate</label>
+												<input type="date" class="form-control required-field-hrisp" id="birthdate" name="birthdate" th:field="*{birthdate}" />
+											</div>
+											
+											<div class="col-sm-2">
+												<label for="age">Age</label>
+												<input type="text" class="form-control" id="age" placeholder="Age" readonly/>
+											</div>
+															
+											<div class="col-sm-4">
+												<label for="gender">Gender</label>
+												<select id="gender" name="gender" class="form-control" th:field="*{gender}">
+													<option value="">SELECT VALUE</option>
+													<option value="MALE">MALE</option>
+													<option value="FEMALE">FEMALE</option>
+												</select>
+											</div>											 
+															
+										</div>
+									</div>
+													
+									<div class="form-group spouseField">
+										<div class="row">   
+																									
+											<div class="col-sm-4">
+												<label for="tin">TIN</label>
+												<input type="text" class="form-control" id="tin" name="tin" th:field="*{tin}" placeholder="TIN"/>
+											</div>
+															 
+											<div class="col-sm-4">
+												<label for="occupation">Occupation</label>
+												<input id="occupation" name="occupation" title="Occupation" th:field="*{occupation}" placeholder="Occupation" type="text" class="form-control">
+											</div>
+											                    
+											<div class="col-sm-4">
+												<label for="employer">Employer/Business Name</label>
+												<input id="employer" name="employer" title="enter your email." th:field="*{employer}" placeholder="Employer/Business Name" type="text" class="form-control" >
+											</div>
+										</div>
+									</div>
+													
+									<div class="form-group spouseField">
+										<div class="row">
+											<div class="col-sm-4">
+												<label for="telNo">Telephone (Office)</label>
+												<input type="text" class="form-control" id="telNo" name="telNo" th:field="*{telNo}" placeholder="Telephone (Office)"/>
+											</div>							                
+											                
+											<div class="col-sm-4">
+												<label for="employmentStatus">Employment Status</label>
+												<select class="form-control" name="employmentStatus" id="employmentStatus" th:field="*{employmentStatus}">
+													<option value="">SELECT VALUE</option>
+													<option value="UNEMPLOYED">UNEMPLOYED</option>
+													<option value="EMPLOYED LOCALLY">EMPLOYED LOCALLY</option>
+													<option value="EMPLOYED ABROAD">EMPLOYED ABROAD</option>
+													<option value="BUSINESS OWNER">BUSINESS OWNER</option>
+												</select>
+											</div>
+											                    
+											<div class="col-sm-4">
+												<label for="mobileNo">Contact Number (Personal)</label>
+												<input type="text" class="form-control" id="mobileNo" th:field="*{mobileNo}" name="mobileNo" placeholder="Contact Number (Personal)"/>
+											</div>
+										</div>
+									</div>
+													
+									<div class="form-group spouseField">
+										<div class="row">   
+											<div class="col-sm-12">
+												<label for="businessAdd">Business Address</label>
+												<input type="text" class="form-control" id="businessAdd" name="businessAdd" th:field="*{businessAdd}" placeholder="Business Address"/>
+											</div>
+										</div>
+									</div>						
+									
+								</div>
+
+								<div class="modal-footer">
+									<button type="button" class="btn bg-primary" data-dismiss="modal">Close</button>
+									<button id="submitBtn" type="submit" class="btn bg-primary">Save Info</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			<!-- /Vertical form modal -->
+
+			
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">
+							
+							
+							
+							<!-- Dashboard content -->
+							<div class="row mt-3">
+								<div class="col-xl-12">
+									
+									
+									<div class="card">
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Family Background Information</h5>
+											<div class="header-elements">
+												<div class="list-icons">				                				
+									           		<button id="addButton" type="button" class="btn btn-primary" data-toggle="modal" data-target="#modal_form_vertical">Add Record</button>
+									           	</div>
+											</div>
+										</div>
+					
+										<div class="card-body">
+											List of All Family Members. Type to search desired family member.
+										</div>
+					
+										<table class="table table-bordered table-hover datatable-highlight">
+											<thead>
+												<tr>
+													<th width="150px;">&nbsp;</th>
+													<th>Name</th>
+													<th>Relationship</th>
+													<th>Birthday</th>		
+													<th>Age</th>												
+												</tr>
+											</thead>
+											<tbody>
+												<th:block th:each="familyBg : ${familyBgList}">
+													<tr>
+														
+														<td class="text-center">
+															<button id="editDegreeLevelButton" type="button" class="showDetails btn btn-primary"
+			                                                 th:data-row-relationship="${familyBg.getRelationship()}"	
+			                                                 th:data-row-tin="${familyBg.getTin()}"
+			                                                 th:data-row-occupation="${familyBg.getOccupation()}"
+			                                                 th:data-row-employer="${familyBg.getEmployer()}"
+			                                                 th:data-row-telNo="${familyBg.getTelNo()}"
+			                                                 th:data-row-businessAdd="${familyBg.getBusinessAdd()}"
+			                                                 th:data-row-mobileNo="${familyBg.getMobileNo()}"
+			                                                 th:data-row-employmentStatus="${familyBg.getEmploymentStatus()}"
+			                                                 th:data-row-firstName="${familyBg.getFirstName()}"
+			                                                 th:data-row-lastName="${familyBg.getLastName()}"
+			                                                 th:data-row-middleName="${familyBg.getMiddleName()}"
+			                                                 th:data-row-birthdate="${familyBg.getBirthdate()}"
+			                                                 th:data-row-suffix="${familyBg.getSuffix()}"
+			                                                 th:data-row-gender="${familyBg.getGender()}"
+			                                                 th:data-row-age="${familyBg.getAge()}"
+			                                                 th:data-row-id="${familyBg.getId()}"												 
+															data-toggle="modal" data-target="#modal_form_vertical"
+			                                                >View Record</button>
+														</td>														
+														
+														<td th:text="${familyBg.getFullName()}">Full Name</td>
+														<td th:text="${familyBg.getRelationship()}">Relationship</td>
+														<td th:text="${familyBg.getBirthdate()}">Birthday</td>
+														<td th:text="${familyBg.getAge()}">Age</td>
+														
+													</tr>
+												</th:block>		
+												
+												
+											</tbody>
+										</table>
+									</div>
+									
+									
+											
+								</div>
+							</div>
+							<!-- /dashboard content -->
+							
+														
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					<!-- Right component Profile Pic -->
+					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+
+						<!-- Main sidebar -->
+						<div th:replace="fragments/common::right-profile-content"></div>
+						<!-- /Main sidebar -->
+		
+					</div>
+					<!-- /right sidebar component -->
+
+				</div>
+				<!-- /inner container -->
+
+			</div>
+			<!-- /content area -->
+						
+			
+
+		</div>
+		<!-- /main content -->
+		
+		
+
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">
+		function returnToList(){
+			//Redirect to Patient Record
+			let contextRoot = /*[[${#httpServletRequest.getContextPath()}]]*/ '';
+			window.location.href = contextRoot + "/employee-list";
+		}
+	</script>
+	
+	<script th:inline="javascript">		
+	
+	    $(document).ready(function() {
+			
+			$('#addButton').click(function(){
+				let empHashCode = $('#empHashCode').val();
+				let employeeId = $('#employeeId').val();
+				
+		        $('#employeeForm')[0].reset();
+		        
+		        $('#empHashCode').val(empHashCode);
+		        $('#employeeId').val(employeeId);
+		        $(".spouseField").show();
+		    });
+			
+			$(document).on("click", ".showDetails", function() {
+	            var id = $(this).attr('data-row-id');
+	            var relationship = $(this).attr('data-row-relationship'); 
+	            var tin = $(this).attr('data-row-tin');
+	            var occupation = $(this).attr('data-row-occupation');
+	            var employer = $(this).attr('data-row-employer');
+	            var telNo = $(this).attr('data-row-telNo');
+	            var businessAdd = $(this).attr('data-row-businessAdd');
+	            var mobileNo = $(this).attr('data-row-mobileNo');
+	            var employmentStatus = $(this).attr('data-row-employmentStatus');
+	            var firstName = $(this).attr('data-row-firstName');
+	            var lastName = $(this).attr('data-row-lastName');
+	            var middleName = $(this).attr('data-row-middleName');
+	            var birthdate = $(this).attr('data-row-birthdate');
+	            var suffix = $(this).attr('data-row-suffix');
+	            var gender = $(this).attr('data-row-gender');
+	            var age = $(this).attr('data-row-age');
+	                    
+	            
+	            $("#modal_form_vertical").find("#id").val(id);
+	            $("#modal_form_vertical").find("#relationship").val(relationship);
+	            $("#modal_form_vertical").find("#tin").val(tin);
+	            $("#modal_form_vertical").find("#occupation").val(occupation);
+	            $("#modal_form_vertical").find("#employer").val(employer);
+	            $("#modal_form_vertical").find("#telNo").val(telNo);
+	            $("#modal_form_vertical").find("#businessAdd").val(businessAdd);
+	            $("#modal_form_vertical").find("#mobileNo").val(mobileNo);
+	            $("#modal_form_vertical").find("#employmentStatus").val(employmentStatus);
+	            $("#modal_form_vertical").find("#firstName").val(firstName);
+	            $("#modal_form_vertical").find("#lastName").val(lastName);
+	            $("#modal_form_vertical").find("#middleName").val(middleName);
+	            $("#modal_form_vertical").find("#birthdate").val(birthdate);
+	            $("#modal_form_vertical").find("#suffix").val(suffix);
+	            $("#modal_form_vertical").find("#gender").val(gender);
+	            $("#modal_form_vertical").find("#age").val(age);
+	            
+	            if(relationship === 'SPOUSE'){
+					$(".spouseField").show();
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);					
+					
+				} else if(relationship === 'MOTHER'){
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else if(relationship === 'FATHER'){
+					
+					$("#gender").val("MALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else {					
+					
+					$("#gender").prop("disabled", false);	
+					$(".spouseField").hide();
+				}
+	            
+	        });
+			
+			$("#relationship").change(function() {
+		        var selectedValue = $(this).val();
+		        //console("Selected value: " + selectedValue);
+		        
+		        if(selectedValue === 'SPOUSE'){
+					$(".spouseField").show();
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);					
+					
+				} else if(selectedValue === 'MOTHER'){
+					
+					$("#gender").val("FEMALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else if(selectedValue === 'FATHER'){
+					
+					$("#gender").val("MALE");
+					$("#gender").prop("disabled", true);	
+					$(".spouseField").hide();
+				} else {					
+					
+					$("#gender").prop("disabled", false);	
+					$(".spouseField").hide();
+				}
+		        
+		        // You can perform any action based on the selected value here
+		    });
+			
+			// start update profile photo
+			const fileSelect = document.getElementById('fileSelect');
+		    const profilePhoto = document.getElementById('profilePhoto');
+			fileSelect.addEventListener('click', (e) => {
+	        	if (profilePhoto) {
+	        		profilePhoto.click();
+	        	}
+	        }, false);
+		    profilePhoto.addEventListener('change', previewImage, false);
+		    
+        	let uploadUrl = /*[[${#request.getContextPath() + '/file/upload/profilePhoto'}]]*/'';
+        	let fileUploadForm = document.getElementById('fileUploadForm');
+		    fileUploadForm.onsubmit = async (e) => {
+		    	e.preventDefault();
+		    	let fd = new FormData(fileUploadForm);
+		    	
+		    	let response = await fetch(uploadUrl, {
+		    		method: 'POST',
+		    		body: fd
+		    	});
+		    	
+		    	if(response.ok){
+		    		swal({
+						title: "Success!",
+						text: "Profile Photo successfully saved.",
+						icon: "success",
+						buttons: false,
+			            timer: 2000,
+					}).then(() => window.location.reload());
+		    	} else {
+		    		swal({
+						title: "Upload Failure!",
+						text: "Profile Photo not uploaded successfully.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		    	}
+		    };
+		    
+		    function previewImage() {
+				let input = document.getElementById('profilePhoto');
+				let img = document.getElementById('photoPreview');
+				if (input.files && input.files[0]) {
+	        		var reader = new FileReader();
+	        		reader.onload = function(e) {
+	        			img.src = e.target.result;
+	        		}
+	        		reader.readAsDataURL(input.files[0]);
+	        	}
+			}
+			// end update profile photo
+	    	
+	    	$('#consultation-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false, 
+				
+			});
+			
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+				
+				//$("#empNo").prop("readOnly", true);
+				//$("#assumptiondate").prop("readOnly", true);
+				//$("#plantillaNo").prop("readOnly", true);
+				
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
+				
+				
+				$("#showMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#showMode").val("HRADMIN");
+			}
+	    		    				
+			
+
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+			
+			if(msgCode === 'EMP-NOT-FOUND'){
+				swal({
+					title: "Employee not found!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 3000,
+				})
+				.then((value) => {
+					let contextPath = /*[[${#request.getContextPath()}]]*/'';
+					window.location.href = contextPath + "/dashboard";
+				});
+
+	    	} else if(msgCode === 'ERROR'){
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'EDIT-SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+			
+			$('#employeeForm').submit(function(event) {
+		        var emptyFields = [];
+		        $('.required-field-hrisp').each(function() {
+		            if ($(this).val().trim() === '') {
+		                emptyFields.push($(this));
+		            }
+		        });
+		
+		        if (emptyFields.length > 0) {
+		            event.preventDefault();
+		            //var alertMessage = "Please fill out the following fields:\n";
+		            //$.each(emptyFields, function(index, field) {
+		            //    alertMessage += "- " + field.attr('name') + "\n";
+		            //});
+		            //alert(alertMessage);
+		            // Focus on the first empty field
+		            
+		            swal({
+						title: "Error!",
+						text: "Mandatory fields marked in RED are mandatory.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		            emptyFields[0].focus();
+		        } else {
+					$("#gender").prop("disabled", false);	
+				}
+		    });
+		    
+		    
+
+	    });
+
+		
+
+	</script>
+
+</body>
+</html>

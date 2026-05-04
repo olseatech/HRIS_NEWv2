@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Error — HRIS</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+               background: #f5f5f5; color: #333; display: flex;
+               justify-content: center; align-items: center; min-height: 100vh; }
+        .box { background: #fff; border-radius: 8px; box-shadow: 0 2px 16px rgba(0,0,0,.12);
+               padding: 48px 40px; max-width: 520px; width: 100%; text-align: center; }
+        .icon { font-size: 48px; color: #e8a020; margin-bottom: 16px; }
+        h2 { font-size: 1.5rem; font-weight: 600; margin-bottom: 8px; }
+        .sub { color: #666; margin-bottom: 20px; font-size: .95rem; }
+        .msg-box { background: #fff8e1; border: 1px solid #ffe082; border-radius: 6px;
+                   padding: 12px 16px; font-size: .875rem; text-align: left;
+                   margin-bottom: 20px; word-break: break-word; }
+        .btn { display: inline-block; padding: 10px 24px; background: #2196f3; color: #fff;
+               border-radius: 5px; text-decoration: none; font-size: .9rem;
+               border: none; cursor: pointer; }
+        .btn:hover { background: #1976d2; }
+        .debug { margin-top: 16px; font-size: .78rem; color: #999; }
+    </style>
+</head>
+<body>
+<div class="box">
+    <div class="icon">⚠</div>
+    <h2 th:if="${status != null}" th:text="${status + ' — ' + (error != null ? error : 'Error')}">Application Error</h2>
+    <h2 th:if="${status == null}">Application Error</h2>
+    <p class="sub">Something went wrong while processing your request.</p>
+
+    <div class="msg-box" th:if="${message != null and !#strings.isEmpty(message)}"
+         th:text="${message}"></div>
+
+    <div class="msg-box" th:if="${message == null or #strings.isEmpty(message)}"
+         th:text="${error != null ? error : 'An unexpected error occurred. Please try again or contact your administrator.'}"></div>
+
+    <a href="javascript:history.back()" style="margin-right:12px;color:#666;font-size:.9rem;">&#8592; Go Back</a>
+    <a th:href="@{/dashboard}" class="btn">Home</a>
+
+    <div class="debug" th:if="${path != null}">
+        Path: <span th:text="${path}"></span>
+        &nbsp;|&nbsp; Status: <span th:text="${status}"></span>
+    </div>
+</div>
+</body>
+</html>

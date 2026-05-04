@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+    xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+	<th:block th:replace="fragments/common::header-meta"></th:block>
+    <!-- common import of css & js goes here -->
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+	<title>Dashboard</title>
+</head>
+<body>
+	<!-- Main Navbar -->
+	<div th:replace="fragments/common::main-navbar"></div>
+	<!-- /Main Navbar -->
+	<!-- Page content -->
+	<div class="page-content">
+		<!-- Main sidebar -->
+		<div th:replace="fragments/common::main-sidebarnav"></div>
+		<!-- /Main sidebar -->
+
+		<!-- Main content -->
+		<div class="content-wrapper">
+			
+			<!-- Vertical form modal -->
+			<div id="modal_form_vertical" class="modal fade" tabindex="-1">
+				<div class="modal-dialog modal-lg">
+					<div class="modal-content">
+						<div class="modal-header bg-primary">
+							<h5 class="modal-title">Other Info Question</h5>
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+						</div>
+
+						
+					</div>
+				</div>
+			</div>
+		    <!-- /Vertical form modal -->
+
+			<div class="content">
+
+				<!-- Inner container -->
+				<div class="d-flex align-items-start flex-column flex-md-row">
+
+					<!-- Left content -->
+					<div class="tab-content w-100 order-2 order-md-1">
+						<div class="tab-pane fade active show" id="activity">
+							
+							
+							
+							<!-- Dashboard content -->
+							<div class="row mt-3">
+								<div class="col-xl-12">
+									
+									
+									<div class="card">
+										
+										<div class="card-header header-elements-inline">
+											<h5 class="card-title">Other Info Questions</h5>											
+										</div>
+										
+										<div class="card-body">
+											<form id="employeeForm" method="post" th:action="@{/addOtherInfoQuestion}" th:object="${otherInfoQuestion}" style="overflow: auto; height: 800px;">
+												<input type="hidden" th:field="*{id}" name="id" id="id">
+												<input type="hidden" th:field="*{employee.id}" name="employeeId" id="employeeId">
+												<input type="hidden" th:field="*{employee.empHashCode}" name="empHashCode" id="empHashCode">
+												<input type="hidden" th:field="*{showMode}" name="showMode" id="showMode" value="">
+												<div class="modal-body">
+													
+													<div class="form-group">
+					
+														<div class="row mt-3">
+					                                        <p>34.) Are you related by consanguinity or affinity to the appointing or recommending authority, or to the chief of bureau of office or to the person who has immediate supervision over you in the Office, Bureau or Department where you will be appointed</p>
+															<div class="col-sm-6">
+																<label for="questionOneThird">a. within the third degree?</label>
+																					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneThird" id="questionOneThirdYes" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'YES'}" value="YES" />&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneThird" id="questionOneThirdNo" th:field="*{questionOneThird}" th:checked="${otherInfoQuestion.questionOneThird == 'NO'}" value="NO"  />&nbsp;NO
+																</p>
+																
+																<!--
+					                                            <div class="col-sm-12">
+					                                                <label for="questionOneThirdIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneThirdIfYes')}" th:errors="*{questionOneThirdIfYes}"></span>
+					                                                <input type="text" th:field="*{questionOneThirdIfYes}"  id="questionOneThirdIfYes" name="questionOneThirdIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionOneThird == 'NO'}">
+					                                            </div>
+					                                            -->
+															</div>
+															<div class="col-sm-6">
+																<label for="questionOneFourth">b. within the fourth degree?</label>
+																					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthYes" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'YES'}" value="YES" />&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionOneFourth" id="questionOneFourthNo" th:field="*{questionOneFourth}" th:checked="${otherInfoQuestion.questionOneFourth == 'NO'}" value="NO"  />&nbsp;NO
+																</p>
+																
+					                                            
+															</div>
+														</div>
+														
+														<div class="row mt-3">
+															<div class="col-sm-12">
+					                                                <label for="questionOneFourthIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionOneFourthIfYes')}" th:errors="*{questionOneFourthIfYes}"></span>
+					                                                <input type="text" th:field="*{questionOneFourthIfYes}" id="questionOneFourthIfYes" name="questionOneFourthIfYes" class="form-control" />
+					                                        </div>
+														</div>	
+														
+														
+														
+														<div class="row mt-3">
+					                                        <p class="col-sm-12">35.) </p>
+															<div class="col-sm-6">
+																<label for="questionTwoA">a. Have you ever been found guilty of any administrative offense?</label>
+																					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoA" id="questionTwoAYes" th:field="*{questionTwoA}" th:checked="${otherInfoQuestion.questionTwoA == 'YES'}" value="YES" onclick="disableDetails('questionTwoA')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoA" id="questionTwoANo" th:field="*{questionTwoA}" th:checked="${otherInfoQuestion.questionTwoA == 'NO'}" value="NO"  onclick="disabledDetails('questionTwoA')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionTwoAIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoAIfYes')}" th:errors="*{questionTwoAIfYes}"></span>
+					                                                <input type="text" th:field="*{questionTwoAIfYes}"  id="questionTwoAIfYes" name="questionTwoAIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionTwoA == 'NO'}">
+					                                            </div>
+															</div>
+					
+															<div class="col-sm-6">
+																<label for="questionTwoB">b. Have you ever been criminally charged before any court?</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoB')}" th:errors="*{questionTwoB}"></span>
+					
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoB" id="questionTwoBYes" th:field="*{questionTwoB}" th:checked="${otherInfoQuestion.questionTwoB == 'YES'}" value="YES" onclick="disableDetails('questionTwoB')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTwoB" id="questionTwoBNo" th:field="*{questionTwoB}" th:checked="${otherInfoQuestion.questionTwoB == 'NO'}" value="NO"  onclick="disabledDetails('questionTwoB')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionTwoBIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBIfYes')}" th:errors="*{questionTwoBIfYes}"></span>
+					                                                <input type="text" th:field="*{questionTwoBIfYes}"  id="questionTwoBIfYes" name="questionTwoBIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionTwoB == 'NO'}">
+					                                            </div>
+															</div>
+					
+														</div>
+					
+														<div th:class="'row my-3 date-details justify-content-end' + (${otherInfoQuestion.questionTwoB == 'NO' ? ' d-none' : ''})">
+															<div class="col-sm-6 d-flex flex-wrap">
+																<div class="col-sm-4 ">
+																	<label for="questionTwoBMonth">Month</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBMonth')}" th:errors="*{questionTwoBMonth}"></span>
+																	<select class="form-control" th:field="*{questionTwoBMonth}">
+																		<option value=null disabled></option>
+																		<option value="JAN">JAN</option>
+																		<option value="FEB">FEB</option>
+																		<option value="MAR">MAR</option>
+																		<option value="APR">APR</option>
+																		<option value="MAY">MAY</option>
+																		<option value="JUN">JUN</option>
+																		<option value="JUL">JUL</option>
+																		<option value="AUG">AUG</option>
+																		<option value="SEPT">SEPT</option>
+																		<option value="OCT">OCT</option>
+																		<option value="NOV">NOV</option>
+																		<option value="DEC">DEC</option>
+																	</select>
+																</div>
+																<div class="col-sm-4 ">
+																	<label for="questionTwoBDay">Day</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBDay')}" th:errors="*{questionTwoBDay}"></span>
+																	<input type="number" th:field="*{questionTwoBDay}" name="questionTwoBDay" id="questionTwoBDay" class="form-control">
+																</div>
+																<div class="col-sm-4 ">
+																	<label for="questionTwoBYear">Year</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBYear')}" th:errors="*{questionTwoBYear}"></span>
+																	<input type="text" th:field="*{questionTwoBYear}" name="questionTwoBYear" id="questionTwoBYear" class="form-control">
+																</div>
+																<div class="col-sm-12 ">
+																	<label for="questionTwoBStatusCase">Status Case</label>
+																	<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTwoBStatusCase')}" th:errors="*{questionTwoBStatusCase}"></span>
+																	<input type="text" th:field="*{questionTwoBStatusCase}" name="questionTwoBStatusCase" id="questionTwoBStatusCase" class="form-control">
+																</div>
+															</div>
+															
+														</div>
+														
+														<div class="row mt-3">
+					                                        <p>36.) Have you ever been convicted of any crime or violation of any law, decree, ordinance or regulation by any court or tribunal?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionThree')}" th:errors="*{questionThree}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionThree" id="questionThreeYes" th:field="*{questionThree}" th:checked="${otherInfoQuestion.questionThree == 'YES'}" value="YES" onclick="disableDetails('questionThree')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionThree" id="questionThreeNo" th:field="*{questionThree}" th:checked="${otherInfoQuestion.questionThree == 'NO'}" value="NO"  onclick="disabledDetails('questionThree')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionThreeIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionThreeIfYes')}" th:errors="*{questionThreeIfYes}"></span>
+					                                                <input type="text" th:field="*{questionThreeIfYes}"  id="questionThreeIfYes" name="questionThreeIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionThree == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>37.) Have you ever been seperated from the service in any of the following modes: resignation, retirement, dropped from the rolls, dismissal, termination, end of term,finished contract or phased out (abolition) in the public or private sector?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFour')}" th:errors="*{questionFour}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFour" id="questionFourYes" th:field="*{questionFour}" th:checked="${otherInfoQuestion.questionFour == 'YES'}" value="YES" onclick="disableDetails('questionFour')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFour" id="questionFourNo" th:field="*{questionFour}" th:checked="${otherInfoQuestion.questionFour == 'NO'}" value="NO"  onclick="disabledDetails('questionFour')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionFourIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFourIfYes')}" th:errors="*{questionFourIfYes}"></span>
+					                                                <input type="text" th:field="*{questionFourIfYes}"  id="questionFourIfYes" name="questionFourIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionFour == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>38 A.) Have you ever been a candidate in national or local election held within the last year (except Barangay Election)?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionFive')}" th:errors="*{questionFive}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFive" id="questionFiveYes" th:field="*{questionFive}" th:checked="${otherInfoQuestion.questionFive == 'YES'}" value="YES" onclick="disableDetails('questionFive')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionFive" id="questionFiveNo" th:field="*{questionFive}" th:checked="${otherInfoQuestion.questionFive == 'NO'}" value="NO"  onclick="disabledDetails('questionFive')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionFiveIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionFiveIfYes')}" th:errors="*{questionFiveIfYes}"></span>
+					                                                <input type="text" th:field="*{questionFiveIfYes}"  id="questionFiveIfYes" name="questionFiveIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionFive == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>38 B.) Have you resigned from the government service during the three (3) month period before the last election to promote/actively campaign for a national or local candidate?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSix')}" th:errors="*{questionSix}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSix" id="questionSixYes" th:field="*{questionSix}" th:checked="${otherInfoQuestion.questionSix == 'YES'}" value="YES" onclick="disableDetails('questionSix')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSix" id="questionSixNo" th:field="*{questionSix}" th:checked="${otherInfoQuestion.questionSix == 'NO'}" value="NO"  onclick="disabledDetails('questionSix')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionSixIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSixIfYes')}" th:errors="*{questionSixIfYes}"></span>
+					                                                <input type="text" th:field="*{questionSixIfYes}"  id="questionSixIfYes" name="questionSixIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionSix == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+					
+														<div class="row mt-3">
+					                                        <p>39.) Have you acquired the status of immigrant or permanent resident of another country?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenA')}" th:errors="*{questionSevenA}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSevenA" id="questionSevenAYes" th:field="*{questionSevenA}" th:checked="${otherInfoQuestion.questionSevenA == 'YES'}" value="YES" onclick="disableDetails('questionSevenA')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionSevenA" id="questionSevenANo" th:field="*{questionSevenA}" th:checked="${otherInfoQuestion.questionSevenA == 'NO'}" value="NO"  onclick="disabledDetails('questionSevenA')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionSevenAIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionSevenAIfYes')}" th:errors="*{questionSevenAIfYes}"></span>
+					                                                <input type="text" th:field="*{questionSevenAIfYes}"  id="questionSevenAIfYes" name="questionSevenAIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionSevenA == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+														
+														<div class="row mt-3">
+															 <p>40.) Pursuant to: (a) Indigenous Peoples Act (RA 8371; (b) Magna Carta for Disabled Persons (RA 7277); and (c) Solo Parents Welfare Act 2000 (RA 8972), please answer the following items:</p>
+														</div>
+														<div class="row mt-3">
+					                                        <p>a.) Are you a member of any indigenous group?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionTen')}" th:errors="*{questionTen}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTen" id="questionTenYes" th:field="*{questionTen}" th:checked="${otherInfoQuestion.questionTen == 'YES'}" value="YES" onclick="disableDetails('questionTen')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionTen" id="questionTenNo" th:field="*{questionTen}" th:checked="${otherInfoQuestion.questionTen == 'NO'}" value="NO"  onclick="disabledDetails('questionTen')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionTenIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionTenIfYes')}" th:errors="*{questionTenIfYes}"></span>
+					                                                <input type="text" th:field="*{questionTenIfYes}"  id="questionTenIfYes" name="questionTenIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionTen == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+														<div class="row mt-3">
+					                                       <p>b. Are you a person with disability?</p>
+															<div class="col-sm-12">															
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEight')}" th:errors="*{questionEight}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionEight" id="questionEightYes" th:field="*{questionEight}" th:checked="${otherInfoQuestion.questionEight == 'YES'}" value="YES" onclick="disableDetails('questionEight')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionEight" id="questionEightNo" th:field="*{questionEight}" th:checked="${otherInfoQuestion.questionEight == 'NO'}" value="NO"  onclick="disabledDetails('questionEight')">&nbsp;NO
+																</p>
+															</div>
+														</div>
+														<div th:class="'row my-3 disability-details justify-content-end' + (${otherInfoQuestion.questionEight == 'NO' ? ' d-none' : ''})">
+															<div class="col-sm-6">
+																<label for="questionEightType">If YES, please specify Type</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightType')}" th:errors="*{questionEightType}"></span>
+																<input type="text" th:field="*{questionEightType}" name="questionEightType" placeholder="N/A" id="questionEightType" class="form-control">
+															</div>
+															<div class="col-sm-6">
+																<label for="questionEightId">If YES, please specify ID No</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightId')}" th:errors="*{questionEightId}"></span>
+																<input type="text" th:field="*{questionEightId}" name="questionEightId" placeholder="N/A" id="questionEightId" class="form-control">
+															</div>
+															<div class="col-sm-6">
+																<label for="questionEightValidityDate">Validity Date</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightValidityDate')}" th:errors="*{questionEightValidityDate}"></span>
+																<input type="date" th:field="*{questionEightValidityDate}" name="questionEightValidityDate" placeholder="N/A" id="questionEightValidityDate" class="form-control">
+															</div>
+															<div class="col-sm-6">
+																<label for="questionEightAttachment">Person With Disability Attachment</label>
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionEightAttachment')}" th:errors="*{questionEightAttachment}"></span>
+																<input type="file" th:field="*{questionEightAttachment}" name="questionEightAttachment" placeholder="N/A" id="questionEightAttachment" class="form-control">
+															</div>
+														</div>
+														
+														<div class="row mt-3">
+					                                        <p>c.) Are you a solo parent?</p>
+															<div class="col-sm-12">
+																<span class="validationError text-danger" th:if="${#fields.hasErrors('questionNine')}" th:errors="*{questionNine}"></span>
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionNine" id="questionNineYes" th:field="*{questionNine}" th:checked="${otherInfoQuestion.questionNine == 'YES'}" value="YES" onclick="disableDetails('questionNine')"/>&nbsp;YES
+																</p>
+																
+																<p class=" d-flex align-items-center">
+																	<input type="radio" name="questionNine" id="questionNineNo" th:field="*{questionNine}" th:checked="${otherInfoQuestion.questionNine == 'NO'}" value="NO"  onclick="disabledDetails('questionNine')">&nbsp;NO
+																</p>
+																
+					                                            <div class="col-sm-12">
+					                                                <label for="questionNineIfYes">If YES, give details:</label>
+					                                                <span class="validationError text-danger" th:if="${#fields.hasErrors('questionNineIfYes')}" th:errors="*{questionNineIfYes}"></span>
+					                                                <input type="text" th:field="*{questionNineIfYes}"  id="questionNineIfYes" name="questionNineIfYes" class="form-control" th:disabled="${otherInfoQuestion.questionNine == 'NO'}">
+					                                            </div>
+															</div>
+														</div>
+					
+													</div>
+												</div>
+					
+												<div class="modal-footer">
+													<button type="submit" class="btn bg-primary" id="submitBtn">Save Info</button>
+												</div>
+											</form>
+										</div>
+										
+												
+										
+									</div>
+									<!-- end card -->
+									
+									
+											
+								</div>
+							</div>
+							<!-- /dashboard content -->
+							
+														
+					    </div>			    
+					</div>
+					<!-- /left content -->
+
+
+					<!-- Right component Profile Pic -->
+					<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right wmin-100 border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+
+						<!-- Main sidebar -->
+						<div th:replace="fragments/common::right-profile-content"></div>
+						<!-- /Main sidebar -->
+		
+					</div>
+					<!-- /right sidebar component -->
+
+				</div>
+				<!-- /inner container -->
+
+			</div>
+			<!-- /content area -->
+		</div>
+		<!-- /main content -->
+	</div>
+	<!-- /page content -->
+	
+	<!-- Main sidebar -->
+	<div th:replace="fragments/common::footer"></div>
+	<!-- /Main sidebar -->
+	
+	<script th:inline="javascript">		
+	
+	    $(document).ready(function() {
+			
+			$("#eligibility").change(function() {
+		        var selectedValue = $(this).val();
+		        
+		        if(selectedValue === 'OTHERS'){				
+					$("#otherEligibility").prop("readOnly", false);
+					$("#otherEligibility").addClass("required-field-hrisp");
+					$("#otherEligibility").focus();
+				} else {					
+					$("#otherEligibility").prop("readOnly", true);
+					$("#otherEligibility").removeClass("required-field-hrisp");
+				}
+				
+		    });
+	    	
+	    	$('#consultation-list').DataTable({
+				"lengthMenu": [10, 25, 50],
+				"ordering": false, 
+				
+			});
+	    		    				
+			let showMode = /*[[${employee.showMode == null ? '' : employee.showMode} ]]*/'';
+			
+			if(showMode === 'PROFILE'){
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#myAccountNav").addClass("nav-item-expanded nav-item-open");
+				$("#myPersonalInfoNav").addClass("active");
+				
+				$('#addButton').hide();
+				$('#submitBtn').hide();
+				$('#updatePhotoBtn').hide();
+				$('#cameraArea').hide();
+				
+				$('textarea').prop('readonly', true);
+				$('input').prop('readonly', true);
+				$('select').prop('disabled', true);
+				$('input, select').removeClass("required-field-hrisp");
+				$('input[type="radio"]').prop('disabled', true);
+								
+				$("#showMode").val("PROFILE");
+			} else {
+				$(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+				$("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+				$("#employeeListNav").addClass("active");
+				
+				$("#showMode").val("HRADMIN");
+			}
+
+	    	let msgCode = /*[[${msg == null ? '' : msg.code} ]]*/'';
+			let msgDesc = /*[[${msg == null ? '' : msg.message}]]*/'';
+
+	    	if(msgCode === 'ERROR'){
+				swal({
+					title: "Error!",
+					text: msgDesc,
+					icon: "error",
+					buttons: false,
+		            timer: 2000,
+				});
+			} else if(msgCode === 'EDIT-SUCCESS'){
+				swal({
+					title: "Success!",
+					text: msgDesc,
+					icon: "success",
+					buttons: false,
+		            timer: 2000,
+				});
+			}
+
+	    });
+
+		$('#employeeForm').submit(function(event) {
+		        var emptyFields = [];
+		        $('.required-field-hrisp').each(function() {
+		            if ($(this).val().trim() === '') {
+		                emptyFields.push($(this));
+		            }
+		        });
+		
+		        if (emptyFields.length > 0) {
+		            event.preventDefault();		            
+		            swal({
+						title: "Error!",
+						text: "Mandatory fields marked in RED are mandatory.",
+						icon: "error",
+						buttons: false,
+			            timer: 2000,
+					});
+		            emptyFields[0].focus();
+		        }
+		});
+
+        const disabledDetails = (id) =>{
+			// $("#modal_form_vertical").find(`#${id}`).val("");
+            $("#employeeForm").find(`#${id}IfYes`).val("").prop("disabled",true);
+			if(id === "questionTwoB"){
+				$("#employeeForm .date-details #questionTwoBMonth").val(null);
+				$("#employeeForm .date-details #questionTwoBDay").val("");
+				$("#employeeForm .date-details #questionTwoBYear").val("");
+				$("#employeeForm .date-details #questionTwoBStatusCase").val("");
+				$("#employeeForm").find(`.date-details`).addClass("d-none")
+			}
+			if (id === "questionEight") {
+				$("#employeeForm .disability-details #questionEightType").val("");
+				$("#employeeForm .disability-details #questionEightId").val("");
+				$("#employeeForm .disability-details #questionEightValidityDate").val("");
+				$("#employeeForm .disability-details #questionEightAttachment").val("");
+				$("#employeeForm .disability-details").addClass("d-none");
+			}
+
+        }
+
+        const disableDetails = (id) =>{
+            $("#employeeForm").find(`#${id}IfYes`).val("").prop("disabled",false)
+			if(id === "questionTwoB"){
+				$("#employeeForm").find(`.date-details`).removeClass("d-none")
+			}else if(id === "questionEight"){
+				$("#employeeForm").find(`.disability-details`).removeClass("d-none")
+			}
+			
+			// if(id === "questionEight"){
+				
+			// 	$("#modal_form_vertical .disability-details #questionEightType").val("");
+			// 	$("#modal_form_vertical .disability-details #questionEightId").val("");
+			// 	$("#modal_form_vertical .disability-details #questionEightValidityDate").val("");
+			// 	$("#modal_form_vertical .disability-details #questionEightAttachment").val("");
+			// 	// $("#modal_form_vertical .disability-details").addClass("d-none");
+			// }
+        }
+	</script>
+
+</body>
+</html>

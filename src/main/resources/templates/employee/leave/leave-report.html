@@ -1,0 +1,206 @@
+    <!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    <title>Leave Report - HRIS</title>
+</head>
+<body>
+
+<div th:replace="fragments/common::main-navbar"></div>
+
+<div class="page-content">
+    <div th:replace="fragments/common::main-sidebarnav"></div>
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <div class="page-header-content header-elements-md-inline">
+                <div class="page-title d-flex">
+                    <h4>
+                        <i class="icon-file-text2 mr-2 text-primary"></i>
+                        <span class="font-weight-semibold">Leave Summary Report</span>
+                    </h4>
+                </div>
+                <div class="header-elements d-none d-md-flex">
+                    <a th:href="@{/leave-export-csv(year=${selectedYear})}"
+                       class="btn btn-sm btn-outline-secondary mr-2">
+                        <i class="icon-download mr-1"></i> Export Applications CSV
+                    </a>
+                    <a th:href="@{|/leave-balance-export-csv/${selectedYear}|}"
+                       class="btn btn-sm btn-outline-info">
+                        <i class="icon-download mr-1"></i> Export Balances CSV
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="content pt-0">
+
+            <div class="card mb-3">
+                <div class="card-body py-2">
+                    <form th:action="@{/leave-report}" method="get" class="form-inline flex-wrap">
+                        <div class="form-group mr-3 mb-2">
+                            <label class="mr-2 font-weight-semibold">Year</label>
+                            <select name="year" class="form-control form-control-sm">
+                                <option th:each="y : ${#numbers.sequence(currentYear, currentYear - 4, -1)}"
+                                        th:value="${y}" th:text="${y}"
+                                        th:selected="${y == selectedYear}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-3 mb-2">
+                            <label class="mr-2 font-weight-semibold">Employee</label>
+                            <select name="employeeId" class="form-control form-control-sm">
+                                <option value="">- All Employees -</option>
+                                <option th:each="emp : ${employees}"
+                                        th:value="${emp.id}"
+                                        th:text="${emp.displayName + ' (' + emp.empNo + ')'}"
+                                        th:selected="${selectedEmployeeId != null and selectedEmployeeId == emp.id}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-3 mb-2">
+                            <label class="mr-2 font-weight-semibold">Leave Type</label>
+                            <select name="leaveTypeId" class="form-control form-control-sm">
+                                <option value="">- All Types -</option>
+                                <option th:each="lt : ${leaveTypes}"
+                                        th:value="${lt.id}"
+                                        th:text="${lt.leaveName + ' (' + lt.leaveCode + ')'}"
+                                        th:selected="${selectedLeaveTypeId != null and selectedLeaveTypeId == lt.id}">
+                                </option>
+                            </select>
+                        </div>
+                        <div class="form-group mr-3 mb-2">
+                            <label class="mr-2 font-weight-semibold">Status</label>
+                            <select name="status" class="form-control form-control-sm">
+                                <option value="">- All Statuses -</option>
+                                <option th:each="st : ${statuses}"
+                                        th:value="${st.name()}"
+                                        th:text="${st.name()}"
+                                        th:selected="${selectedStatus != null and selectedStatus == st.name()}">
+                                </option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-sm btn-primary mb-2">
+                            <i class="icon-filter3 mr-1"></i> Filter
+                        </button>
+                        <a th:href="@{/leave-report}" class="btn btn-sm btn-link mb-2 ml-1">Reset</a>
+                    </form>
+                </div>
+            </div>
+
+            <div class="row mb-3" th:if="${applications != null}">
+                <div class="col-sm-3">
+                    <div class="card card-body text-center py-2 border-left border-secondary border-left-3">
+                        <small class="text-muted text-uppercase font-weight-semibold">Total Showing</small>
+                        <h4 class="mb-0 font-weight-semibold"
+                            th:text="${#lists.size(applications)}">0</h4>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="card card-body text-center py-2 border-left border-primary border-left-3">
+                        <small class="text-muted text-uppercase font-weight-semibold">Year</small>
+                        <h4 class="mb-0 font-weight-semibold text-primary"
+                            th:text="${selectedYear}"></h4>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="card card-body py-2 text-muted small">
+                        Use the filter above to narrow by employee, leave type, or status.
+                        Download all records with the <strong>Export CSV</strong> buttons at top right.
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header header-elements-inline">
+                    <h5 class="card-title">
+                        Leave Applications -
+                        <span th:text="${selectedYear}" class="text-primary"></span>
+                    </h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-basic table-hover table-sm mb-0" id="table-leave-report">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>#</th>
+                            <th>Employee</th>
+                            <th>Division</th>
+                            <th>Leave Type</th>
+                            <th>Date From</th>
+                            <th>Date To</th>
+                            <th class="text-center">Days</th>
+                            <th>Status</th>
+                            <th>Filed</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="app : ${applications}"
+                            th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
+                            <td th:text="${app.id}"></td>
+                            <td>
+                                <span class="font-weight-semibold" th:text="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}"></span>
+                                <small class="d-block text-muted" th:text="${app.employee != null ? app.employee.empNo : ''}"></small>
+                            </td>
+                            <td th:text="${app.employee != null and app.employee.division != null ? app.employee.division.divisionName : '-'}"></td>
+                            <td>
+                                <span th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></span>
+                                <small class="text-muted ml-1" th:text="${app.leaveType != null ? '(' + app.leaveType.leaveCode + ')' : ''}"></small>
+                            </td>
+                            <td th:text="${app.dateFrom}"></td>
+                            <td th:text="${app.dateTo}"></td>
+                            <td class="text-center font-weight-semibold" th:text="${app.numberOfDays}"></td>
+                            <td>
+                                <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
+                                      th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                       statusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                       statusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                       statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                       statusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                       statusName == 'CANCELLED'   ? ' badge badge-dark'      :
+                                                                                        ' badge badge-light'}">
+                                </span>
+                                <small th:if="${statusName == 'APPROVED' and !app.withPay}"
+                                       class="d-block text-danger font-weight-semibold">LWOP</small>
+                            </td>
+                            <td th:text="${app.appliedDateTime != null ? app.appliedDateTime.toLocalDate() : ''}"></td>
+                            <td class="text-center text-nowrap">
+                                <a th:href="@{|/leave-history/${app.id}|}"
+                                   class="btn btn-xs btn-outline-primary" title="View History">
+                                    <i class="icon-history"></i>
+                                </a>
+                                <a th:if="${app.employee != null}" th:href="@{|/leave-card/${app.employee.id}/${selectedYear}|}"
+                                   class="btn btn-xs btn-outline-secondary ml-1" title="Leave Card">
+                                    <i class="icon-vcard"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <tr th:if="${applications == null or applications.isEmpty()}">
+                            <td colspan="10" class="text-center text-muted py-4">No records found for the selected filters.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <div th:replace="fragments/common::footer"></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+    $("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+    $("#leaveReportNav").addClass("active");
+
+    $('#table-leave-report').DataTable({
+        lengthMenu: [10, 25, 50, 100],
+        columnDefs: [{ orderable: false, targets: 9 }]
+    });
+});
+</script>
+</body>
+</html>

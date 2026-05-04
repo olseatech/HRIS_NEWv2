@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:replace="fragments/common::header-meta"></th:block>
+    <th:block th:replace="fragments/common::header-import-css"></th:block>
+    <th:block th:replace="fragments/common::header-import-js"></th:block>
+    <title>Leave Application History - HRIS</title>
+</head>
+<body>
+
+<div th:replace="fragments/common::main-navbar"></div>
+
+<div class="page-content">
+    <div th:replace="fragments/common::main-sidebarnav"></div>
+
+    <div class="content-wrapper">
+        <div class="page-header">
+            <div class="page-header-content header-elements-md-inline">
+                <div class="page-title d-flex">
+                    <h4>
+                        <i class="icon-history mr-2 text-primary"></i>
+                        <span class="font-weight-semibold">Application #<span th:text="${app != null ? app.id : ''}"></span> - Status History</span>
+                    </h4>
+                </div>
+            </div>
+        </div>
+
+        <div class="content pt-0">
+
+            <div class="row mb-3" th:if="${app != null}">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body py-3">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <small class="text-muted d-block">Employee</small>
+                                    <span class="font-weight-semibold"
+                                          th:text="${app.employee != null ? app.employee.displayName : ''}"></span>
+                                </div>
+                                <div class="col-sm-3">
+                                    <small class="text-muted d-block">Leave Type</small>
+                                    <span th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></span>
+                                    <small class="text-muted ml-1" th:text="${app.leaveType != null ? '(' + app.leaveType.leaveCode + ')' : ''}"></small>
+                                </div>
+                                <div class="col-sm-3">
+                                    <small class="text-muted d-block">Inclusive Dates</small>
+                                    <span th:text="${app.dateFrom + ' to ' + app.dateTo}"></span>
+                                    <small class="d-block text-muted" th:text="${app.numberOfDays} + ' working day(s)'"></small>
+                                </div>
+                                <div class="col-sm-3">
+                                    <small class="text-muted d-block">Current Status</small>
+                                    <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
+                                          th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}"
+                                          th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                           statusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                           statusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                           statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                           statusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                           statusName == 'CANCELLED'   ? ' badge badge-dark'      :
+                                                                                        ' badge badge-light'}">
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Workflow Audit Trail</h5>
+                        </div>
+                        <div class="card-body">
+                            <div th:if="${#lists.isEmpty(history)}"
+                                 class="text-center text-muted py-4">
+                                No history records found.
+                            </div>
+                            <ul class="list-group list-group-flush" th:unless="${#lists.isEmpty(history)}">
+                                <li class="list-group-item" th:each="h : ${history}"
+                                    th:with="toStatusName=${h.toStatus != null ? h.toStatus.name() : 'UNKNOWN'}">
+                                    <div class="d-flex align-items-start">
+                                        <span th:classappend="${toStatusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                               toStatusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                               toStatusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                               toStatusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                               toStatusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                               toStatusName == 'CANCELLED'   ? ' badge badge-dark'      :
+                                                                                            ' badge badge-light'}"
+                                              th:text="${h.toStatus != null ? h.toStatus : 'UNKNOWN'}" style="min-width:110px;"></span>
+                                        <div class="ml-3 flex-grow-1">
+                                            <div class="d-flex justify-content-between">
+                                                <span>
+                                                    <strong th:text="${h.actorName != null ? h.actorName : 'System'}"></strong>
+                                                    <span class="text-muted small ml-1"
+                                                          th:text="${'(' + (h.actorRole != null ? h.actorRole : '') + ')'}"></span>
+                                                </span>
+                                                <small class="text-muted"
+                                                       th:text="${h.changedAt}"></small>
+                                            </div>
+                                            <small th:if="${h.fromStatus != null}" class="text-muted d-block">
+                                                Changed from:
+                                                <span class="font-weight-semibold"
+                                                      th:text="${h.fromStatus}"></span>
+                                            </small>
+                                            <p class="mb-0 mt-1 small"
+                                               th:if="${h.remarks != null and !h.remarks.isBlank()}"
+                                               th:text="${h.remarks}"></p>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-2">
+                <a th:href="@{/leave-management}" class="btn btn-sm btn-outline-secondary">
+                    <i class="icon-arrow-left8 mr-1"></i> Back to Leave Management
+                </a>
+            </div>
+        </div>
+
+        <div th:replace="fragments/common::footer"></div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
+    $("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
+    $("#leaveManagementNav").addClass("active");
+});
+</script>
+</body>
+</html>
