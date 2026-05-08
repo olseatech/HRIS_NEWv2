@@ -123,9 +123,9 @@
                                             <small class="text-muted text-uppercase font-weight-semibold"
                                                    th:text="${bal.leaveType != null ? bal.leaveType.leaveCode : ''}"></small>
                                             <h4 class="mb-0 font-weight-semibold text-primary"
-                                                th:text="${bal.balance}"></h4>
+                                                th:text="${bal.balance != null ? bal.balance : 0}"></h4>
                                             <small class="text-muted"
-                                                   th:text="${'Earned: ' + bal.totalEarned + '  Used: ' + bal.totalUsed}"></small>
+                                                   th:text="${'Earned: ' + (bal.totalEarned != null ? bal.totalEarned : 0) + '  Used: ' + (bal.totalUsed != null ? bal.totalUsed : 0)}"></small>
                                         </div>
                                     </div>
                                 </div>
@@ -141,7 +141,7 @@
                             <div class="card-header header-elements-inline">
                                 <h5 class="card-title">Leave Applications</h5>
                             </div>
-                            <table class="table table-basic table-hover table-sm" id="table-emp-leave">
+                            <table class="table table-basic table-hover table-sm" id="table-emp-leave" th:if="${applications != null and !applications.isEmpty()}">
                                 <thead>
                                 <tr>
                                     <th>#</th>
@@ -220,6 +220,12 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <!-- Empty state when no applications -->
+                            <div th:unless="${applications != null and !applications.isEmpty()}" class="card-body text-center py-5">
+                                <i class="icon-file-empty2 text-muted" style="font-size:3rem;"></i>
+                                <h6 class="mt-3 text-muted">No leave applications filed</h6>
+                                <p class="text-muted small">This employee has no leave applications on record.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -349,5 +355,7 @@
         });
     });
 </script>
+
+<th:block th:replace="fragments/common::sidebar-activation"></th:block>
 </body>
 </html>

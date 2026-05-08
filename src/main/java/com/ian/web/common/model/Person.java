@@ -99,7 +99,9 @@ public class Person extends Auditable {
     
     @JsonIgnore
 	public Integer getAge() {
-		return Period.between(getBirthdate(), LocalDate.now()).getYears();
+		LocalDate bd = getBirthdate();
+		if (bd == null) return null;
+		return Period.between(bd, LocalDate.now()).getYears();
 	}
 
 }

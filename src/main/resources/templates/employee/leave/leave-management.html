@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+  <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
@@ -18,10 +18,11 @@
 
         <div class="page-header">
             <div class="page-header-content header-elements-md-inline">
-                <div class="page-title d-flex">
-                    <h4>
+                <div class="page-title d-flex align-items-center">
+                    <h4 class="mb-0">
                         <i class="icon-calendar3 mr-2 text-primary"></i>
                         <span class="font-weight-semibold">Leave Management</span>
+                        <small class="ml-2 text-muted">Workflow and approvals</small>
                         <span th:if="${actionableCount != null and actionableCount > 0}"
                               class="badge badge-danger ml-2"
                               th:text="${actionableCount} + ' For Action'"></span>
@@ -123,9 +124,10 @@
                                 <div class="col-sm-8">
                                     <select name="employeeId" class="form-control" required>
                                         <option value="">-- Select Employee --</option>
-                                        <option th:each="emp : ${employees}"
-                                                th:value="${emp.id}"
-                                                th:text="${emp.displayName}"></option>
+                                        <th:block th:each="employeeItem : ${employees}">
+                                            <option th:value="${employeeItem.id}"
+                                                    th:text="${employeeItem.displayName}"></option>
+                                        </th:block>
                                     </select>
                                 </div>
                             </div>
@@ -134,9 +136,10 @@
                                 <div class="col-sm-8">
                                     <select name="leaveTypeId" class="form-control" required>
                                         <option value="">-- Select Leave Type --</option>
-                                        <option th:each="lt : ${leaveTypes}"
-                                                th:value="${lt.id}"
-                                                th:text="${lt.leaveName + ' (' + lt.leaveCode + ')'}"></option>
+                                        <th:block th:each="leaveTypeItem : ${leaveTypes}">
+                                            <option th:value="${leaveTypeItem.id}"
+                                                    th:text="${leaveTypeItem.leaveName + ' (' + leaveTypeItem.leaveCode + ')'}"></option>
+                                        </th:block>
                                     </select>
                                 </div>
                             </div>
@@ -195,32 +198,32 @@
 
             <!-- Statistics row -->
             <div class="row mb-2">
-                <div class="col-6 col-sm-3">
+                <div class="col-6 col-lg-3">
                     <div class="card card-body text-center py-2">
-                        <h3 class="mb-0 font-weight-bold text-warning"
-                            th:text="${pendingCount != null ? pendingCount : 0}">0</h3>
-                        <small class="text-muted">Pending</small>
+                        <div class="text-muted small">Pending</div>
+                        <div class="h4 mb-0 font-weight-semibold text-warning"
+                             th:text="${pendingCount != null ? pendingCount : 0}">0</div>
                     </div>
                 </div>
-                <div class="col-6 col-sm-3">
+                <div class="col-6 col-lg-3">
                     <div class="card card-body text-center py-2">
-                        <h3 class="mb-0 font-weight-bold text-info"
-                            th:text="${endorsedCount != null ? endorsedCount : 0}">0</h3>
-                        <small class="text-muted">Endorsed</small>
+                        <div class="text-muted small">Endorsed</div>
+                        <div class="h4 mb-0 font-weight-semibold text-info"
+                             th:text="${endorsedCount != null ? endorsedCount : 0}">0</div>
                     </div>
                 </div>
-                <div class="col-6 col-sm-3">
+                <div class="col-6 col-lg-3">
                     <div class="card card-body text-center py-2">
-                        <h3 class="mb-0 font-weight-bold text-danger"
-                            th:text="${actionableCount != null ? actionableCount : 0}">0</h3>
-                        <small class="text-muted">For Action</small>
+                        <div class="text-muted small">For Action</div>
+                        <div class="h4 mb-0 font-weight-semibold text-danger"
+                             th:text="${actionableCount != null ? actionableCount : 0}">0</div>
                     </div>
                 </div>
-                <div class="col-6 col-sm-3">
+                <div class="col-6 col-lg-3">
                     <div class="card card-body text-center py-2">
-                        <h3 class="mb-0 font-weight-bold"
-                            th:text="${applications != null ? applications.size() : 0}">0</h3>
-                        <small class="text-muted">Showing</small>
+                        <div class="text-muted small">Showing</div>
+                        <div class="h4 mb-0 font-weight-semibold"
+                             th:text="${applications != null ? applications.size() : 0}">0</div>
                     </div>
                 </div>
             </div>
@@ -228,25 +231,28 @@
             <!-- Filter / Tools bar -->
             <div class="row mb-2">
                 <div class="col-12">
-                    <div class="card card-body py-2 d-flex flex-row flex-wrap align-items-center justify-content-between">
-                        <div class="d-flex flex-wrap align-items-center">
-                            <span class="text-muted small mr-2">Filter:</span>
-                            <a th:href="@{/leave-management}" class="btn btn-xs btn-light border mr-1 mb-1">All</a>
-                            <a th:href="@{/leave-management/pending}" class="btn btn-xs btn-warning text-white mr-1 mb-1">Pending</a>
-                            <a th:href="@{/leave-management/actionable}" class="btn btn-xs btn-info text-white mr-1 mb-1">For Action</a>
-                        </div>
-                        <div class="d-flex flex-wrap align-items-center">
-                            <button class="btn btn-xs btn-outline-warning mr-1 mb-1"
-                                    data-toggle="modal" data-target="#modalBalanceAdj">
-                                <i class="icon-database mr-1"></i> Adjust Balance
-                            </button>
-                            <form th:action="@{/leave-accrue-all}" method="post" class="mb-1"
-                                  onsubmit="return confirm('Run leave accrual for ALL employees (Jan–current month)? This is safe to re-run.');">
-                                <button type="submit" class="btn btn-xs btn-primary">
-                                    <i class="icon-sync mr-1"></i> Run Accrual
+                    <div class="card card-body py-2">
+                        <div class="d-flex flex-wrap align-items-center justify-content-between">
+                            <div class="d-flex flex-wrap align-items-center">
+                                <span class="text-muted small mr-2">Filter:</span>
+                                <a th:href="@{/leave-management}" class="btn btn-xs btn-light border mr-1 mb-1">All</a>
+                                <a th:href="@{/leave-management/pending}" class="btn btn-xs btn-warning text-white mr-1 mb-1">Pending</a>
+                                <a th:href="@{/leave-management/actionable}" class="btn btn-xs btn-info text-white mr-1 mb-1">For Action</a>
+                            </div>
+                            <div class="d-flex flex-wrap align-items-center">
+                                <button class="btn btn-xs btn-outline-warning mr-1 mb-1"
+                                        data-toggle="modal" data-target="#modalBalanceAdj">
+                                    <i class="icon-database mr-1"></i> Adjust Balance
                                 </button>
-                            </form>
+                                <form th:action="@{/leave-accrue-all}" method="post" class="mb-1"
+                                      onsubmit="return confirm('Run leave accrual for ALL employees (Jan–current month)? This is safe to re-run.');">
+                                    <button type="submit" class="btn btn-xs btn-primary">
+                                        <i class="icon-sync mr-1"></i> Run Accrual
+                                    </button>
+                                </form>
+                            </div>
                         </div>
+                        <small class="text-muted d-block mt-1">Use filters to focus on pending actions and approvals.</small>
                     </div>
                 </div>
             </div>
@@ -264,7 +270,7 @@
                             </h5>
                         </div>
 
-                        <div class="table-responsive">
+                        <div class="table-responsive" th:if="${applications != null and !#lists.isEmpty(applications)}">
                             <table class="table table-basic table-hover table-sm mb-0" id="table-leave">
                                 <thead class="thead-light">
                                 <tr>
@@ -284,12 +290,9 @@
                                     th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
                                     <td class="small text-muted" th:text="${app.id}"></td>
                                     <td>
-<a th:if="${app.employee != null and app.employee.empHashCode != null}" th:href="@{|/employee-leave/${app.employee.id}/LEAVE/${app.employee.empHashCode}|}"
+<a th:if="${app.employee != null}" th:href="@{|/employee-leave/${app.employee.id}/LEAVE/${app.employee.empHashCode}|}"
                                            th:text="${app.employee.displayName}"
                                            class="font-weight-semibold d-block"></a>
-                                        <span th:if="${app.employee != null and app.employee.empHashCode == null}"
-                                              class="font-weight-semibold d-block"
-                                              th:text="${app.employee.displayName}"></span>
                                         <span th:if="${app.employee == null}" class="font-weight-semibold d-block text-danger">Unknown Employee</span>
                                         <small class="text-muted d-block"
                                                th:text="${app.employee != null and app.employee.positionTitle != null ? app.employee.positionTitle.positionTitleName : ''}"></small>
@@ -343,32 +346,40 @@
                                                     class="btn btn-xs btn-info btnEndorse m-1"
                                                     th:data-id="${app.id}"
                                                     th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}"
-                                                    th:data-days="${app.numberOfDays}">
-                                                Endorse
+                                                    th:data-days="${app.numberOfDays}"
+                                                    aria-label="Endorse">
+                                                <i class="icon-forward3 mr-1"></i>
+                                                <span class="d-none d-md-inline">Endorse</span>
                                             </button>
                                             <!-- Approve (PENDING or ENDORSED) -->
                                             <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
                                                     type="button"
                                                     class="btn btn-xs btn-success btnApprove m-1"
                                                     th:data-id="${app.id}"
-                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}">
-                                                Approve
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}"
+                                                    aria-label="Approve">
+                                                <i class="icon-checkmark3 mr-1"></i>
+                                                <span class="d-none d-md-inline">Approve</span>
                                             </button>
                                             <!-- Disapprove (PENDING or ENDORSED) -->
                                             <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
                                                     type="button"
                                                     class="btn btn-xs btn-danger btnDisapprove m-1"
                                                     th:data-id="${app.id}"
-                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}">
-                                                Disapprove
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}"
+                                                    aria-label="Disapprove">
+                                                <i class="icon-cross2 mr-1"></i>
+                                                <span class="d-none d-md-inline">Disapprove</span>
                                             </button>
                                             <!-- Return for Correction (PENDING or ENDORSED) -->
                                             <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
                                                     type="button"
                                                     class="btn btn-xs btn-secondary btnReturn m-1"
                                                     th:data-id="${app.id}"
-                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}">
-                                                Return
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}"
+                                                    aria-label="Return for correction">
+                                                <i class="icon-undo2 mr-1"></i>
+                                                <span class="d-none d-md-inline">Return</span>
                                             </button>
                                             <!-- Cancel (active statuses) -->
                                             <form th:if="${statusName == 'PENDING' or statusName == 'ENDORSED' or statusName == 'APPROVED'}"
@@ -376,7 +387,10 @@ th:action="@{|/leave-cancel-admin/${app.id}|}"
                                                   method="post" style="display:inline-block;"
                                                   onsubmit="return confirm('Cancel this leave application?');"
                                                   class="m-1">
-                                                <button type="submit" class="btn btn-xs btn-outline-secondary">Cancel</button>
+                                                <button type="submit" class="btn btn-xs btn-outline-secondary" aria-label="Cancel">
+                                                    <i class="icon-cross2 mr-1"></i>
+                                                    <span class="d-none d-md-inline">Cancel</span>
+                                                </button>
                                             </form>
                                             <!-- Attachment (if present) -->
                                             <a th:if="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath)}"
@@ -395,15 +409,16 @@ th:action="@{|/leave-cancel-admin/${app.id}|}"
                                         </div>
                                     </td>
                                 </tr>
-                                <tr th:if="${#lists.isEmpty(applications)}">
-                                    <td colspan="9" class="text-center text-muted py-5">
-                                        <i class="icon-file-empty2" style="font-size:2.5rem;"></i>
-                                        <div class="mt-2">No leave applications found.</div>
-                                    </td>
-                                </tr>
                                 </tbody>
                             </table>
                         </div>
+
+                    <div class="card-body text-center py-5"
+                         th:if="${applications == null or #lists.isEmpty(applications)}">
+                        <i class="icon-file-empty2 text-muted" style="font-size:2.5rem;"></i>
+                        <div class="mt-2 font-weight-semibold text-muted">No leave applications found.</div>
+                        <div class="text-muted small">Try another filter or check back later.</div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -428,18 +443,8 @@ $(document).ready(function () {
         swal({ title: "Success", text: msgDesc, icon: "success", buttons: false, timer: 2200 });
     }
 
-    // DataTable
-    if ($.fn.DataTable) {
-        var dtOrderMgmt = []; dtOrderMgmt.push([0, 'desc']);
-        $('#table-leave').DataTable({
-            pageLength: 25,
-            order: dtOrderMgmt,
-            columnDefs: [{ orderable: false, targets: [8] }]
-        });
-    }
-
-    // ENDORSE
-    $(document).on('click', '.btnEndorse', function () {
+    function attachActionHandlers() {
+        $('.btnEndorse').off('click').on('click', function () {
         let id = $(this).data('id'), name = $(this).data('name'), days = $(this).data('days');
         $('#modalActionTitle').text('Endorse Application #' + id);
         $('#modalActionDesc').text('Employee: ' + name + ' | Working Days: ' + days);
@@ -450,10 +455,9 @@ $(document).ready(function () {
         $('#actionRemarks').removeAttr('required');
         $('#actionSubmitBtn').text('Endorse').attr('class', 'btn bg-info');
         $('#modalAction').modal('show');
-    });
+        });
 
-    // APPROVE
-    $(document).on('click', '.btnApprove', function () {
+        $('.btnApprove').off('click').on('click', function () {
         let id = $(this).data('id'), name = $(this).data('name');
         $('#modalActionTitle').text('Approve Application #' + id);
         $('#modalActionDesc').text('Approving leave for: ' + name);
@@ -463,10 +467,9 @@ $(document).ready(function () {
         $('#actionRemarks').removeAttr('required');
         $('#actionSubmitBtn').text('Approve').attr('class', 'btn bg-success');
         $('#modalAction').modal('show');
-    });
+        });
 
-    // DISAPPROVE
-    $(document).on('click', '.btnDisapprove', function () {
+        $('.btnDisapprove').off('click').on('click', function () {
         let id = $(this).data('id'), name = $(this).data('name');
         $('#modalActionTitle').text('Disapprove Application #' + id);
         $('#modalActionDesc').text('Disapproving leave for: ' + name + '. Please provide a reason.');
@@ -476,10 +479,9 @@ $(document).ready(function () {
         $('#actionRemarks').attr('required', true);
         $('#actionSubmitBtn').text('Disapprove').attr('class', 'btn bg-danger');
         $('#modalAction').modal('show');
-    });
+        });
 
-    // RETURN FOR CORRECTION
-    $(document).on('click', '.btnReturn', function () {
+        $('.btnReturn').off('click').on('click', function () {
         let id = $(this).data('id'), name = $(this).data('name');
         $('#modalActionTitle').text('Return for Correction #' + id);
         $('#modalActionDesc').text('Return application to: ' + name + '. State reason for return.');
@@ -489,7 +491,26 @@ $(document).ready(function () {
         $('#actionRemarks').attr('required', true);
         $('#actionSubmitBtn').text('Return for Correction').attr('class', 'btn bg-secondary');
         $('#modalAction').modal('show');
-    });
+        });
+    }
+
+    // DataTable
+    if ($.fn.DataTable && $('#table-leave').length > 0) {
+        try {
+            $('#table-leave').DataTable({
+                pageLength: 25,
+                order: [ [0, 'desc'] ],
+                columnDefs: [{ orderable: false, targets: [8] }],
+                drawCallback: function () {
+                    attachActionHandlers();
+                }
+            });
+        } catch (e) {
+            console.warn('DataTable init error (leave-management):', e);
+        }
+    }
+
+    attachActionHandlers();
 
     // Reset modal on close
     $('#modalAction').on('hidden.bs.modal', function () {
@@ -497,7 +518,10 @@ $(document).ready(function () {
         $('#endorseFields').hide();
         $('#remarksRequired').hide();
     });
+    
 });
 </script>
+
+<th:block th:replace="fragments/common :: sidebar-activation"></th:block>
 </body>
 </html>

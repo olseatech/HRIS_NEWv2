@@ -130,74 +130,59 @@
     
     <script th:src="@{/js/philippines.js}"></script>
     
-</th:block>
+    <!-- Universal Sidebar Activation for Leave Pages -->
+    <th:block th:fragment="sidebar-activation">
+    <script th:inline="javascript">
+    $(document).ready(function() {
+        // Force all submenu <ul> elements to have an inline display:none so that
+        // app.js's slideDown / slideUp can manage visibility with inline styles.
+        // Without this, the CSS class-based display and jQuery's inline-style approach
+        // get out of sync, making accordion clicks appear to do nothing.
+        $(".nav-item-submenu > .nav-group-sub").hide();
+        $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
 
-<!--
-  sidebar-activation — standalone fragment, defined OUTSIDE header-import-js.
+        // Activate the correct parent section by triggering a click through app.js's
+        // accordion handler (which adds nav-item-open and runs slideDown), then mark
+        // the exact leaf nav item as active.
+        var path = /*[[${#httpServletRequest.requestURI}]]*/ '';
 
-  ROOT CAUSE THIS FIXES:
-  Previously this <th:block th:fragment="sidebar-activation"> was NESTED inside
-  the header-import-js fragment (lines ~134-179).  Every page that includes
-  header-import-js in <head> therefore also rendered the sidebar-activation
-  <script> block there — ONCE in <head>.  Pages that additionally included
-  sidebar-activation explicitly at the bottom of <body> rendered the script a
-  SECOND time.  Both $(document).ready() callbacks fired at DOM-ready:
-    1st call → activateNav() triggers('click') → accordion opens  ✓
-    2nd call → activateNav() triggers('click') again → accordion CLOSES ✗
-  Net result: the correct submenu toggled open then immediately shut — appearing
-  as broken / collapsed sidebar layout on every leave-related page.
-
-  FIX: sidebar-activation is now a top-level standalone fragment.  It is NOT
-  rendered as part of header-import-js.  Pages include it exactly once, at the
-  bottom of <body>, immediately before </body>.
-
-  th:inline="javascript" is also REMOVED.  window.location.pathname replaces
-  the server-side /*[[${#httpServletRequest.requestURI}]]*/ expression.
-  No Thymeleaf JS context is needed, eliminating the class of
-  ERR_INCOMPLETE_CHUNKED_ENCODING bugs that occur when a nested fragment include
-  emits a </script> tag inside a Thymeleaf JS inline block.
--->
-<th:block th:fragment="sidebar-activation">
-<script>
-$(document).ready(function () {
-    // Reset all submenus to a known hidden state so app.js's slideDown/slideUp
-    // can control visibility via inline styles without CSS-class conflicts.
-    $(".nav-item-submenu > .nav-group-sub").hide();
-    $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
-
-    // window.location.pathname — pure JS, no th:inline="javascript" needed.
-    var path = window.location.pathname;
-
-    function activateNav(parentId, childId) {
-        var parent = $("#" + parentId + " > .nav-link");
-        var child  = $("#" + childId);
-        if (parent.length > 0 && child.length > 0) {
-            parent.trigger('click');
-            child.addClass("active");
-            return true;
+        function activateNav(parentId, childId) {
+            var parent = $("#" + parentId + " > .nav-link");
+            var child = $("#" + childId);
+            if (parent.length > 0 && child.length > 0) {
+                parent.trigger('click');
+                child.addClass("active");
+                return true;
+            }
+            return false;
         }
-        return false;
-    }
 
-    if (path.indexOf('/my-leave') !== -1) {
-        activateNav("myAccountNav", "myLeaveNav");
-    } else if (path.indexOf('/leave-management') !== -1 || path.indexOf('/employee-leave') !== -1) {
-        activateNav("employeeManagementNav", "leaveManagementNav");
-    } else if (path.indexOf('/leave-report') !== -1) {
-        activateNav("employeeManagementNav", "leaveReportNav");
-    } else if (path.indexOf('/public-holidays') !== -1) {
-        activateNav("systemSettingsNav", "publicHolidaysNav");
-    } else if (path.indexOf('/leave-types') !== -1) {
-        activateNav("systemSettingsNav", "leaveTypesNav");
-    } else if (path.indexOf('/my-service-record') !== -1) {
-        activateNav("myAccountNav", "myServiceRecordNav");
-    } else if (path.indexOf('/myclearance') !== -1) {
-        activateNav("myAccountNav", "myClearanceNav");
-    } else if (path.indexOf('/my201files') !== -1) {
-        activateNav("myAccountNav", "my201FileNav");
-    }
-});
-</script>
+        if (path.indexOf('/my-leave') !== -1) {
+            activateNav("myAccountNav", "myLeaveNav");
+        } else if (path.indexOf('/leave-management') !== -1 || path.indexOf('/employee-leave') !== -1) {
+            activateNav("employeeManagementNav", "leaveManagementNav");
+        } else if (path.indexOf('/leave-report') !== -1) {
+            activateNav("employeeManagementNav", "leaveReportNav");
+        } else if (path.indexOf('/public-holidays') !== -1) {
+            activateNav("systemSettingsNav", "publicHolidaysNav");
+        } else if (path.indexOf('/leave-types') !== -1) {
+            activateNav("systemSettingsNav", "leaveTypesNav");
+        } else if (path.indexOf('/my-service-record') !== -1) {
+            activateNav("myAccountNav", "myServiceRecordNav");
+        } else if (path.indexOf('/myclearance') !== -1) {
+            activateNav("myAccountNav", "myClearanceNav");
+        } else if (path.indexOf('/my201files') !== -1) {
+            activateNav("myAccountNav", "my201FileNav");
+        }
+    });
+    </script>
+    </th:block>
+    
+    
+    
+    
+    
+    
 </th:block>
 
 
@@ -460,16 +445,13 @@ $(document).ready(function () {
 					<div class="card-body">
 						<div class="media">
 							<div class="mr-3">
-										<!-- Single profile photo — use actorObj.profilePhoto if set, else default avatar -->
-										<img th:src="${session.actorObj != null and session.actorObj.profilePhoto != null and !#strings.isEmpty(session.actorObj.profilePhoto) ? session.actorObj.profilePhoto : #httpServletRequest.contextPath + '/images/avatar.png'}"
-										     width="38" height="38" class="rounded-circle" alt="Profile Photo">
+										<img th:src="@{/images/avatar.png}" width="38" height="38" class="rounded-circle" alt="">
+										<img th:src="@{/images/avatar.png}" width="38" height="38" class="rounded-circle" alt="">
+										<img th:src="@{/images/avatar.png}" width="38" height="38" class="rounded-circle" alt="">
 							</div>
 
 							<div class="media-body">
-							<div class="media-title font-weight-semibold">
-								<span th:if="${session.actorObj != null}" th:text="${session.actorObj.displayName}">Employee</span>
-								<span th:unless="${session.actorObj != null}">User</span>
-							</div>
+								<div class="media-title font-weight-semibold" th:text="${session.actorObj != null ? session.actorObj.displayName : 'User'}">Lucas Peralta</div>
 								<div class="font-size-xs opacity-50" th:text="${session.actorObj != null and session.actorObj.userType == 'ROLE_ADMIN' ? 'HR ADMIN' : (session.actorObj != null ? session.actorObj.userType : '')}">
 									HR ADMIN
 								</div>

@@ -89,19 +89,21 @@
                             <th>Balance</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody th:if="${balances != null and !balances.isEmpty()}">
                         <tr th:each="bal : ${balances}">
                             <td>
                                 <span th:text="${bal.leaveType != null ? bal.leaveType.leaveName : 'Unknown Leave Type'}"></span>
                                 <small class="text-muted ml-1" th:text="${bal.leaveType != null ? '(' + bal.leaveType.leaveCode + ')' : ''}"></small>
                             </td>
-                            <td class="text-center" th:text="${bal.totalEarned}"></td>
-                            <td class="text-center" th:text="${bal.totalUsed}"></td>
+                            <td class="text-center" th:text="${bal.totalEarned != null ? bal.totalEarned : 0}"></td>
+                            <td class="text-center" th:text="${bal.totalUsed != null ? bal.totalUsed : 0}"></td>
                             <td class="text-center font-weight-semibold"
-                                th:classappend="${bal.balance <= 0 ? ' text-danger' : ' text-success'}"
-                                th:text="${bal.balance}"></td>
+                                th:classappend="${(bal.balance != null and bal.balance <= 0) ? ' text-danger' : ' text-success'}"
+                                th:text="${bal.balance != null ? bal.balance : 0}"></td>
                         </tr>
-                        <tr th:if="${balances == null or balances.isEmpty()}">
+                        </tbody>
+                        <tbody th:unless="${balances != null and !balances.isEmpty()}">
+                        <tr>
                             <td colspan="4" class="text-center text-muted py-3">No balance records for this year.</td>
                         </tr>
                         </tbody>
@@ -168,7 +170,7 @@
                             <th class="text-center">History</th>
                         </tr>
                         </thead>
-                        <tbody>
+                        <tbody th:if="${applications != null and !applications.isEmpty()}">
                         <tr th:each="app : ${applications}"
                             th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
                             <td th:text="${app.id}"></td>
@@ -208,7 +210,9 @@
                                 </a>
                             </td>
                         </tr>
-                        <tr th:if="${applications == null or applications.isEmpty()}">
+                        </tbody>
+                        <tbody th:unless="${applications != null and !applications.isEmpty()}">
+                        <tr>
                             <td colspan="9" class="text-center text-muted py-3">No applications for this year.</td>
                         </tr>
                         </tbody>

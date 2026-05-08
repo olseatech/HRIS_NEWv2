@@ -55,19 +55,27 @@ public class LeaveAdminController {
     // LIST VIEWS
     // -----------------------------------------------------------------------
 
+    private static void noCache(HttpServletResponse res) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setDateHeader("Expires", 0);
+    }
+
     @GetMapping("/leave-management")
-    public String listAll(Model model, HttpServletRequest request) {
+    public String listAll(Model model, HttpServletRequest request,
+                          HttpServletResponse response) {
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
 
         try {
             long pendingCount  = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
             long endorsedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
-            model.addAttribute("applications",    applicationRepo.findAllByOrderByAppliedDateTimeDesc());
+            model.addAttribute("applications",    applicationRepo.findAllFetched());
             model.addAttribute("pendingCount",    pendingCount);
             model.addAttribute("endorsedCount",   endorsedCount);
             model.addAttribute("actionableCount", pendingCount + endorsedCount);
             model.addAttribute("leaveTypes",      leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",       employeeRepository.findAll());
+            model.addAttribute("employees",       employeeRepository.findAllWithAssociationsFetched());
             model.addAttribute("currentYear",     LocalDate.now().getYear());
         } catch (Exception e) {
             log.error("Leave management page error", e);
@@ -86,18 +94,20 @@ public class LeaveAdminController {
     }
 
     @GetMapping("/leave-management/pending")
-    public String listPending(Model model, HttpServletRequest request) {
+    public String listPending(Model model, HttpServletRequest request,
+                              HttpServletResponse response) {
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
         try {
             long pendingCount  = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
             long endorsedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
-            model.addAttribute("applications",    applicationRepo.findAllPending());
+            model.addAttribute("applications",    applicationRepo.findAllPendingFetched());
             model.addAttribute("filterLabel",     "Pending Only");
             model.addAttribute("pendingCount",    pendingCount);
             model.addAttribute("endorsedCount",   endorsedCount);
             model.addAttribute("actionableCount", pendingCount + endorsedCount);
             model.addAttribute("leaveTypes",      leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",       employeeRepository.findAll());
+            model.addAttribute("employees",       employeeRepository.findAllWithAssociationsFetched());
             model.addAttribute("currentYear",     LocalDate.now().getYear());
         } catch (Exception e) {
             log.error("Leave management pending page error", e);
@@ -117,18 +127,22 @@ public class LeaveAdminController {
     }
 
     @GetMapping("/leave-management/actionable")
-    public String listActionable(Model model, HttpServletRequest request) {
+    public String listActionable(Model model, HttpServletRequest request,
+                                 HttpServletResponse response) {
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
         try {
             long pendingCount  = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
             long endorsedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
-            model.addAttribute("applications",    applicationRepo.findAllActionable());
+            model.addAttribute("applications",    applicationRepo.findAllActionableFetched(
+                        java.util.Arrays.asList(LeaveApplication.LeaveStatus.PENDING,
+                                                LeaveApplication.LeaveStatus.ENDORSED)));
             model.addAttribute("filterLabel",     "Pending & Endorsed");
             model.addAttribute("pendingCount",    pendingCount);
             model.addAttribute("endorsedCount",   endorsedCount);
             model.addAttribute("actionableCount", pendingCount + endorsedCount);
             model.addAttribute("leaveTypes",      leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",       employeeRepository.findAll());
+            model.addAttribute("employees",       employeeRepository.findAllWithAssociationsFetched());
             model.addAttribute("currentYear",     LocalDate.now().getYear());
         } catch (Exception e) {
             log.error("Leave management actionable page error", e);
@@ -156,26 +170,54 @@ public class LeaveAdminController {
             @PathVariable long employeeId,
             @PathVariable String showMode,
             @PathVariable String empHashCode,
-            Model model, HttpServletRequest request) {
+            Model model, HttpServletRequest request,
+            HttpServletResponse response) {
 
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
 
+        // Use findByIdAndEmpHashCodeFetched to prevent N+1 queries and lazy initialization
         Employee employee = employeeRepository
-                .findByIdAndEmpHashCode(employeeId, empHashCode).orElse(null);
+                .findByIdAndEmpHashCodeFetched(employeeId, empHashCode).orElse(null);
+
+        int year = LocalDate.now().getYear();
+
         if (employee == null) {
-            model.addAttribute("uxmessage", new UXMessage("ERROR", "Employee not found."));
+            model.addAttribute("employee",     null);
+            model.addAttribute("balances",     java.util.Collections.emptyList());
+            model.addAttribute("ledger",       java.util.Collections.emptyList());
+            model.addAttribute("applications", java.util.Collections.emptyList());
+            model.addAttribute("leaveTypes",   java.util.Collections.emptyList());
+            model.addAttribute("currentYear",  year);
+            model.addAttribute("uxmessage",    new UXMessage("ERROR", "Employee not found."));
             return "employee/leave/employee-leave";
         }
 
-        int year = LocalDate.now().getYear();
         employee.setShowMode(showMode);
 
-        model.addAttribute("employee",     employee);
-        model.addAttribute("balances",     leaveService.getBalancesForEmployee(employeeId, year));
-        model.addAttribute("ledger",       leaveService.getLedgerForEmployee(employeeId));
-        model.addAttribute("applications", applicationRepo.findByEmployeeIdOrderByAppliedDateTimeDesc(employeeId));
-        model.addAttribute("leaveTypes",   leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-        model.addAttribute("currentYear",  year);
+        try {
+            model.addAttribute("balances", leaveService.getBalancesForEmployee(employeeId, year));
+        } catch (Exception e) {
+            log.warn("Failed to load balances for employee {}: {}", employeeId, e.getMessage());
+            model.addAttribute("balances", java.util.Collections.emptyList());
+        }
+        try {
+            model.addAttribute("ledger", leaveService.getLedgerForEmployeeFetched(employeeId));
+        } catch (Exception e) {
+            log.warn("Failed to load ledger for employee {}: {}", employeeId, e.getMessage());
+            model.addAttribute("ledger", java.util.Collections.emptyList());
+        }
+        try {
+            model.addAttribute("applications",
+                    applicationRepo.findByEmployeeIdFetched(employeeId));
+        } catch (Exception e) {
+            log.warn("Failed to load applications for employee {}: {}", employeeId, e.getMessage());
+            model.addAttribute("applications", java.util.Collections.emptyList());
+        }
+
+        model.addAttribute("employee",      employee);
+        model.addAttribute("leaveTypes",    leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
+        model.addAttribute("currentYear",   year);
         model.addAttribute("newApplication", buildBlankApplication(employee));
         return "employee/leave/employee-leave";
     }
@@ -360,7 +402,8 @@ public class LeaveAdminController {
 
         if (!isAdmin(request)) return "redirect:/dashboard";
 
-        Employee  employee  = employeeRepository.findById(employeeId).orElse(null);
+        // Use findByIdFetched to ensure all associations are loaded, preventing N+1 queries
+        Employee  employee  = employeeRepository.findByIdFetched(employeeId).orElse(null);
         LeaveType leaveType = leaveTypeRepo.findById(leaveTypeId).orElse(null);
 
         if (employee == null || leaveType == null) {
@@ -407,7 +450,8 @@ public class LeaveAdminController {
 
         if (!isAdmin(request)) return "redirect:/dashboard";
 
-        Employee  employee  = employeeRepository.findById(employeeId).orElse(null);
+        // Use findByIdFetched to ensure all associations are loaded, preventing N+1 queries
+        Employee  employee  = employeeRepository.findByIdFetched(employeeId).orElse(null);
         LeaveType leaveType = leaveTypeRepo.findById(leaveTypeId).orElse(null);
 
         if (employee == null || leaveType == null) {
@@ -472,13 +516,22 @@ public class LeaveAdminController {
     public String viewHistory(
             @PathVariable Long id,
             Model model,
-            HttpServletRequest request) {
+            HttpServletRequest request,
+            HttpServletResponse response) {
 
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
         LeaveApplication app = applicationRepo.findById(id).orElse(null);
         if (app == null) return "redirect:/leave-management";
+
+        List<LeaveStatusHistory> history = java.util.Collections.emptyList();
+        try {
+            history = leaveService.getStatusHistory(id);
+        } catch (Exception e) {
+            log.warn("Failed to load history for application {}: {}", id, e.getMessage());
+        }
         model.addAttribute("app",     app);
-        model.addAttribute("history", leaveService.getStatusHistory(id));
+        model.addAttribute("history", history);
         return "employee/leave/leave-history";
     }
 
@@ -500,7 +553,8 @@ public class LeaveAdminController {
 
     private boolean isAdmin(HttpServletRequest request) {
         Employee actor = getActor(request);
-        return actor != null && "ROLE_ADMIN".equals(actor.getUserType());
+        return actor != null && actor.getUserType() != null
+                && "ROLE_ADMIN".equals(actor.getUserType());
     }
 
     private LeaveApplication buildBlankApplication(Employee employee) {

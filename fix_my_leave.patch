@@ -1,0 +1,11 @@
+--- a/src/main/resources/templates/my-account/my-leave.html
++++ b/src/main/resources/templates/my-account/my-leave.html
+@@ -258,6 +258,8 @@
+         <div th:replace="fragments/common::footer"></div>
+     </div>
+ </div>
++
++<th:block th:replace="fragments/common::sidebar-activation"></th:block>
+ 
+ <!-- FILE LEAVE MODAL — CSC Form No. 6 (Section A & B) -->
+ <div id="modalFileLeave" class="modal fade" tabindex="-1">

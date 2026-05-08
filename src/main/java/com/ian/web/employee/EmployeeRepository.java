@@ -16,6 +16,22 @@ public interface EmployeeRepository  extends JpaRepository<Employee, Long> {
 	List<Employee> findByFirstNameAndLastName(String firstName, String lastName);
 	Optional<Employee> findByEmpNo(String empNo);
 	Optional<Employee> findByUsername(String username);
+
+    /**
+     * Security login query — returns the employee with ALL four EAGER associations
+     * fully JOIN-FETCHed so the stored session.actorObj never holds uninitialized
+     * Hibernate proxies. Without this, any template that touches division, positionTitle,
+     * district, or employeeStatus on the detached session entity throws
+     * LazyInitializationException mid-render → ERR_INCOMPLETE_CHUNKED_ENCODING.
+     */
+    @Query("SELECT e FROM Employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "WHERE e.username = :username")
+    Optional<Employee> findByUsernameFetched(
+            @org.springframework.data.repository.query.Param("username") String username);
 	Optional<Employee> findByIdAndEmpHashCode(long id, String empHashCode);
 	Optional<Employee> findById(long id);
 	List<Employee> findByEmpNoOrPlantillaNo(String empNo, String plantillaNo);
@@ -33,6 +49,54 @@ public interface EmployeeRepository  extends JpaRepository<Employee, Long> {
 	
 	@Query("SELECT e FROM Employee e WHERE MONTH(e.birthdate) = MONTH(CURRENT_DATE)")
     List<Employee> findEmployeesWithBirthMonth();
+
+    /**
+     * Returns all employees with their associations fully initialised in one query.
+     * Use this instead of findAll() anywhere the template or service accesses
+     * employee.division, positionTitle, district, or employeeStatus — those are
+     * declared EAGER on the entity, but JPQL (findAll) does NOT auto-JOIN-FETCH them.
+     * Without this, Hibernate issues N+1 secondary SELECTs and, if the session is
+     * already closed (spring.jpa.open-in-view=false), throws LazyInitializationException
+     * mid-render, causing ERR_INCOMPLETE_CHUNKED_ENCODING.
+     */
+    @Query("SELECT DISTINCT e FROM Employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "ORDER BY e.lastName ASC, e.firstName ASC")
+    List<Employee> findAllWithAssociationsFetched();
+
+    /**
+     * Single-employee lookup with all four EAGER associations pre-fetched.
+     * Use this instead of findById() wherever a template or service accesses
+     * employee.division, positionTitle, district, or employeeStatus, so that
+     * Hibernate never issues N+1 secondaries and there is no risk of a
+     * LazyInitializationException if the OSIV session boundary shifts.
+     */
+    @Query("SELECT e FROM Employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "WHERE e.id = :id")
+    Optional<Employee> findByIdFetched(@org.springframework.data.repository.query.Param("id") Long id);
+
+    /**
+     * Single-employee lookup with ID and hash code (for security), with all four EAGER
+     * associations pre-fetched. Use this instead of findByIdAndEmpHashCode() when
+     * rendering templates that access employee.division, positionTitle, district, or
+     * employeeStatus, to prevent N+1 queries and LazyInitializationException.
+     */
+    @Query("SELECT e FROM Employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "WHERE e.id = :id AND e.empHashCode = :empHashCode")
+    Optional<Employee> findByIdAndEmpHashCodeFetched(
+            @org.springframework.data.repository.query.Param("id") long id,
+            @org.springframework.data.repository.query.Param("empHashCode") String empHashCode);
 
     default Map<Long, Long> getCountEmployeeStatus() {
         List<Object[]> result = countEmployeeStatus();

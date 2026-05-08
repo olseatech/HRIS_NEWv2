@@ -1,10 +1,20 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <th:block th:replace="fragments/common::header-meta"></th:block>
     <th:block th:replace="fragments/common::header-import-css"></th:block>
     <th:block th:replace="fragments/common::header-import-js"></th:block>
     <title>Leave Report - HRIS</title>
+    <style>
+        /* Child-row expand control */
+        td.dt-control { width: 32px; text-align: center; cursor: pointer; }
+        tr.shown td.dt-control i { color: #f44336; }
+        /* Nested child-row table */
+        .child-detail-wrapper { background: #f8f9fa; border-top: 2px solid #dee2e6; }
+        .child-detail-wrapper table { margin-bottom: 0; }
+        .child-detail-wrapper thead th { background: #e9ecef; font-size: .8rem; }
+        .child-detail-wrapper tbody tr:hover { background: #fff3cd; }
+    </style>
 </head>
 <body>
 
@@ -14,12 +24,16 @@
     <div th:replace="fragments/common::main-sidebarnav"></div>
 
     <div class="content-wrapper">
+
+        <!-- Page header -->
         <div class="page-header">
             <div class="page-header-content header-elements-md-inline">
                 <div class="page-title d-flex">
                     <h4>
                         <i class="icon-file-text2 mr-2 text-primary"></i>
                         <span class="font-weight-semibold">Leave Summary Report</span>
+                        <span class="badge badge-primary ml-2"
+                              th:text="${selectedYear}"></span>
                     </h4>
                 </div>
                 <div class="header-elements d-none d-md-flex">
@@ -37,9 +51,22 @@
 
         <div class="content pt-0">
 
+            <!-- Flash alert -->
+            <div th:if="${uxmessage != null and uxmessage.code == 'ERROR'}"
+                 class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                <i class="icon-cross2 mr-2"></i>
+                <span th:text="${uxmessage.message}"></span>
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+
+            <!-- ============================================================
+                 YEAR FILTER BAR
+                 Employee search is now handled by the DataTable search box.
+            ============================================================ -->
             <div class="card mb-3">
                 <div class="card-body py-2">
-                    <form th:action="@{/leave-report}" method="get" class="form-inline flex-wrap">
+                    <form th:action="@{/leave-report}" method="get"
+                          class="form-inline flex-wrap align-items-center">
                         <div class="form-group mr-3 mb-2">
                             <label class="mr-2 font-weight-semibold">Year</label>
                             <select name="year" class="form-control form-control-sm">
@@ -48,159 +75,339 @@
                                         th:selected="${y == selectedYear}"></option>
                             </select>
                         </div>
-                        <div class="form-group mr-3 mb-2">
-                            <label class="mr-2 font-weight-semibold">Employee</label>
-                            <select name="employeeId" class="form-control form-control-sm">
-                                <option value="">- All Employees -</option>
-                                <option th:each="emp : ${employees}"
-                                        th:value="${emp.id}"
-                                        th:text="${emp.displayName + ' (' + emp.empNo + ')'}"
-                                        th:selected="${selectedEmployeeId != null and selectedEmployeeId == emp.id}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-3 mb-2">
-                            <label class="mr-2 font-weight-semibold">Leave Type</label>
-                            <select name="leaveTypeId" class="form-control form-control-sm">
-                                <option value="">- All Types -</option>
-                                <option th:each="lt : ${leaveTypes}"
-                                        th:value="${lt.id}"
-                                        th:text="${lt.leaveName + ' (' + lt.leaveCode + ')'}"
-                                        th:selected="${selectedLeaveTypeId != null and selectedLeaveTypeId == lt.id}">
-                                </option>
-                            </select>
-                        </div>
-                        <div class="form-group mr-3 mb-2">
-                            <label class="mr-2 font-weight-semibold">Status</label>
-                            <select name="status" class="form-control form-control-sm">
-                                <option value="">- All Statuses -</option>
-                                <option th:each="st : ${statuses}"
-                                        th:value="${st.name()}"
-                                        th:text="${st.name()}"
-                                        th:selected="${selectedStatus != null and selectedStatus == st.name()}">
-                                </option>
-                            </select>
-                        </div>
                         <button type="submit" class="btn btn-sm btn-primary mb-2">
-                            <i class="icon-filter3 mr-1"></i> Filter
+                            <i class="icon-filter3 mr-1"></i> Apply
                         </button>
-                        <a th:href="@{/leave-report}" class="btn btn-sm btn-link mb-2 ml-1">Reset</a>
+                        <a th:href="@{/leave-report}" class="btn btn-sm btn-link mb-2 ml-1">
+                            Reset
+                        </a>
+                        <span class="text-muted small ml-3 mb-2">
+                            Use the table search box below to find a specific employee.
+                        </span>
                     </form>
                 </div>
             </div>
 
-            <div class="row mb-3" th:if="${applications != null}">
-                <div class="col-sm-3">
+            <!-- ============================================================
+                 SUMMARY STATS
+            ============================================================ -->
+            <div class="row mb-3">
+                <div class="col-6 col-sm-3">
                     <div class="card card-body text-center py-2 border-left border-secondary border-left-3">
-                        <small class="text-muted text-uppercase font-weight-semibold">Total Showing</small>
+                        <small class="text-muted text-uppercase font-weight-semibold">Employees</small>
                         <h4 class="mb-0 font-weight-semibold"
-                            th:text="${#lists.size(applications)}">0</h4>
+                            th:text="${employees != null ? #lists.size(employees) : 0}">0</h4>
                     </div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-6 col-sm-3">
                     <div class="card card-body text-center py-2 border-left border-primary border-left-3">
-                        <small class="text-muted text-uppercase font-weight-semibold">Year</small>
+                        <small class="text-muted text-uppercase font-weight-semibold">Total Applications</small>
                         <h4 class="mb-0 font-weight-semibold text-primary"
-                            th:text="${selectedYear}"></h4>
+                            th:text="${applications != null ? #lists.size(applications) : 0}">0</h4>
                     </div>
                 </div>
-                <div class="col-sm-6">
-                    <div class="card card-body py-2 text-muted small">
-                        Use the filter above to narrow by employee, leave type, or status.
-                        Download all records with the <strong>Export CSV</strong> buttons at top right.
+                <div class="col-6 col-sm-3">
+                    <div class="card card-body text-center py-2 border-left border-warning border-left-3">
+                        <small class="text-muted text-uppercase font-weight-semibold">Pending</small>
+                        <h4 class="mb-0 font-weight-semibold text-warning"
+                            th:text="${totalPending}">0</h4>
+                    </div>
+                </div>
+                <div class="col-6 col-sm-3">
+                    <div class="card card-body text-center py-2 border-left border-success border-left-3">
+                        <small class="text-muted text-uppercase font-weight-semibold">Approved</small>
+                        <h4 class="mb-0 font-weight-semibold text-success"
+                            th:text="${totalApproved}">0</h4>
                     </div>
                 </div>
             </div>
 
+            <!-- ============================================================
+                 PRIMARY EMPLOYEE SUMMARY TABLE
+                 Click a row's ► cell to expand that employee's applications.
+            ============================================================ -->
             <div class="card">
                 <div class="card-header header-elements-inline">
                     <h5 class="card-title">
-                        Leave Applications -
+                        <i class="icon-people mr-1"></i>
+                        Employee Leave Summary —
                         <span th:text="${selectedYear}" class="text-primary"></span>
                     </h5>
+                    <div class="header-elements">
+                        <small class="text-muted">
+                            <i class="icon-info22 mr-1"></i>
+                            Click <strong>►</strong> to expand an employee's applications
+                        </small>
+                    </div>
                 </div>
-                <div class="card-body p-0">
-                    <table class="table table-basic table-hover table-sm mb-0" id="table-leave-report">
+
+                <div class="table-responsive">
+                    <table class="table table-basic table-hover table-sm mb-0"
+                           id="table-report">
                         <thead class="thead-light">
                         <tr>
-                            <th>#</th>
+                            <th class="dt-control-col"></th>
                             <th>Employee</th>
                             <th>Division</th>
-                            <th>Leave Type</th>
-                            <th>Date From</th>
-                            <th>Date To</th>
-                            <th class="text-center">Days</th>
-                            <th>Status</th>
-                            <th>Filed</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Pending</th>
+                            <th class="text-center">Approved</th>
+                            <th class="text-center">Disapproved</th>
+                            <th class="text-center">LWOP</th>
+                            <th class="text-center">Days Used</th>
                             <th class="text-center">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="app : ${applications}"
-                            th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
-                            <td th:text="${app.id}"></td>
-                            <td>
-                                <span class="font-weight-semibold" th:text="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}"></span>
-                                <small class="d-block text-muted" th:text="${app.employee != null ? app.employee.empNo : ''}"></small>
+                        <tr th:each="emp : ${employees}"
+                            th:attr="data-empid=${emp.id}">
+
+                            <!-- Expand control (column 1) -->
+                            <td class="dt-control text-center">
+                                <i class="icon-plus2 text-primary" style="font-size:.8rem;"></i>
                             </td>
-                            <td th:text="${app.employee != null and app.employee.division != null ? app.employee.division.divisionName : '-'}"></td>
+
+                            <!-- Employee (column 2) -->
                             <td>
-                                <span th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></span>
-                                <small class="text-muted ml-1" th:text="${app.leaveType != null ? '(' + app.leaveType.leaveCode + ')' : ''}"></small>
+                                <a th:if="${emp.empHashCode != null}"
+                                   th:href="@{|/employee-leave/${emp.id}/LEAVE/${emp.empHashCode}|}"
+                                   class="font-weight-semibold d-block"
+                                   th:text="${emp.displayName}"></a>
+                                <span th:if="${emp.empHashCode == null}"
+                                      class="font-weight-semibold d-block"
+                                      th:text="${emp.displayName ?: 'Unknown'}"></span>
+                                <small class="text-muted d-block" th:text="${emp.empNo ?: ''}"></small>
                             </td>
-                            <td th:text="${app.dateFrom}"></td>
-                            <td th:text="${app.dateTo}"></td>
-                            <td class="text-center font-weight-semibold" th:text="${app.numberOfDays}"></td>
-                            <td>
-                                <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
-                                      th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
-                                                       statusName == 'ENDORSED'    ? ' badge badge-info'      :
-                                                       statusName == 'APPROVED'    ? ' badge badge-success'   :
-                                                       statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
-                                                       statusName == 'RETURNED'    ? ' badge badge-secondary' :
-                                                       statusName == 'CANCELLED'   ? ' badge badge-dark'      :
-                                                                                        ' badge badge-light'}">
+
+                            <!-- Division (column 3) — use pre-computed map to avoid LazyInitializationException
+                                 (Employee.division is LAZY; direct access in Thymeleaf crashes with OISV=false) -->
+                            <td th:text="${empDivisionNames[emp.id] ?: '-'}"></td>
+
+                            <!-- Total applications (column 4) -->
+                            <td class="text-center font-weight-semibold"
+                                th:text="${appsByEmpId[emp.id] != null ? appsByEmpId[emp.id].size() : 0}"></td>
+
+                            <!-- Pending (column 5) -->
+                            <td class="text-center">
+                                <span th:with="cnt=${pendingByEmpId[emp.id] ?: 0}">
+                                    <span th:if="${cnt > 0}" class="badge badge-warning"
+                                          th:text="${cnt}"></span>
+                                    <span th:unless="${cnt > 0}" class="text-muted small">—</span>
                                 </span>
-                                <small th:if="${statusName == 'APPROVED' and !app.withPay}"
-                                       class="d-block text-danger font-weight-semibold">LWOP</small>
                             </td>
-                            <td th:text="${app.appliedDateTime != null ? app.appliedDateTime.toLocalDate() : ''}"></td>
+
+                            <!-- Approved (column 6) -->
+                            <td class="text-center">
+                                <span th:with="cnt=${approvedByEmpId[emp.id] ?: 0}">
+                                    <span th:if="${cnt > 0}" class="badge badge-success"
+                                          th:text="${cnt}"></span>
+                                    <span th:unless="${cnt > 0}" class="text-muted small">—</span>
+                                </span>
+                            </td>
+
+                            <!-- Disapproved (column 7) -->
+                            <td class="text-center">
+                                <span th:with="cnt=${disapprovedByEmpId[emp.id] ?: 0}">
+                                    <span th:if="${cnt > 0}" class="badge badge-danger"
+                                          th:text="${cnt}"></span>
+                                    <span th:unless="${cnt > 0}" class="text-muted small">—</span>
+                                </span>
+                            </td>
+
+                            <!-- LWOP count (column 8) -->
+                            <td class="text-center">
+                                <span th:with="cnt=${lwopByEmpId[emp.id] ?: 0}">
+                                    <span th:if="${cnt > 0}" class="badge badge-dark"
+                                          th:text="${cnt}"></span>
+                                    <span th:unless="${cnt > 0}" class="text-muted small">—</span>
+                                </span>
+                            </td>
+
+                            <!-- Days used (column 9) -->
+                            <td class="text-center font-weight-semibold"
+                                th:text="${daysUsedByEmpId[emp.id] != null ?
+                                           #numbers.formatDecimal(daysUsedByEmpId[emp.id], 1, 1) :
+                                           '0.0'}"></td>
+
+                            <!-- Actions (column 10) -->
                             <td class="text-center text-nowrap">
-                                <a th:href="@{|/leave-history/${app.id}|}"
-                                   class="btn btn-xs btn-outline-primary" title="View History">
-                                    <i class="icon-history"></i>
-                                </a>
-                                <a th:if="${app.employee != null}" th:href="@{|/leave-card/${app.employee.id}/${selectedYear}|}"
-                                   class="btn btn-xs btn-outline-secondary ml-1" title="Leave Card">
+                                <a th:href="@{|/leave-card/${emp.id}/${selectedYear}|}"
+                                   class="btn btn-xs btn-outline-secondary"
+                                   title="View Leave Card">
                                     <i class="icon-vcard"></i>
                                 </a>
                             </td>
-                        </tr>
-                        <tr th:if="${applications == null or applications.isEmpty()}">
-                            <td colspan="10" class="text-center text-muted py-4">No records found for the selected filters.</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
+            <!-- /Employee Summary Table -->
 
-        </div>
+            <!-- ============================================================
+                 PRE-RENDERED CHILD ROW DETAIL PANELS
+                 Hidden divs — one per employee. DataTables injects their
+                 innerHTML into the child row on click.
+            ============================================================ -->
+            <div th:each="emp : ${employees}"
+                 th:id="'child-' + ${emp.id}"
+                 class="child-detail-wrapper"
+                 style="display:none;">
+
+                <div class="px-3 py-2 border-bottom bg-white d-flex align-items-center">
+                    <i class="icon-calendar3 text-primary mr-2"></i>
+                    <strong th:text="${emp.displayName}"></strong>
+                    <small class="text-muted ml-2" th:text="'(' + ${emp.empNo} + ')'"></small>
+                    <span class="badge badge-primary ml-2"
+                          th:text="${selectedYear}"></span>
+                    <span class="ml-auto">
+                        <a th:href="@{|/leave-card/${emp.id}/${selectedYear}|}"
+                           class="btn btn-xs btn-outline-secondary"
+                           title="Full Leave Card">
+                            <i class="icon-vcard mr-1"></i> Leave Card
+                        </a>
+                    </span>
+                </div>
+
+                <table class="table table-sm table-striped mb-0">
+                    <thead>
+                    <tr>
+                        <th style="width:50px;">#</th>
+                        <th>Leave Type</th>
+                        <th>Date From</th>
+                        <th>Date To</th>
+                        <th class="text-center" style="width:70px;">Days</th>
+                        <th>Status</th>
+                        <th>Filed</th>
+                        <th class="text-center" style="width:60px;">History</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    <!-- Applications for this employee -->
+                    <tr th:each="app : ${appsByEmpId[emp.id]}"
+                        th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
+                        <td class="small text-muted" th:text="${app.id}"></td>
+                        <td>
+                            <span th:text="${app?.leaveType?.leaveName ?: 'Unknown'}"></span>
+                            <small class="text-muted d-block"
+                                   th:text="${app?.leaveType?.leaveCode ?: ''}"></small>
+                            <small th:if="${app?.leaveSubType != null}"
+                                   class="text-muted d-block"
+                                   th:text="${app.leaveSubType}"></small>
+                        </td>
+                        <td th:text="${app.dateFrom}"></td>
+                        <td th:text="${app.dateTo}"></td>
+                        <td class="text-center font-weight-semibold"
+                            th:text="${app.numberOfDays}"></td>
+                        <td>
+                            <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
+                                  th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
+                                                   statusName == 'ENDORSED'    ? ' badge badge-info'      :
+                                                   statusName == 'APPROVED'    ? ' badge badge-success'   :
+                                                   statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
+                                                   statusName == 'RETURNED'    ? ' badge badge-secondary' :
+                                                   statusName == 'CANCELLED'   ? ' badge badge-dark'      :
+                                                                                 ' badge badge-light'}">
+                            </span>
+                            <small th:if="${statusName == 'APPROVED' and !app.withPay}"
+                                   class="d-block text-danger font-weight-semibold small">LWOP</small>
+                        </td>
+                        <td class="small"
+                            th:text="${app.appliedDateTime != null ?
+                                       app.appliedDateTime.toLocalDate() : '—'}"></td>
+                        <td class="text-center">
+                            <a th:href="@{|/leave-history/${app.id}|}"
+                               class="btn btn-xs btn-outline-primary"
+                               title="View Status History">
+                                <i class="icon-history"></i>
+                            </a>
+                        </td>
+                    </tr>
+
+                    <!-- Empty state for this employee (no applications this year) -->
+                    <tr th:if="${appsByEmpId[emp.id] == null or #lists.isEmpty(appsByEmpId[emp.id])}">
+                        <td colspan="8" class="text-center text-muted py-3 small">
+                            <i class="icon-info22 mr-1"></i>
+                            No leave applications filed in
+                            <span th:text="${selectedYear}"></span>.
+                        </td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <!-- /Child detail panels -->
+
+        </div><!-- /content -->
 
         <div th:replace="fragments/common::footer"></div>
     </div>
 </div>
 
-<script>
+<script th:inline="javascript">
 $(document).ready(function () {
+
+    /* --- Sidebar nav state ------------------------------------------- */
     $(".nav-item-submenu").removeClass("nav-item-expanded nav-item-open");
     $("#employeeManagementNav").addClass("nav-item-expanded nav-item-open");
     $("#leaveReportNav").addClass("active");
 
-    $('#table-leave-report').DataTable({
-        lengthMenu: [10, 25, 50, 100],
-        columnDefs: [{ orderable: false, targets: 9 }]
-    });
+    /* --- Flash message ------------------------------------------------ */
+    let msgCode = /*[[${uxmessage == null ? '' : uxmessage.code}]]*/'';
+    let msgDesc = /*[[${uxmessage == null ? '' : uxmessage.message}]]*/'';
+    if (msgCode === 'ERROR') {
+        swal({ title: "Error", text: msgDesc, icon: "error", buttons: false, timer: 3500 });
+    }
+
+    /* --- Employee Summary DataTable ----------------------------------- */
+    var table = null;
+    if ($.fn.DataTable && $('#table-report').length > 0) {
+        try {
+            table = $('#table-report').DataTable({
+                pageLength: 25,
+                order: [ [1, 'asc'] ],
+                columnDefs: [
+                    { orderable: false, targets: [0, 9] },  /* expand + actions */
+                    { searchable: false, targets: [0, 3, 4, 5, 6, 7, 8, 9] }
+                ],
+                language: {
+                    search: '<i class="icon-search4 mr-1"></i>',
+                    searchPlaceholder: 'Search employee name, number…',
+                    emptyTable: 'No employees found.',
+                    zeroRecords: 'No employees match your search.'
+                }
+            });
+        } catch (e) {
+            console.warn('DataTable init error (leave-report):', e);
+        }
+    }
+
+    /* --- Child row expand / collapse ---------------------------------- */
+    if (table) {
+        $('#table-report tbody').on('click', 'td.dt-control', function () {
+            var tr      = $(this).closest('tr');
+            var row     = table.row(tr);
+            var empId   = tr.attr('data-empid');
+            var icon    = tr.find('td.dt-control i');
+
+            if (row.child.isShown()) {
+                row.child.hide();
+                tr.removeClass('shown');
+                icon.removeClass('icon-minus2 text-danger').addClass('icon-plus2 text-primary');
+            } else {
+                /* Pull pre-rendered Thymeleaf HTML from hidden div */
+                var childHtml = $('#child-' + empId).html();
+                row.child('<div class="child-detail-wrapper">' + childHtml + '</div>').show();
+                tr.addClass('shown');
+                icon.removeClass('icon-plus2 text-primary').addClass('icon-minus2 text-danger');
+            }
+        });
+    }
+
 });
 </script>
+
+<th:block th:replace="fragments/common::sidebar-activation"></th:block>
 </body>
 </html>

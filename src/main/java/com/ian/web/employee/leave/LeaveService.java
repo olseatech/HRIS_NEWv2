@@ -332,11 +332,20 @@ public class LeaveService {
     // -----------------------------------------------------------------------
 
     public List<LeaveBalance> getBalancesForEmployee(Long employeeId, int year) {
-        return balanceRepo.findByEmployeeIdAndBalanceYear(employeeId, year);
+        return balanceRepo.findByEmployeeIdAndYearFetched(employeeId, year);
     }
 
     public List<LeaveLedger> getLedgerForEmployee(Long employeeId) {
         return ledgerRepo.findByEmployeeIdOrderByTransactionDateDesc(employeeId);
+    }
+
+    /**
+     * Same as getLedgerForEmployee but with leaveType JOIN-FETCHed.
+     * Use this for templates that display ledger.leaveType.leaveName to avoid
+     * LazyInitializationException when spring.jpa.open-in-view=false.
+     */
+    public List<LeaveLedger> getLedgerForEmployeeFetched(Long employeeId) {
+        return ledgerRepo.findByEmployeeIdFetched(employeeId);
     }
 
     public List<LeaveLedger> getLedgerForEmployeeAndType(Long employeeId, Long leaveTypeId) {

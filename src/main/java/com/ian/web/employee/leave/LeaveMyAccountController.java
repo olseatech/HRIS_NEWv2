@@ -2,7 +2,10 @@ package com.ian.web.employee.leave;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.function.Supplier;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import org.springframework.core.io.Resource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
@@ -45,13 +48,34 @@ public class LeaveMyAccountController {
     // -----------------------------------------------------------------------
 
 @GetMapping("/my-leave")
-    public String myLeave(Model model, HttpServletRequest request) {
+    public String myLeave(Model model, HttpServletRequest request,
+                          HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        response.setHeader("Pragma", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        response.setBufferSize(65536);
+
         Employee actor = getActor(request);
         if (actor == null) return "redirect:/login";
 
         try {
-            Employee employee = employeeRepository.findById(actor.getId()).orElse(null);
+            // Use findByIdFetched (JOIN FETCH all EAGER associations in one query)
+            // so that division, positionTitle, district, and employeeStatus are all
+            // initialised before Thymeleaf starts rendering — eliminates N+1 SELECTs
+            // and any risk of LazyInitializationException mid-render.
+            Employee employee = employeeRepository.findByIdFetched((long) actor.getId()).orElse(null);
             if (employee == null) return "redirect:/dashboard";
+
+            // Pre-compute association fields that may be lazy-loaded.
+            // With spring.jpa.open-in-view=false the Hibernate session is closed before
+            // Thymeleaf renders, so accessing lazy proxies in the template throws
+            // LazyInitializationException and causes ERR_INCOMPLETE_CHUNKED_ENCODING.
+            // Catching here gives a safe null fallback instead of a mid-stream crash.
+            String positionTitleName = safeGet(() -> employee.getPositionTitle() != null
+                    ? employee.getPositionTitle().getPositionTitleName() : null);
+            String divisionName = safeGet(() -> employee.getDivision() != null
+                    ? employee.getDivision().getDivisionName() : null);
 
             int year = LocalDate.now().getYear();
             List<LeaveBalance> balances = java.util.Collections.emptyList();
@@ -79,7 +103,13 @@ public class LeaveMyAccountController {
 
             List<LeaveApplication> applications = java.util.Collections.emptyList();
             try {
-                applications = applicationRepo.findByEmployeeIdOrderByAppliedDateTimeDesc(employee.getId());
+                applications = applicationRepo.findByEmployeeIdFetched(employee.getId());
+                // Force initialization of all associations while session is open
+                for (LeaveApplication app : applications) {
+                    if (app.getLeaveType() != null) {
+                        app.getLeaveType().getLeaveCode();
+                    }
+                }
             } catch (Exception e) {
                 log.warn("Failed to load applications: {}", e.getMessage());
             }
@@ -98,26 +128,53 @@ public class LeaveMyAccountController {
                         .count();
             } catch (Exception ignored) { }
 
-            model.addAttribute("employee",      employee);
-            model.addAttribute("balances",      balances);
-            model.addAttribute("applications",  applications);
-            model.addAttribute("leaveTypes",    leaveTypes);
-            model.addAttribute("currentYear",   year);
-            model.addAttribute("returnedCount", returnedCount);
-            model.addAttribute("actorId",       employee.getId());
+            model.addAttribute("employee",           employee);
+            model.addAttribute("positionTitleName",  positionTitleName);
+            model.addAttribute("divisionName",        divisionName);
+            model.addAttribute("balances",            balances);
+            model.addAttribute("vlBalance",           findBalanceByCode(balances, "VL"));
+            model.addAttribute("slBalance",           findBalanceByCode(balances, "SL"));
+            model.addAttribute("flBalance",           findBalanceByCode(balances, "FL"));
+            model.addAttribute("splBalance",          findBalanceByCode(balances, "SPL"));
+            model.addAttribute("applications",        applications);
+            model.addAttribute("leaveTypes",          leaveTypes);
+            model.addAttribute("currentYear",         year);
+            model.addAttribute("returnedCount",       returnedCount);
+            model.addAttribute("actorId",             employee.getId());
         } catch (Exception e) {
             log.error("My Leave page error", e);
-            model.addAttribute("employee",      null);
-            model.addAttribute("balances",      java.util.Collections.emptyList());
-            model.addAttribute("applications",  java.util.Collections.emptyList());
-            model.addAttribute("leaveTypes",    java.util.Collections.emptyList());
-            model.addAttribute("currentYear",   LocalDate.now().getYear());
-            model.addAttribute("returnedCount", 0L);
+            // CRITICAL: Never set employee to null - template relies on it for display.
+            // Use actor (guaranteed non-null at this point)
+            model.addAttribute("employee",           actor);
+            model.addAttribute("positionTitleName",  null);
+            model.addAttribute("divisionName",        null);
+            model.addAttribute("balances",            java.util.Collections.emptyList());
+            model.addAttribute("vlBalance",           null);
+            model.addAttribute("slBalance",           null);
+            model.addAttribute("flBalance",           null);
+            model.addAttribute("splBalance",          null);
+            model.addAttribute("applications",        java.util.Collections.emptyList());
+            model.addAttribute("leaveTypes",          java.util.Collections.emptyList());
+            model.addAttribute("currentYear",         LocalDate.now().getYear());
+            model.addAttribute("returnedCount",       0L);
             model.addAttribute("uxmessage",
                 new UXMessage("ERROR",
                     "Unable to load leave data. Please try again or contact IT support."));
         }
         return "my-account/my-leave";
+    }
+
+    private LeaveBalance findBalanceByCode(List<LeaveBalance> balances, String code) {
+        if (balances == null || code == null) {
+            return null;
+        }
+        for (LeaveBalance balance : balances) {
+            if (balance != null && balance.getLeaveType() != null
+                    && code.equalsIgnoreCase(balance.getLeaveType().getLeaveCode())) {
+                return balance;
+            }
+        }
+        return null;
     }
 
     // -----------------------------------------------------------------------
@@ -145,7 +202,9 @@ public class LeaveMyAccountController {
         Employee actor = getActor(request);
         if (actor == null) return "redirect:/login";
 
-        Employee  employee  = employeeRepository.findById(actor.getId()).orElse(null);
+        // Use findByIdFetched to ensure all associations are pre-loaded, preventing N+1 queries
+        // and lazy initialization errors if an error page is rendered.
+        Employee  employee  = employeeRepository.findByIdFetched(actor.getId()).orElse(null);
         LeaveType leaveType = leaveTypeRepo.findById(leaveTypeId).orElse(null);
 
         if (employee == null || leaveType == null) {
@@ -164,6 +223,14 @@ public class LeaveMyAccountController {
         app.setReason(reason);
         app.setExpectedReturnDate(expectedReturnDate);
         app.setRequestedCommutation(requestedCommutation);
+
+        // Enforce required attachment for medical/flagged leave types
+        if (leaveType.isRequiresMedCert() && (attachment == null || attachment.isEmpty())) {
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("ERROR",
+                            "Supporting document is required for the selected leave type."));
+            return "redirect:/my-leave";
+        }
 
         // Handle file attachment (optional unless leave type requires medical cert)
         if (attachment != null && !attachment.isEmpty()) {
@@ -307,14 +374,36 @@ public class LeaveMyAccountController {
     // -----------------------------------------------------------------------
 
     private Employee getActor(HttpServletRequest request) {
-        Employee actor = (Employee) request.getSession().getAttribute("actorObj");
+        HttpSession session = request.getSession(false);
+        Employee actor = null;
+
+        if (session != null) {
+            actor = (Employee) session.getAttribute("actorObj");
+        }
+
         if (actor == null) {
             Authentication auth = org.springframework.security.core.context.SecurityContextHolder
                     .getContext().getAuthentication();
             if (auth != null && auth.getPrincipal() instanceof Employee) {
                 actor = (Employee) auth.getPrincipal();
+                if (session != null) {
+                    session.setAttribute("actorObj", actor);
+                }
             }
         }
         return actor;
+    }
+
+    /**
+     * Safely invokes a supplier that might throw LazyInitializationException (or any
+     * other exception) when accessing a detached Hibernate proxy outside a session.
+     * Returns null instead of crashing — callers must handle null in templates.
+     */
+    private static <T> T safeGet(Supplier<T> supplier) {
+        try {
+            return supplier.get();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

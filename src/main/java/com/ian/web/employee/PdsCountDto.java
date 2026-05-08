@@ -1,8 +1,12 @@
 package com.ian.web.employee;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PdsCountDto {	
 	
 	private int familyBgCount;	

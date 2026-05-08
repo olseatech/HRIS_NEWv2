@@ -2,7 +2,11 @@ package com.ian.web.employee.leave;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.stereotype.Controller;
@@ -38,76 +42,152 @@ public class LeaveReportController {
     // LEAVE SUMMARY REPORT PAGE
     // -----------------------------------------------------------------------
 
+    private static void noCache(HttpServletResponse res) {
+        res.setHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+        res.setHeader("Pragma", "no-cache");
+        res.setDateHeader("Expires", 0);
+    }
+
     @GetMapping("/leave-report")
     public String reportPage(
             @RequestParam(value = "year",       required = false) Integer year,
             @RequestParam(value = "employeeId", required = false) Long    employeeId,
             @RequestParam(value = "leaveTypeId",required = false) Long    leaveTypeId,
             @RequestParam(value = "status",     required = false) String  status,
-            Model model, HttpServletRequest request) {
+            Model model, HttpServletRequest request, HttpServletResponse response) {
 
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
 
         int selectedYear = (year != null) ? year : LocalDate.now().getYear();
         try {
-            // Default: all applications for the selected year (pending, endorsed, approved, etc.)
-            List<LeaveApplication> applications;
-            if (employeeId != null && leaveTypeId != null) {
-                applications = applicationRepo.findByEmployeeAndYear(employeeId, selectedYear)
-                        .stream()
-                        .filter(a -> a.getLeaveType() != null && a.getLeaveType().getId() != null
-                                && a.getLeaveType().getId().equals(leaveTypeId))
-                        .collect(java.util.stream.Collectors.toList());
-            } else if (employeeId != null) {
-                applications = applicationRepo.findByEmployeeAndYear(employeeId, selectedYear);
-            } else if (leaveTypeId != null) {
-                final Long ltId = leaveTypeId;
-                applications = applicationRepo.findAllByOrderByAppliedDateTimeDesc()
-                        .stream()
-                        .filter(a -> a.getDateFrom() != null
-                                && a.getDateFrom().getYear() == selectedYear
-                                && a.getLeaveType() != null
-                                && a.getLeaveType().getId() != null
-                                && a.getLeaveType().getId().equals(ltId))
-                        .collect(java.util.stream.Collectors.toList());
-            } else {
-                applications = applicationRepo.findAllByOrderByAppliedDateTimeDesc()
-                        .stream()
-                        .filter(a -> a.getDateFrom() != null
-                                && a.getDateFrom().getYear() == selectedYear)
-                        .collect(java.util.stream.Collectors.toList());
-            }
+            // Use JOIN FETCH to prevent N+1 and LazyInitializationException
+            List<LeaveApplication> allYearApps = applicationRepo.findAllForYearFetched(selectedYear);
 
-            // Apply status filter if provided
+            // Apply optional filters
+            List<LeaveApplication> applications = allYearApps;
+            if (employeeId != null) {
+                final Long fEmpId = employeeId;
+                applications = applications.stream()
+                        .filter(a -> a.getEmployee() != null
+                                && fEmpId.equals(a.getEmployee().getId()))
+                        .collect(Collectors.toList());
+            }
+            if (leaveTypeId != null) {
+                final Long fLtId = leaveTypeId;
+                applications = applications.stream()
+                        .filter(a -> a.getLeaveType() != null
+                                && fLtId.equals(a.getLeaveType().getId()))
+                        .collect(Collectors.toList());
+            }
             if (status != null && !status.isBlank()) {
                 try {
                     LeaveApplication.LeaveStatus st = LeaveApplication.LeaveStatus.valueOf(status);
                     applications = applications.stream()
                             .filter(a -> a.getStatus() == st)
-                            .collect(java.util.stream.Collectors.toList());
+                            .collect(Collectors.toList());
                 } catch (IllegalArgumentException ignored) { }
             }
 
-            model.addAttribute("applications", applications);
-            model.addAttribute("employees",    employeeRepository.findAll());
-            model.addAttribute("leaveTypes",   leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
+            // Group applications by employee ID for the employee-centric table
+            Map<Long, List<LeaveApplication>> appsByEmpId = allYearApps.stream()
+                    .filter(a -> a.getEmployee() != null)
+                    .collect(Collectors.groupingBy(
+                            a -> a.getEmployee().getId(),
+                            LinkedHashMap::new,
+                            Collectors.toList()));
+
+            // Per-employee summary stats (counts and days)
+            Map<Long, Long>   pendingByEmpId     = new LinkedHashMap<>();
+            Map<Long, Long>   approvedByEmpId    = new LinkedHashMap<>();
+            Map<Long, Long>   disapprovedByEmpId = new LinkedHashMap<>();
+            Map<Long, Long>   lwopByEmpId        = new LinkedHashMap<>();
+            Map<Long, Double> daysUsedByEmpId    = new LinkedHashMap<>();
+
+            appsByEmpId.forEach((empId, apps) -> {
+                pendingByEmpId.put(empId, apps.stream()
+                        .filter(a -> a.getStatus() == LeaveApplication.LeaveStatus.PENDING).count());
+                approvedByEmpId.put(empId, apps.stream()
+                        .filter(a -> a.getStatus() == LeaveApplication.LeaveStatus.APPROVED).count());
+                disapprovedByEmpId.put(empId, apps.stream()
+                        .filter(a -> a.getStatus() == LeaveApplication.LeaveStatus.DISAPPROVED).count());
+                lwopByEmpId.put(empId, apps.stream()
+                        .filter(a -> a.getStatus() == LeaveApplication.LeaveStatus.APPROVED
+                                && !a.isWithPay()).count());
+                daysUsedByEmpId.put(empId, apps.stream()
+                        .filter(a -> a.getStatus() == LeaveApplication.LeaveStatus.APPROVED)
+                        .mapToDouble(LeaveApplication::getNumberOfDays).sum());
+            });
+
+            List<Employee> employees = employeeRepository.findAllWithAssociationsFetched();
+
+            // Aggregate totals for the stats row
+            long totalPending     = pendingByEmpId.values().stream().mapToLong(Long::longValue).sum();
+            long totalApproved    = approvedByEmpId.values().stream().mapToLong(Long::longValue).sum();
+            long totalDisapproved = disapprovedByEmpId.values().stream().mapToLong(Long::longValue).sum();
+
+            // Build division-name lookup from the eagerly-fetched application data.
+            // Employee.division is LAZY; accessing it on a detached entity in Thymeleaf
+            // (spring.jpa.open-in-view=false) throws LazyInitializationException mid-stream
+            // even through the ?. safe-nav operator (proxy is non-null, getName() fails).
+            // allYearApps was loaded with LEFT JOIN FETCH e.division, so it is safe.
+            Map<Long, String> empDivisionNames = new LinkedHashMap<>();
+            for (LeaveApplication a : allYearApps) {
+                if (a.getEmployee() == null) continue;
+                if (empDivisionNames.containsKey(a.getEmployee().getId())) continue;
+                try {
+                    String dn = a.getEmployee().getDivision() != null
+                            ? a.getEmployee().getDivision().getDivisionName() : "";
+                    empDivisionNames.put(a.getEmployee().getId(), dn);
+                } catch (Exception ignored) {
+                    empDivisionNames.put(a.getEmployee().getId(), "");
+                }
+            }
+            // Employees with no apps this year still need an entry (safe empty fallback)
+            for (Employee e : employees) {
+                empDivisionNames.putIfAbsent(e.getId(), "");
+            }
+
+            model.addAttribute("applications",      applications);
+            model.addAttribute("appsByEmpId",       appsByEmpId);
+            model.addAttribute("pendingByEmpId",    pendingByEmpId);
+            model.addAttribute("approvedByEmpId",   approvedByEmpId);
+            model.addAttribute("disapprovedByEmpId",disapprovedByEmpId);
+            model.addAttribute("lwopByEmpId",       lwopByEmpId);
+            model.addAttribute("daysUsedByEmpId",   daysUsedByEmpId);
+            model.addAttribute("totalPending",      totalPending);
+            model.addAttribute("totalApproved",     totalApproved);
+            model.addAttribute("totalDisapproved",  totalDisapproved);
+            model.addAttribute("employees",         employees);
+            model.addAttribute("empDivisionNames",  empDivisionNames);
+            model.addAttribute("leaveTypes",        leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
         } catch (Exception e) {
             log.error("Leave report page error", e);
-            model.addAttribute("applications", java.util.Collections.emptyList());
-            model.addAttribute("employees",    java.util.Collections.emptyList());
-            model.addAttribute("leaveTypes",   java.util.Collections.emptyList());
+            model.addAttribute("applications",      Collections.emptyList());
+            model.addAttribute("appsByEmpId",       Collections.emptyMap());
+            model.addAttribute("pendingByEmpId",    Collections.emptyMap());
+            model.addAttribute("approvedByEmpId",   Collections.emptyMap());
+            model.addAttribute("disapprovedByEmpId",Collections.emptyMap());
+            model.addAttribute("lwopByEmpId",       Collections.emptyMap());
+            model.addAttribute("daysUsedByEmpId",   Collections.emptyMap());
+            model.addAttribute("totalPending",      0L);
+            model.addAttribute("totalApproved",     0L);
+            model.addAttribute("totalDisapproved",  0L);
+            model.addAttribute("employees",         Collections.emptyList());
+            model.addAttribute("empDivisionNames",  Collections.emptyMap());
+            model.addAttribute("leaveTypes",        Collections.emptyList());
             model.addAttribute("uxmessage",
                 new UXMessage("ERROR",
                     "DB error: " + e.getMessage()
                         + " — Run leave_migration.sql then restart."));
         }
 
-        model.addAttribute("selectedYear", selectedYear);
+        model.addAttribute("selectedYear",       selectedYear);
         model.addAttribute("selectedEmployeeId", employeeId);
-        model.addAttribute("selectedLeaveTypeId", leaveTypeId);
-        model.addAttribute("selectedStatus", status);
-        model.addAttribute("currentYear",  LocalDate.now().getYear());
-        model.addAttribute("statuses",     LeaveApplication.LeaveStatus.values());
+        model.addAttribute("selectedLeaveTypeId",leaveTypeId);
+        model.addAttribute("selectedStatus",     status);
+        model.addAttribute("currentYear",        LocalDate.now().getYear());
+        model.addAttribute("statuses",           LeaveApplication.LeaveStatus.values());
         return "employee/leave/leave-report";
     }
 
@@ -119,18 +199,43 @@ public class LeaveReportController {
     public String leaveCard(
             @PathVariable Long employeeId,
             @PathVariable int  year,
-            Model model, HttpServletRequest request) {
+            Model model, HttpServletRequest request, HttpServletResponse response) {
 
+        noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
 
-        Employee employee = employeeRepository.findById(employeeId).orElse(null);
+        Employee employee = employeeRepository.findByIdFetched(employeeId).orElse(null);
         if (employee == null) return "redirect:/leave-report";
+
+        List<LeaveBalance> balances = Collections.emptyList();
+        try {
+            balances = leaveService.getBalancesForEmployee(employeeId, year);
+        } catch (Exception e) {
+            log.warn("Failed to load balances for leave card emp={} year={}: {}",
+                    employeeId, year, e.getMessage());
+        }
+
+        List<LeaveLedger> ledger = Collections.emptyList();
+        try {
+            ledger = leaveService.getLedgerForEmployeeFetched(employeeId);
+        } catch (Exception e) {
+            log.warn("Failed to load ledger for leave card emp={}: {}",
+                    employeeId, e.getMessage());
+        }
+
+        List<LeaveApplication> applications = Collections.emptyList();
+        try {
+            applications = applicationRepo.findByEmployeeAndYearFetched(employeeId, year);
+        } catch (Exception e) {
+            log.warn("Failed to load applications for leave card emp={} year={}: {}",
+                    employeeId, year, e.getMessage());
+        }
 
         model.addAttribute("employee",     employee);
         model.addAttribute("year",         year);
-        model.addAttribute("balances",     leaveService.getBalancesForEmployee(employeeId, year));
-        model.addAttribute("ledger",       leaveService.getLedgerForEmployee(employeeId));
-        model.addAttribute("applications", applicationRepo.findByEmployeeAndYear(employeeId, year));
+        model.addAttribute("balances",     balances);
+        model.addAttribute("ledger",       ledger);
+        model.addAttribute("applications", applications);
         model.addAttribute("leaveTypes",   leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
         return "employee/leave/leave-card";
     }
@@ -167,10 +272,15 @@ public class LeaveReportController {
         for (LeaveApplication a : applications) {
             Employee employee = a.getEmployee();
             LeaveType leaveType = a.getLeaveType();
+            // Division is accessed via safe try-catch: Employee.division may be a lazy proxy
+            // on a detached entity (spring.jpa.open-in-view=false), causing LazyInitializationException
+            // even when guarded by != null (the proxy is non-null but uninitialized).
             String division = "";
-            if (employee != null && employee.getDivision() != null) {
-            division = employee.getDivision().getDivisionName();
-            }
+            try {
+                if (employee != null && employee.getDivision() != null) {
+                    division = employee.getDivision().getDivisionName();
+                }
+            } catch (Exception ignored) { }
 
             csv.append(csvField(a.getId())).append(',')
                .append(csvField(employee != null ? employee.getDisplayName() : "")).append(',')
@@ -221,7 +331,7 @@ public class LeaveReportController {
 
         if (!isAdmin(request)) { response.setStatus(403); return; }
 
-        List<Employee> employees = employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findAllWithAssociationsFetched();
         StringBuilder csv = new StringBuilder(1024);
         csv.append("Employee Name,Employee No,Division,Leave Type,")
            .append("Year,Total Earned,Total Used,Balance\n");
@@ -236,8 +346,11 @@ public class LeaveReportController {
                 continue;
             }
 
-            String division = emp.getDivision() != null
-                    ? emp.getDivision().getDivisionName() : "";
+            String division = "";
+            try {
+                division = emp.getDivision() != null
+                        ? emp.getDivision().getDivisionName() : "";
+            } catch (Exception ignored) { }
             for (LeaveBalance b : balances) {
                 LeaveType leaveType = b.getLeaveType();
                 csv.append(csvField(emp.getDisplayName())).append(',')
@@ -275,7 +388,8 @@ public class LeaveReportController {
 
     private boolean isAdmin(HttpServletRequest request) {
         Employee actor = getActor(request);
-        return actor != null && "ROLE_ADMIN".equals(actor.getUserType());
+        return actor != null && actor.getUserType() != null
+                && "ROLE_ADMIN".equals(actor.getUserType());
     }
 
     private String csvField(Object value) {

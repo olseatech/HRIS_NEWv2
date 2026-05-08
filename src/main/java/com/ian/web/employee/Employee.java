@@ -147,6 +147,11 @@ public class Employee extends Person  implements UserDetails {
 	private PdsCountDto pdsCountDto;
     
     @Override
+    public String getUsername() {
+        return this.username;
+    }
+
+    @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         Set<GrantedAuthority> authorities = new HashSet<>();
         authorities.add(new SimpleGrantedAuthority(this.userType));
@@ -202,10 +207,13 @@ public class Employee extends Person  implements UserDetails {
         sb.append(", mobileNo1='").append(mobileNo1).append('\'');
         sb.append(", mobileNo2='").append(mobileNo2).append('\'');
         sb.append(", status='").append(status).append('\'');
-        sb.append(", district=").append(district);
-        sb.append(", division=").append(division);
-        sb.append(", employeeStatus=").append(employeeStatus);
-        sb.append(", positionTitle=").append(positionTitle);
+        // Reference associations by ID only — avoids triggering Hibernate proxy
+        // initialization (and potential LazyInitializationException) if this entity
+        // is detached when toString() is called (e.g. session.actorObj in templates).
+        sb.append(", districtId=").append(district != null ? district.getId() : null);
+        sb.append(", divisionId=").append(division != null ? division.getId() : null);
+        sb.append(", employeeStatusId=").append(employeeStatus != null ? employeeStatus.getId() : null);
+        sb.append(", positionTitleId=").append(positionTitle != null ? positionTitle.getId() : null);
         sb.append(", userType='").append(userType).append('\'');
         sb.append(", profilePhoto='").append(profilePhoto).append('\'');
         sb.append(", houseno1='").append(houseno1).append('\'');

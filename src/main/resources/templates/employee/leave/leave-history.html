@@ -73,11 +73,11 @@
                             <h5 class="card-title">Workflow Audit Trail</h5>
                         </div>
                         <div class="card-body">
-                            <div th:if="${#lists.isEmpty(history)}"
+                            <div th:if="${history == null or #lists.isEmpty(history)}"
                                  class="text-center text-muted py-4">
                                 No history records found.
                             </div>
-                            <ul class="list-group list-group-flush" th:unless="${#lists.isEmpty(history)}">
+                            <ul class="list-group list-group-flush" th:unless="${history == null or #lists.isEmpty(history)}">
                                 <li class="list-group-item" th:each="h : ${history}"
                                     th:with="toStatusName=${h.toStatus != null ? h.toStatus.name() : 'UNKNOWN'}">
                                     <div class="d-flex align-items-start">

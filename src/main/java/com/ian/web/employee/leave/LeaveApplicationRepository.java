@@ -14,6 +14,17 @@ public interface LeaveApplicationRepository extends JpaRepository<LeaveApplicati
 
     List<LeaveApplication> findByEmployeeIdOrderByAppliedDateTimeDesc(Long employeeId);
 
+    @Query("SELECT DISTINCT a FROM LeaveApplication a " +
+           "JOIN FETCH a.leaveType " +
+           "JOIN FETCH a.employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "WHERE e.id = :empId " +
+           "ORDER BY a.appliedDateTime DESC")
+    List<LeaveApplication> findByEmployeeIdFetched(@Param("empId") Long employeeId);
+
     List<LeaveApplication> findByStatusOrderByAppliedDateTimeDesc(LeaveStatus status);
 
     List<LeaveApplication> findAllByOrderByAppliedDateTimeDesc();
@@ -87,4 +98,64 @@ public interface LeaveApplicationRepository extends JpaRepository<LeaveApplicati
     @Query("SELECT a FROM LeaveApplication a " +
            "WHERE a.employee.id = :empId AND YEAR(a.dateFrom) = :year ORDER BY a.dateFrom DESC")
     List<LeaveApplication> findByEmployeeAndYear(@Param("empId") Long employeeId, @Param("year") int year);
+
+    // -----------------------------------------------------------------------
+    // JOIN FETCH variants — loads employee + division + positionTitle +
+    // leaveType in one query, preventing N+1 and LazyInitializationException
+    // when spring.jpa.open-in-view=false.
+    // -----------------------------------------------------------------------
+
+    @Query("SELECT DISTINCT a FROM LeaveApplication a " +
+           "JOIN FETCH a.employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "JOIN FETCH a.leaveType " +
+           "WHERE YEAR(a.dateFrom) = :year " +
+           "ORDER BY a.appliedDateTime DESC")
+    List<LeaveApplication> findAllForYearFetched(@Param("year") int year);
+
+    @Query("SELECT DISTINCT a FROM LeaveApplication a " +
+           "JOIN FETCH a.employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "JOIN FETCH a.leaveType " +
+           "ORDER BY a.appliedDateTime DESC")
+    List<LeaveApplication> findAllFetched();
+
+    @Query("SELECT DISTINCT a FROM LeaveApplication a " +
+           "JOIN FETCH a.employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "JOIN FETCH a.leaveType " +
+           "WHERE a.status = 'PENDING' " +
+           "ORDER BY a.appliedDateTime ASC")
+    List<LeaveApplication> findAllPendingFetched();
+
+    @Query("SELECT DISTINCT a FROM LeaveApplication a " +
+           "JOIN FETCH a.employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "JOIN FETCH a.leaveType " +
+           "WHERE a.status IN :statuses " +
+           "ORDER BY a.appliedDateTime ASC")
+    List<LeaveApplication> findAllActionableFetched(@Param("statuses") java.util.Collection<LeaveStatus> statuses);
+
+    @Query("SELECT DISTINCT a FROM LeaveApplication a " +
+           "JOIN FETCH a.employee e " +
+           "LEFT JOIN FETCH e.division " +
+           "LEFT JOIN FETCH e.positionTitle " +
+           "LEFT JOIN FETCH e.district " +
+           "LEFT JOIN FETCH e.employeeStatus " +
+           "JOIN FETCH a.leaveType " +
+           "WHERE e.id = :empId AND YEAR(a.dateFrom) = :year " +
+           "ORDER BY a.dateFrom DESC")
+    List<LeaveApplication> findByEmployeeAndYearFetched(@Param("empId") Long employeeId, @Param("year") int year);
 }
