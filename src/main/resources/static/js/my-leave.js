@@ -89,13 +89,21 @@
         var opt  = sel.options[sel.selectedIndex];
         var code = opt ? (opt.getAttribute('data-code') || '') : '';
         var req  = opt ? (opt.getAttribute('data-requires-doc') || '') : '';
-        $('#vlSubTypeRow, #slSubTypeRow, #otherDetailsRow').hide();
+
+        // Disable all hidden-row inputs so they are NOT submitted with the form.
+        // Without this, all three leaveSubType selects and leaveDetails inputs send
+        // values and Spring's @RequestParam picks the first one in document order.
+        $('#vlSubTypeRow, #slSubTypeRow, #otherDetailsRow')
+            .hide()
+            .find('input, select, textarea')
+            .prop('disabled', true);
+
         if (code === 'VL') {
-            $('#vlSubTypeRow').show();
+            $('#vlSubTypeRow').show().find('input, select, textarea').prop('disabled', false);
         } else if (code === 'SL') {
-            $('#slSubTypeRow').show();
+            $('#slSubTypeRow').show().find('input, select, textarea').prop('disabled', false);
         } else if (code !== '') {
-            $('#otherDetailsRow').show();
+            $('#otherDetailsRow').show().find('input, select, textarea').prop('disabled', false);
         }
         setAttachmentRequired(req === 'true');
     };

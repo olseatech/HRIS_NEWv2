@@ -339,10 +339,10 @@
                                     <div class="col-sm-8">
                                         <input type="file" name="attachment" id="supportingDocument"
                                                class="form-control-file"
-                                               accept=".pdf,image/*"
+                                               accept=".pdf,.jpg,.jpeg,.png"
                                                aria-describedby="supportingDocHelp"/>
                                         <small id="supportingDocHelp" class="text-muted d-block">
-                                            Required for medical and selected leave types. Accepted: PDF or image.
+                                            Required for medical and selected leave types. Accepted: PDF, JPG, PNG — max 5 MB.
                                         </small>
                                     </div>
                                 </div>
@@ -504,6 +504,14 @@
                                                        statusName == 'DISAPPROVED' or
                                                        statusName == 'CANCELLED'}"
                                               class="text-muted small">—</span>
+                                        <!-- Attachment link (always show if present) -->
+                                        <a th:if="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath)}"
+                                           th:href="@{|/my-leave-attachment/${app.id}|}"
+                                           class="btn btn-xs btn-outline-secondary ml-1"
+                                           target="_blank"
+                                           th:title="${app.attachmentFileName != null ? app.attachmentFileName : 'View Attachment'}">
+                                            <i class="icon-attachment"></i>
+                                        </a>
                                     </td>
 
                                 </tr>

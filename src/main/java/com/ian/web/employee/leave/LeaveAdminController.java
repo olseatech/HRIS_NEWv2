@@ -13,6 +13,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
@@ -395,8 +396,11 @@ public class LeaveAdminController {
             @RequestParam(value = "reason",       required = false) String  reason,
             @RequestParam(value = "leaveSubType", required = false) String  leaveSubType,
             @RequestParam(value = "leaveDetails", required = false) String  leaveDetails,
+            @RequestParam(value = "expectedReturnDate", required = false)
+            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate expectedReturnDate,
             @RequestParam(value = "requestedCommutation",
                           required = false, defaultValue = "false")  boolean requestedCommutation,
+            @RequestParam(value = "attachment", required = false) MultipartFile attachment,
             HttpServletRequest request,
             final RedirectAttributes redirect) {
 
@@ -421,6 +425,31 @@ public class LeaveAdminController {
         app.setLeaveSubType(leaveSubType);
         app.setLeaveDetails(leaveDetails);
         app.setRequestedCommutation(requestedCommutation);
+        app.setExpectedReturnDate(expectedReturnDate);
+
+        if (leaveType.isRequiresMedCert() && (attachment == null || attachment.isEmpty())) {
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("ERROR",
+                            "Supporting document is required for the selected leave type."));
+            return "redirect:/employee-leave/" + employee.getId() + "/LEAVE/" + employee.getEmpHashCode();
+        }
+
+        if (attachment != null && !attachment.isEmpty()) {
+            try {
+                String storedName = fileStorageService.store(attachment, attachment.getOriginalFilename());
+                app.setAttachmentPath(storedName);
+                app.setAttachmentFileName(attachment.getOriginalFilename());
+                app.setAttachmentMimeType(fileStorageService.detectMimeType(attachment));
+            } catch (IllegalArgumentException e) {
+                redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+                return "redirect:/employee-leave/" + employee.getId() + "/LEAVE/" + employee.getEmpHashCode();
+            } catch (Exception e) {
+                log.warn("File upload failed: {}", e.getMessage());
+                redirect.addFlashAttribute("uxmessage",
+                        new UXMessage("ERROR", "File upload failed. Please try again."));
+                return "redirect:/employee-leave/" + employee.getId() + "/LEAVE/" + employee.getEmpHashCode();
+            }
+        }
 
         try {
             leaveService.applyLeave(app);

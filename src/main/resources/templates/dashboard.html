@@ -712,10 +712,14 @@
 					return;
 				}
 				$.each(data, function(i, app) {
+					var empCell =
+						'<span class="font-weight-semibold d-block">' + (app.employeeName || '—') + '</span>' +
+						(app.employeePosition ? '<small class="text-muted d-block">' + app.employeePosition + '</small>' : '') +
+						(app.employeeDivision ? '<small class="text-muted d-block">' + app.employeeDivision + '</small>' : '');
 					var row = '<tr>' +
 						'<td>' + app.id + '</td>' +
-						'<td class="font-weight-semibold">' + (app.employee ? app.employee.displayName : '—') + '</td>' +
-						'<td>' + (app.leaveType ? app.leaveType.leaveName : '—') + '</td>' +
+						'<td>' + empCell + '</td>' +
+						'<td>' + (app.leaveName || '—') + '</td>' +
 						'<td>' + (app.dateFrom || '') + '</td>' +
 						'<td>' + (app.dateTo || '') + '</td>' +
 						'<td class="text-center">' + (app.numberOfDays || 0) + '</td>' +

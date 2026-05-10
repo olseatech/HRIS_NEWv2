@@ -37,11 +37,29 @@ public class LeaveApiController {
         return ResponseEntity.ok(applicationRepo.findAllByOrderByAppliedDateTimeDesc());
     }
 
-    /** Pending applications — admin only. */
+    /** Pending applications — admin only. Returns flat DTOs; employee is @JsonIgnore on entity so projected here. */
     @GetMapping("/pending")
-    public ResponseEntity<List<LeaveApplication>> getPending(HttpServletRequest request) {
+    public ResponseEntity<List<java.util.Map<String,Object>>> getPending(HttpServletRequest request) {
         if (!isAdmin(request)) return ResponseEntity.status(403).build();
-        return ResponseEntity.ok(applicationRepo.findAllPending());
+        List<LeaveApplication> apps = applicationRepo.findAllPendingFetched();
+        List<java.util.Map<String,Object>> result = new java.util.ArrayList<>();
+        for (LeaveApplication a : apps) {
+            java.util.Map<String,Object> dto = new java.util.LinkedHashMap<>();
+            dto.put("id",              a.getId());
+            dto.put("dateFrom",        a.getDateFrom());
+            dto.put("dateTo",          a.getDateTo());
+            dto.put("numberOfDays",    a.getNumberOfDays());
+            dto.put("appliedDateTime", a.getAppliedDateTime());
+            dto.put("leaveName",       a.getLeaveType() != null ? a.getLeaveType().getLeaveName() : "");
+            Employee emp = a.getEmployee();
+            dto.put("employeeName",     emp != null ? emp.getDisplayName() : "");
+            dto.put("employeePosition", emp != null && emp.getPositionTitle() != null
+                                          ? emp.getPositionTitle().getPositionTitleName() : "");
+            dto.put("employeeDivision", emp != null && emp.getDivision() != null
+                                          ? emp.getDivision().getDivisionName() : "");
+            result.add(dto);
+        }
+        return ResponseEntity.ok(result);
     }
 
     /** Applications for a specific employee (admin or own employee). */

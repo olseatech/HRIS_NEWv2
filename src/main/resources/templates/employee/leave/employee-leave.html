@@ -36,43 +36,156 @@
                         <button type="button" class="close" data-dismiss="modal">&times;</button>
                     </div>
                     <!-- th:object removed — same NPE fix as my-leave.html -->
-                    <form th:action="@{/addLeaveAdmin}" method="post">
+                      <form th:action="@{/addLeaveAdmin}" method="post"
+                          enctype="multipart/form-data" autocomplete="off">
                         <input type="hidden" name="employeeId"
                                th:value="${newApplication != null and newApplication.employee != null ? newApplication.employee.id : ''}"/>
                         <div class="modal-body">
                             <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Leave Type <span class="text-danger">*</span></label>
+                                <label class="col-sm-4 col-form-label">
+                                    Leave Type <span class="text-danger">*</span>
+                                </label>
                                 <div class="col-sm-8">
-                                    <select class="form-control" name="leaveTypeId" required>
+                                    <select class="form-control" name="leaveTypeId" id="leaveTypeSelect" required
+                                            onchange="updateLeaveSubTypeFields(this)">
                                         <option value="">-- Select Leave Type --</option>
                                         <option th:each="leaveTypeItem : ${leaveTypes}"
                                                 th:value="${leaveTypeItem.id}"
+                                                th:attr="data-code=${leaveTypeItem.leaveCode},data-requires-doc=${leaveTypeItem.requiresMedCert}"
                                                 th:text="${leaveTypeItem.leaveName + ' (' + leaveTypeItem.leaveCode + ')'}">
                                         </option>
                                     </select>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Date From <span class="text-danger">*</span></label>
+
+                            <div class="form-group row" id="vlSubTypeRow" style="display:none;">
+                                <label class="col-sm-4 col-form-label">
+                                    Details of Vacation Leave <span class="text-danger">*</span>
+                                </label>
                                 <div class="col-sm-8">
-                                    <input type="date" name="dateFrom"
-                                           th:value="${newApplication != null ? newApplication.dateFrom : ''}"
-                                           class="form-control" required/>
+                                    <select name="leaveSubType" id="vlSubType" class="form-control">
+                                        <option value="WITHIN_PHILIPPINES">Within the Philippines</option>
+                                        <option value="ABROAD">Abroad</option>
+                                    </select>
+                                    <input type="text" name="leaveDetails" id="vlDetails"
+                                           class="form-control mt-1"
+                                           placeholder="Specify destination (if abroad) or place"/>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Date To <span class="text-danger">*</span></label>
+
+                            <div class="form-group row" id="slSubTypeRow" style="display:none;">
+                                <label class="col-sm-4 col-form-label">
+                                    Details of Sick Leave <span class="text-danger">*</span>
+                                </label>
                                 <div class="col-sm-8">
-                                    <input type="date" name="dateTo"
-                                           th:value="${newApplication != null ? newApplication.dateTo : ''}"
-                                           class="form-control" required/>
+                                    <select name="leaveSubType" id="slSubType" class="form-control">
+                                        <option value="IN_HOSPITAL">In Hospital</option>
+                                        <option value="OUT_PATIENT">Out-Patient</option>
+                                    </select>
+                                    <input type="text" name="leaveDetails" id="slDetails"
+                                           class="form-control mt-1"
+                                           placeholder="Specify illness / nature of sickness"/>
                                 </div>
                             </div>
-                            <div class="form-group row">
-                                <label class="col-sm-4 col-form-label">Reason / Purpose</label>
+
+                            <div class="form-group row" id="otherDetailsRow" style="display:none;">
+                                <label class="col-sm-4 col-form-label">
+                                    Specify Type of Leave <span class="text-danger">*</span>
+                                </label>
                                 <div class="col-sm-8">
-                                    <textarea name="reason" class="form-control" rows="2" placeholder="Purpose of leave"></textarea>
+                                    <input type="text" name="leaveDetails" id="otherDetails"
+                                           class="form-control"
+                                           placeholder="Specify details for this leave type"/>
                                 </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">
+                                    Inclusive Dates <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-4">
+                                    <label class="text-muted small">From</label>
+                                    <input type="date" name="dateFrom" class="form-control"
+                                           id="inputDateFrom" required
+                                           th:value="${newApplication != null ? newApplication.dateFrom : ''}"/>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label class="text-muted small">To</label>
+                                    <input type="date" name="dateTo" class="form-control"
+                                           id="inputDateTo" required
+                                           th:value="${newApplication != null ? newApplication.dateTo : ''}"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Number of Working Days</label>
+                                <div class="col-sm-4">
+                                    <div class="input-group">
+                                        <input type="text" id="computedDays" class="form-control"
+                                               readonly placeholder="Auto-calculated"/>
+                                        <div class="input-group-append">
+                                            <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                    onclick="calculateDays()">
+                                                Calculate
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted">
+                                        Mon–Fri only. Public holidays excluded by HR after approval.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Expected Return Date</label>
+                                <div class="col-sm-4">
+                                    <input type="date" name="expectedReturnDate" class="form-control"/>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">
+                                    Remarks / Purpose <span class="text-danger">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <textarea name="reason" class="form-control" rows="3" required
+                                              placeholder="Briefly describe the purpose or reason for this leave application."></textarea>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">
+                                    Supporting Document
+                                    <span id="supportingDocBadge" class="text-danger d-none">*</span>
+                                </label>
+                                <div class="col-sm-8">
+                                    <input type="file" name="attachment" id="supportingDocument"
+                                           class="form-control-file"
+                                           accept=".pdf,image/*"
+                                           aria-describedby="supportingDocHelp"/>
+                                    <small id="supportingDocHelp" class="text-muted d-block">
+                                        Required for medical and selected leave types. Accepted: PDF or image.
+                                    </small>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-8 offset-sm-4">
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input"
+                                               name="requestedCommutation"
+                                               id="reqCommutation" value="true"/>
+                                        <label class="form-check-label" for="reqCommutation">
+                                            Request money value / commutation of leave credits
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info py-2 px-3 small">
+                                <i class="icon-info22 mr-1"></i>
+                                Working days (Mon–Fri) are computed automatically. Public holidays
+                                will be excluded by HR after approval.
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -353,7 +466,58 @@
         $('#modalReturn').on('hidden.bs.modal', function () {
             $('#formReturn')[0].reset();
         });
+
+        $('#inputDateFrom, #inputDateTo').on('change', calculateDays);
+
+        var leaveTypeSelect = document.getElementById('leaveTypeSelect');
+        if (leaveTypeSelect && leaveTypeSelect.value) {
+            updateLeaveSubTypeFields(leaveTypeSelect);
+        }
     });
+
+    function setAttachmentRequired(isRequired) {
+        var input = document.getElementById('supportingDocument');
+        var badge = document.getElementById('supportingDocBadge');
+        if (!input) {
+            return;
+        }
+        input.required = !!isRequired;
+        if (badge) {
+            badge.classList.toggle('d-none', !isRequired);
+        }
+    }
+
+    window.updateLeaveSubTypeFields = function (sel) {
+        var opt = sel.options[sel.selectedIndex];
+        var code = opt ? (opt.getAttribute('data-code') || '') : '';
+        var req = opt ? (opt.getAttribute('data-requires-doc') || '') : '';
+        $('#vlSubTypeRow, #slSubTypeRow, #otherDetailsRow').hide();
+        if (code === 'VL') {
+            $('#vlSubTypeRow').show();
+        } else if (code === 'SL') {
+            $('#slSubTypeRow').show();
+        } else if (code !== '') {
+            $('#otherDetailsRow').show();
+        }
+        setAttachmentRequired(req === 'true');
+    };
+
+    window.calculateDays = function () {
+        var from = new Date($('#inputDateFrom').val());
+        var to = new Date($('#inputDateTo').val());
+        if (isNaN(from.getTime()) || isNaN(to.getTime()) || to < from) {
+            $('#computedDays').val('');
+            return;
+        }
+        var count = 0;
+        var cur = new Date(from);
+        while (cur <= to) {
+            var dow = cur.getDay();
+            if (dow !== 0 && dow !== 6) { count++; }
+            cur.setDate(cur.getDate() + 1);
+        }
+        $('#computedDays').val(count + ' working day(s)');
+    };
 </script>
 
 <th:block th:replace="fragments/common::sidebar-activation"></th:block>
