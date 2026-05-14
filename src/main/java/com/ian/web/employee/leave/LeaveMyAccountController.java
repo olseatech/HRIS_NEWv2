@@ -224,6 +224,19 @@ public class LeaveMyAccountController {
         app.setExpectedReturnDate(expectedReturnDate);
         app.setRequestedCommutation(requestedCommutation);
 
+        // Extended leave document requirement (e.g. SL >5 days requires medical cert)
+        if (leaveType.isRequiresDocForExtended() && leaveType.getExtendedLeaveDays() > 0) {
+            double previewDays = leaveService.countWorkingDays(dateFrom, dateTo);
+            if (previewDays > leaveType.getExtendedLeaveDays()
+                    && (attachment == null || attachment.isEmpty())) {
+                redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR",
+                    "A supporting document is required for "
+                    + leaveType.getLeaveName() + " exceeding "
+                    + leaveType.getExtendedLeaveDays() + " working days."));
+                return "redirect:/my-leave";
+            }
+        }
+
         // Enforce required attachment for medical/flagged leave types
         if (leaveType.isRequiresMedCert() && (attachment == null || attachment.isEmpty())) {
             redirect.addFlashAttribute("uxmessage",

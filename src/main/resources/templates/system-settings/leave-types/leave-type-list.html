@@ -111,6 +111,38 @@
                                 </div>
                             </div>
 
+                            <!-- Extended Leave Policy -->
+                            <div class="form-group row mt-2">
+                                <label class="col-form-label col-sm-3 font-weight-bold text-primary">Extended Leave Policy</label>
+                                <div class="col-sm-9">
+                                    <small class="text-muted">CSC default: &gt;5 working days requires endorsement before approval.</small>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <label class="col-form-label col-sm-3">Threshold (days)</label>
+                                <div class="col-sm-4">
+                                    <input type="number" min="0" class="form-control"
+                                           th:field="*{extendedLeaveDays}" id="ltExtDays"/>
+                                    <small class="text-muted">0 = disabled (e.g. ML, PL, SPL)</small>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-sm-9 offset-sm-3">
+                                    <div class="form-check form-check-inline">
+                                        <input type="checkbox" class="form-check-input"
+                                               th:field="*{requiresDocForExtended}" id="ltReqDoc"/>
+                                        <label class="form-check-label" for="ltReqDoc">Require document if extended</label>
+                                    </div>
+                                    <div class="form-check form-check-inline ml-3">
+                                        <input type="checkbox" class="form-check-input"
+                                               th:field="*{requiresEndorsementForExtended}" id="ltReqEndorse"/>
+                                        <label class="form-check-label" for="ltReqEndorse">Require endorsement before approval if extended</label>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="form-group row">
                                 <div class="col-sm-3 offset-sm-3">
                                     <div class="form-check">
@@ -185,6 +217,9 @@
                                             th:data-lwop="${leaveTypeItem.lwopType}"
                                             th:data-medcert="${leaveTypeItem.requiresMedCert}"
                                             th:data-active="${leaveTypeItem.active}"
+                                            th:data-extdays="${leaveTypeItem.extendedLeaveDays}"
+                                            th:data-reqdoc="${leaveTypeItem.requiresDocForExtended}"
+                                            th:data-reqendorse="${leaveTypeItem.requiresEndorsementForExtended}"
                                             data-toggle="modal" data-target="#modal_leave_type">
                                         Edit
                                     </button>
@@ -245,6 +280,9 @@
             $('#ltLwop').prop('checked', $btn.attr('data-lwop') === 'true');
             $('#ltMedCert').prop('checked', $btn.attr('data-medcert') === 'true');
             $('#ltActive').prop('checked', $btn.attr('data-active') === 'true');
+            $('#ltExtDays').val($btn.attr('data-extdays') || '0');
+            $('#ltReqDoc').prop('checked', $btn.attr('data-reqdoc') === 'true');
+            $('#ltReqEndorse').prop('checked', $btn.attr('data-reqendorse') === 'true');
         });
 
         function clearForm() {

@@ -59,6 +59,11 @@ public class LeaveService {
 
         double workingDays = countWorkingDays(application.getDateFrom(), application.getDateTo());
         application.setNumberOfDays(workingDays);
+
+        // Extended leave policy flag (CSC: >5 working days)
+        int extThreshold = application.getLeaveType().getExtendedLeaveDays();
+        application.setRequiresHigherApproval(extThreshold > 0 && workingDays > extThreshold);
+
         application.setStatus(LeaveStatus.PENDING);
         application.setAppliedDateTime(LocalDateTime.now());
         application.setLedgerPosted(false);
@@ -154,6 +159,11 @@ public class LeaveService {
         // Re-compute working days in case dates are unchanged but holidays changed
         app.setNumberOfDays(countWorkingDays(app.getDateFrom(), app.getDateTo()));
 
+        // Re-evaluate extended leave flag (employee may have narrowed the date range)
+        int resubThreshold = app.getLeaveType().getExtendedLeaveDays();
+        app.setRequiresHigherApproval(
+                resubThreshold > 0 && app.getNumberOfDays() > resubThreshold);
+
         // Clear previous endorsement data so HR must re-process
         app.setSupervisorId(null);      app.setSupervisorName(null);
         app.setSupervisorActionDate(null); app.setSupervisorRecommendation(null);
@@ -184,6 +194,16 @@ public class LeaveService {
         if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED) {
             throw new IllegalStateException(
                     "Only PENDING or ENDORSED applications can be approved.");
+        }
+
+        // Extended leave policy: endorsement is mandatory before approval
+        if (app.isRequiresHigherApproval()
+                && app.getLeaveType().isRequiresEndorsementForExtended()
+                && app.getStatus() == LeaveStatus.PENDING) {
+            int thr = app.getLeaveType().getExtendedLeaveDays();
+            throw new IllegalStateException(
+                "Leave application #" + applicationId + " exceeds " + thr
+                + " working days and must be endorsed before it can be approved.");
         }
 
         int year = app.getDateFrom().getYear();

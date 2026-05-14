@@ -272,7 +272,11 @@
                                 <tr th:each="app : ${applications}"
                                     th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}">
                                     <td th:text="${app.id}"></td>
-                                    <td th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></td>
+                                    <td>
+                                        <span th:text="${app.leaveType != null ? app.leaveType.leaveName : 'Unknown Leave Type'}"></span>
+                                        <span th:if="${app.requiresHigherApproval}"
+                                              class="badge badge-warning ml-1">Extended</span>
+                                    </td>
                                     <td th:text="${app.dateFrom}"></td>
                                     <td th:text="${app.dateTo}"></td>
                                     <td class="text-center font-weight-semibold" th:text="${app.numberOfDays}"></td>
@@ -358,6 +362,7 @@
                 <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
             </div>
             <form id="formEndorse" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="modal-body">
                     <div class="form-group row">
                         <label class="col-sm-4 col-form-label">Supervisor Recommendation</label>
@@ -408,6 +413,7 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <form id="formReturn" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="font-weight-semibold">Reason / Remarks <span class="text-danger">*</span></label>
@@ -444,7 +450,7 @@
         $('#table-emp-leave').DataTable({
             lengthMenu: [10, 25, 50],
             order: dtOrderEmpLeave,
-            columnDefs: [{ orderable: false, targets: 8 }]
+            columnDefs: [{ orderable: false, targets: [8] }]
         });
 
         // Endorse button

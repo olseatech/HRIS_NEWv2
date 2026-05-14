@@ -88,6 +88,15 @@ public class LeaveApplication {
     @Column(columnDefinition = "TEXT")
     private String reason;
 
+    /**
+     * Set to {@code true} by the service layer when
+     * {@code numberOfDays > leaveType.extendedLeaveDays}.
+     * When {@code true} and the leave type requires endorsement for extended leaves,
+     * the application must be endorsed before it can be approved.
+     */
+    @Column(name = "requires_higher_approval", columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean requiresHigherApproval = false;
+
     /** Whether the employee requests money value / commutation of leave credits. */
     private boolean requestedCommutation;
 

@@ -41,7 +41,7 @@
                     $tbl.DataTable({
                         pageLength: 15,
                         order: [[6, 'desc']],
-                        columnDefs: [{ orderable: false, targets: [7] }]
+                        columnDefs: [{ orderable: false, targets: [0, 7] }]
                     });
                 } catch (e) {
                     console.warn('DataTable init error (my-leave):', e);
@@ -126,6 +126,14 @@
             cur.setDate(cur.getDate() + 1);
         }
         $('#computedDays').val(count + ' working day(s)');
+
+        // Extended leave warning (informational — server enforces authoritatively)
+        var EXTENDED_THRESHOLD = 5;
+        if (count > EXTENDED_THRESHOLD) {
+            $('#extendedLeaveWarning').removeClass('d-none');
+        } else {
+            $('#extendedLeaveWarning').addClass('d-none');
+        }
     };
 
 }());

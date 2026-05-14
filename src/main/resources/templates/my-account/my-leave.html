@@ -314,6 +314,20 @@
                                     </div>
                                 </div>
 
+                                <!-- Extended leave warning — shown by my-leave.js when days > 5 -->
+                                <div class="form-group row">
+                                    <div class="col-sm-8 offset-sm-4">
+                                        <div id="extendedLeaveWarning"
+                                             class="alert alert-warning py-2 px-3 small d-none mb-0">
+                                            <i class="icon-warning2 mr-1"></i>
+                                            <strong>Extended Leave Notice:</strong>
+                                            Applications exceeding 5 working days require
+                                            an endorsement step before final approval.
+                                            Sick Leave &gt;5 days also requires a supporting document.
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-sm-4 col-form-label">Expected Return Date</label>
                                     <div class="col-sm-4">
@@ -425,12 +439,12 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr th:each="app : ${applications}"
+                                <tr th:each="app, appStat : ${applications}"
                                     th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}"
                                     th:classappend="${statusName == 'RETURNED' ? ' table-warning' : ''}">
 
                                     <!-- # -->
-                                    <td class="text-muted small" th:text="${app.id}"></td>
+                                    <td class="text-muted small" th:text="${appStat.count}"></td>
 
                                     <!-- Leave type + sub-type -->
                                     <td>
@@ -441,6 +455,8 @@
                                              <small th:if="${app.leaveSubType != null}"
                                                class="text-muted d-block"
                                                th:text="${app.leaveSubType}"></small>
+                                             <span th:if="${app.requiresHigherApproval}"
+                                               class="badge badge-warning mt-1">Extended</span>
                                     </td>
 
                                     <!-- Date range -->
