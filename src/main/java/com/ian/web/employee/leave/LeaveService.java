@@ -61,8 +61,9 @@ public class LeaveService {
         application.setNumberOfDays(workingDays);
 
         // Extended leave policy flag (CSC: >5 working days)
-        int extThreshold = application.getLeaveType().getExtendedLeaveDays();
-        application.setRequiresHigherApproval(extThreshold > 0 && workingDays > extThreshold);
+        Integer extThreshold = application.getLeaveType().getExtendedLeaveDays();
+        int threshold = (extThreshold != null) ? extThreshold : 0;
+        application.setRequiresHigherApproval(threshold > 0 && workingDays > threshold);
 
         application.setStatus(LeaveStatus.PENDING);
         application.setAppliedDateTime(LocalDateTime.now());
@@ -160,9 +161,10 @@ public class LeaveService {
         app.setNumberOfDays(countWorkingDays(app.getDateFrom(), app.getDateTo()));
 
         // Re-evaluate extended leave flag (employee may have narrowed the date range)
-        int resubThreshold = app.getLeaveType().getExtendedLeaveDays();
+        Integer resubThreshold = app.getLeaveType().getExtendedLeaveDays();
+        int threshold = (resubThreshold != null) ? resubThreshold : 0;
         app.setRequiresHigherApproval(
-                resubThreshold > 0 && app.getNumberOfDays() > resubThreshold);
+                threshold > 0 && app.getNumberOfDays() > threshold);
 
         // Clear previous endorsement data so HR must re-process
         app.setSupervisorId(null);      app.setSupervisorName(null);
@@ -198,11 +200,12 @@ public class LeaveService {
 
         // Extended leave policy: endorsement is mandatory before approval
         if (app.isRequiresHigherApproval()
-                && app.getLeaveType().isRequiresEndorsementForExtended()
+                && (app.getLeaveType().getRequiresEndorsementForExtended() == Boolean.TRUE)
                 && app.getStatus() == LeaveStatus.PENDING) {
-            int thr = app.getLeaveType().getExtendedLeaveDays();
+            Integer thr = app.getLeaveType().getExtendedLeaveDays();
+            int threshold = (thr != null) ? thr : 0;
             throw new IllegalStateException(
-                "Leave application #" + applicationId + " exceeds " + thr
+                "Leave application #" + applicationId + " exceeds " + threshold
                 + " working days and must be endorsed before it can be approved.");
         }
 

@@ -225,14 +225,15 @@ public class LeaveMyAccountController {
         app.setRequestedCommutation(requestedCommutation);
 
         // Extended leave document requirement (e.g. SL >5 days requires medical cert)
-        if (leaveType.isRequiresDocForExtended() && leaveType.getExtendedLeaveDays() > 0) {
+        Integer extLeaveThreshold = leaveType.getExtendedLeaveDays();
+        if ((leaveType.getRequiresDocForExtended() == Boolean.TRUE) && extLeaveThreshold != null && extLeaveThreshold > 0) {
             double previewDays = leaveService.countWorkingDays(dateFrom, dateTo);
-            if (previewDays > leaveType.getExtendedLeaveDays()
+            if (previewDays > extLeaveThreshold
                     && (attachment == null || attachment.isEmpty())) {
                 redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR",
                     "A supporting document is required for "
                     + leaveType.getLeaveName() + " exceeding "
-                    + leaveType.getExtendedLeaveDays() + " working days."));
+                    + extLeaveThreshold + " working days."));
                 return "redirect:/my-leave";
             }
         }

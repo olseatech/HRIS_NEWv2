@@ -82,25 +82,28 @@ public class LeaveType {
      * 0 = disabled (no extended-leave policy for this type, e.g. ML, PL, SPL).
      * Default 5 per CSC policy for VL and SL.
      * Configurable per agency/LGU via the Leave Types admin page.
+     * Boxed Integer to handle NULL values from existing DB records.
      */
     @Column(name = "extended_leave_days")
-    private int extendedLeaveDays = 0;
+    private Integer extendedLeaveDays = 0;
 
     /**
      * If true, a supporting document upload is required when
      * {@code numberOfDays > extendedLeaveDays}.
      * CSC: required for Sick Leave exceeding 5 working days.
+     * Boxed Boolean to handle NULL values from existing DB records.
      */
     @Column(name = "requires_doc_for_extended")
-    private boolean requiresDocForExtended = false;
+    private Boolean requiresDocForExtended = false;
 
     /**
      * If true, an endorsement step is mandatory before final approval
      * when {@code numberOfDays > extendedLeaveDays}.
      * Prevents direct PENDING → APPROVED for extended leaves.
+     * Boxed Boolean to handle NULL values from existing DB records.
      */
     @Column(name = "requires_endorsement_for_extended")
-    private boolean requiresEndorsementForExtended = true;
+    private Boolean requiresEndorsementForExtended = true;
 
     @Transient
     private String showMode;

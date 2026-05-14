@@ -152,7 +152,8 @@ public class LeaveDataInitializer implements CommandLineRunner {
 
     private void patchType(String code, int extLeave, boolean reqDoc, boolean reqEndorse) {
         leaveTypeRepo.findByLeaveCode(code).ifPresent(lt -> {
-            if (lt.getExtendedLeaveDays() == 0) {
+            Integer currentThreshold = lt.getExtendedLeaveDays();
+            if (currentThreshold == null || currentThreshold == 0) {
                 lt.setExtendedLeaveDays(extLeave);
                 lt.setRequiresDocForExtended(reqDoc);
                 lt.setRequiresEndorsementForExtended(reqEndorse);
