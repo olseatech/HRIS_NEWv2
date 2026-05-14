@@ -110,13 +110,56 @@ public class LeaveDataInitializer implements CommandLineRunner {
                 "When leave credits are exhausted. Affects service credit computation.",
                 0, 0, 0, false, true, false, "", 11,
                 0, false, true);
+
+        // ----------------------------------------------------------------
+        // Agency-specific leave types (not standard CSC)
+        // ----------------------------------------------------------------
+
+        // TL — Travel Leave
+        // requiresMedCert=true triggers the "attachment required" badge and server
+        // block for every TL application (Travel Authority / Travel Order document).
+        seed("TL",   "Travel Leave",
+                "Agency-specific leave for official or personal travel. "
+                + "Travel Authority / Travel Order attachment required.",
+                0, 0, 0, false, false, true, "", 12,
+                0, false, true);
+
+        // SPEC — Special Leave (seeded INACTIVE — HR activates once policy is set)
+        seed("SPEC", "Special Leave",
+                "Agency-defined special leave. Not a CSC standard type. "
+                + "Activate via Leave Types admin once the internal policy is confirmed.",
+                0, 0, 0, false, false, false, "", 13,
+                0, false, true,
+                false);   // 15-param overload: active = false
+
+        // WL — Wellness Leave
+        seed("WL",   "Wellness Leave",
+                "Agency wellness program leave. Up to 3 days per year. Not a CSC standard type.",
+                3, 0, 0, false, false, false, "", 14,
+                0, false, false);
     }
 
+    /** Convenience overload — seeds the type as active (the common case). */
     private void seed(String code, String name, String desc,
                       double maxDays, double accrual, double carryOver,
                       boolean commutable, boolean lwop, boolean medCert,
                       String eligible, int sortOrder,
                       int extLeave, boolean reqDoc, boolean reqEndorse) {
+        seed(code, name, desc, maxDays, accrual, carryOver, commutable, lwop, medCert,
+             eligible, sortOrder, extLeave, reqDoc, reqEndorse, true);
+    }
+
+    /**
+     * Full seed with explicit {@code active} flag.
+     * The {@code existsByLeaveCode} guard means this only runs once at INSERT time,
+     * so a subsequent admin change to {@code active} is never overwritten on restart.
+     */
+    private void seed(String code, String name, String desc,
+                      double maxDays, double accrual, double carryOver,
+                      boolean commutable, boolean lwop, boolean medCert,
+                      String eligible, int sortOrder,
+                      int extLeave, boolean reqDoc, boolean reqEndorse,
+                      boolean active) {
         if (leaveTypeRepo.existsByLeaveCode(code)) return;
 
         LeaveType lt = new LeaveType();
@@ -131,7 +174,7 @@ public class LeaveDataInitializer implements CommandLineRunner {
         lt.setRequiresMedCert(medCert);
         lt.setEligibleEmploymentTypes(eligible);
         lt.setSortOrder(sortOrder);
-        lt.setActive(true);
+        lt.setActive(active);
         lt.setExtendedLeaveDays(extLeave);
         lt.setRequiresDocForExtended(reqDoc);
         lt.setRequiresEndorsementForExtended(reqEndorse);

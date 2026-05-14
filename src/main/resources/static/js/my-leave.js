@@ -91,9 +91,9 @@
         var req  = opt ? (opt.getAttribute('data-requires-doc') || '') : '';
 
         // Disable all hidden-row inputs so they are NOT submitted with the form.
-        // Without this, all three leaveSubType selects and leaveDetails inputs send
-        // values and Spring's @RequestParam picks the first one in document order.
-        $('#vlSubTypeRow, #slSubTypeRow, #otherDetailsRow')
+        // Without this, all leaveSubType selects and leaveDetails inputs send values
+        // and Spring's @RequestParam picks the first one in document order.
+        $('#vlSubTypeRow, #slSubTypeRow, #tlSubTypeRow, #otherDetailsRow')
             .hide()
             .find('input, select, textarea')
             .prop('disabled', true);
@@ -102,6 +102,8 @@
             $('#vlSubTypeRow').show().find('input, select, textarea').prop('disabled', false);
         } else if (code === 'SL') {
             $('#slSubTypeRow').show().find('input, select, textarea').prop('disabled', false);
+        } else if (code === 'TL') {
+            $('#tlSubTypeRow').show().find('input, select, textarea').prop('disabled', false);
         } else if (code !== '') {
             $('#otherDetailsRow').show().find('input, select, textarea').prop('disabled', false);
         }
