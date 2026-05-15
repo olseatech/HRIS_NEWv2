@@ -49,15 +49,25 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <small class="text-muted d-block">Current Status</small>
-                                    <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
+                                    <span th:text="${statusName == 'CANCEL_REQUESTED'       ? 'Cancel Requested' :
+                                                        statusName == 'CANCEL_HR_ACKNOWLEDGED' ? 'HR Acknowledged'   :
+                                                        statusName == 'HR_VERIFIED'            ? 'HR Verified'       :
+                                                        statusName == 'ENDORSED_DIV'           ? 'Div Endorsed'      :
+                                                        statusName == 'ENDORSED_SEC'           ? 'Sec Endorsed'      :
+                                                        (app.status != null ? app.status : 'UNKNOWN')}"
                                           th:with="statusName=${app.status != null ? app.status.name() : 'UNKNOWN'}"
-                                          th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
-                                                           statusName == 'ENDORSED'    ? ' badge badge-info'      :
-                                                           statusName == 'APPROVED'    ? ' badge badge-success'   :
-                                                           statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
-                                                           statusName == 'RETURNED'    ? ' badge badge-secondary' :
-                                                           statusName == 'CANCELLED'   ? ' badge badge-dark'      :
-                                                                                        ' badge badge-light'}">
+                                          th:classappend="${statusName == 'PENDING'                  ? ' badge badge-warning'   :
+                                                           statusName == 'ENDORSED'                  ? ' badge badge-info'      :
+                                                           statusName == 'APPROVED'                  ? ' badge badge-success'   :
+                                                           statusName == 'CANCEL_REQUESTED'          ? ' badge badge-warning'   :
+                                                           statusName == 'CANCEL_HR_ACKNOWLEDGED'    ? ' badge badge-primary'   :
+                                                           statusName == 'HR_VERIFIED'               ? ' badge badge-teal'      :
+                                                           statusName == 'ENDORSED_DIV'              ? ' badge badge-indigo'    :
+                                                           statusName == 'ENDORSED_SEC'              ? ' badge badge-purple'    :
+                                                           statusName == 'DISAPPROVED'               ? ' badge badge-danger'    :
+                                                           statusName == 'RETURNED'                  ? ' badge badge-secondary' :
+                                                           statusName == 'CANCELLED'                 ? ' badge badge-dark'      :
+                                                                                                      ' badge badge-light'}">
                                     </span>
                                 </div>
                             </div>
@@ -81,14 +91,24 @@
                                 <li class="list-group-item" th:each="h : ${history}"
                                     th:with="toStatusName=${h.toStatus != null ? h.toStatus.name() : 'UNKNOWN'}">
                                     <div class="d-flex align-items-start">
-                                        <span th:classappend="${toStatusName == 'PENDING'     ? ' badge badge-warning'   :
-                                                               toStatusName == 'ENDORSED'    ? ' badge badge-info'      :
-                                                               toStatusName == 'APPROVED'    ? ' badge badge-success'   :
-                                                               toStatusName == 'DISAPPROVED' ? ' badge badge-danger'    :
-                                                               toStatusName == 'RETURNED'    ? ' badge badge-secondary' :
-                                                               toStatusName == 'CANCELLED'   ? ' badge badge-dark'      :
-                                                                                            ' badge badge-light'}"
-                                              th:text="${h.toStatus != null ? h.toStatus : 'UNKNOWN'}" style="min-width:110px;"></span>
+                                        <span th:classappend="${toStatusName == 'PENDING'                  ? ' badge badge-warning'   :
+                                                               toStatusName == 'ENDORSED'                  ? ' badge badge-info'      :
+                                                               toStatusName == 'APPROVED'                  ? ' badge badge-success'   :
+                                                               toStatusName == 'CANCEL_REQUESTED'          ? ' badge badge-warning'   :
+                                                               toStatusName == 'CANCEL_HR_ACKNOWLEDGED'    ? ' badge badge-primary'   :
+                                                               toStatusName == 'HR_VERIFIED'               ? ' badge badge-teal'      :
+                                                               toStatusName == 'ENDORSED_DIV'              ? ' badge badge-indigo'    :
+                                                               toStatusName == 'ENDORSED_SEC'              ? ' badge badge-purple'    :
+                                                               toStatusName == 'DISAPPROVED'               ? ' badge badge-danger'    :
+                                                               toStatusName == 'RETURNED'                  ? ' badge badge-secondary' :
+                                                               toStatusName == 'CANCELLED'                 ? ' badge badge-dark'      :
+                                                                                                            ' badge badge-light'}"
+                                              th:text="${toStatusName == 'CANCEL_REQUESTED'       ? 'Cancel Requested' :
+                                                         toStatusName == 'CANCEL_HR_ACKNOWLEDGED' ? 'HR Acknowledged'  :
+                                                         toStatusName == 'HR_VERIFIED'            ? 'HR Verified'      :
+                                                         toStatusName == 'ENDORSED_DIV'           ? 'Div Endorsed'     :
+                                                         toStatusName == 'ENDORSED_SEC'           ? 'Sec Endorsed'     :
+                                                         (h.toStatus != null ? h.toStatus : 'UNKNOWN')}" style="min-width:130px;"></span>
                                         <div class="ml-3 flex-grow-1">
                                             <div class="d-flex justify-content-between">
                                                 <span>

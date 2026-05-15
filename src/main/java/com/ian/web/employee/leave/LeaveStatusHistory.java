@@ -34,12 +34,12 @@ public class LeaveStatusHistory {
 
     /** Status BEFORE this transition (null for the initial PENDING submission). */
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 25)
     private LeaveApplication.LeaveStatus fromStatus;
 
     /** Status AFTER this transition. */
     @Enumerated(EnumType.STRING)
-    @Column(length = 20, nullable = false)
+    @Column(length = 25, nullable = false)
     private LeaveApplication.LeaveStatus toStatus;
 
     /** Employee ID of the actor who triggered this transition. */

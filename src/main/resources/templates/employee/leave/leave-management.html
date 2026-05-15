@@ -26,6 +26,9 @@
                         <span th:if="${actionableCount != null and actionableCount > 0}"
                               class="badge badge-danger ml-2"
                               th:text="${actionableCount} + ' For Action'"></span>
+                        <span th:if="${cancelRequestedCount != null and cancelRequestedCount > 0}"
+                              class="badge badge-warning ml-2"
+                              th:text="${cancelRequestedCount} + ' Cancel Request(s)'"></span>
                     </h4>
                 </div>
                 <div class="header-elements d-none d-md-flex">
@@ -222,9 +225,9 @@
                 </div>
                 <div class="col-6 col-lg-3">
                     <div class="card card-body text-center py-2">
-                        <div class="text-muted small">Showing</div>
-                        <div class="h4 mb-0 font-weight-semibold"
-                             th:text="${applications != null ? applications.size() : 0}">0</div>
+                        <div class="text-muted small">Cancel Requests</div>
+                        <div class="h4 mb-0 font-weight-semibold text-warning"
+                             th:text="${cancelRequestedCount != null ? cancelRequestedCount : 0}">0</div>
                     </div>
                 </div>
             </div>
@@ -316,17 +319,35 @@
                                     <td class="text-center font-weight-semibold"
                                         th:text="${app.numberOfDays}"></td>
                                     <td>
-                                        <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
-                                              th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
-                                                               statusName == 'ENDORSED'    ? ' badge badge-info'      :
-                                                               statusName == 'APPROVED'    ? ' badge badge-success'   :
-                                                               statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
-                                                               statusName == 'RETURNED'    ? ' badge badge-secondary' :
-                                                               statusName == 'CANCELLED'   ? ' badge badge-dark'      :
-                                                                                            ' badge badge-light'}">
+                                        <span th:text="${statusName == 'CANCEL_REQUESTED'       ? 'Cancel Requested' :
+                                                            statusName == 'CANCEL_HR_ACKNOWLEDGED' ? 'HR Acknowledged'   :
+                                                            statusName == 'HR_VERIFIED'            ? 'HR Verified'       :
+                                                            statusName == 'ENDORSED_DIV'           ? 'Div Endorsed'      :
+                                                            statusName == 'ENDORSED_SEC'           ? 'Sec Endorsed'      :
+                                                            (app.status != null ? app.status : 'UNKNOWN')}"
+                                              th:classappend="${statusName == 'PENDING'                  ? ' badge badge-warning'   :
+                                                               statusName == 'ENDORSED'                  ? ' badge badge-info'      :
+                                                               statusName == 'APPROVED'                  ? ' badge badge-success'   :
+                                                               statusName == 'CANCEL_REQUESTED'          ? ' badge badge-warning'   :
+                                                               statusName == 'CANCEL_HR_ACKNOWLEDGED'    ? ' badge badge-primary'   :
+                                                               statusName == 'HR_VERIFIED'               ? ' badge badge-teal'      :
+                                                               statusName == 'ENDORSED_DIV'              ? ' badge badge-indigo'    :
+                                                               statusName == 'ENDORSED_SEC'              ? ' badge badge-purple'    :
+                                                               statusName == 'DISAPPROVED'               ? ' badge badge-danger'    :
+                                                               statusName == 'RETURNED'                  ? ' badge badge-secondary' :
+                                                               statusName == 'CANCELLED'                 ? ' badge badge-dark'      :
+                                                                                                          ' badge badge-light'}">
                                         </span>
                                         <small th:if="${statusName == 'APPROVED' and !app.withPay}"
                                                class="d-block text-danger font-weight-bold">LWOP</small>
+                                        <small th:if="${statusName == 'CANCEL_REQUESTED'}"
+                                               class="d-block text-muted">
+                                            Requested by <span th:text="${app.cancellationRequestedByName}"></span>
+                                        </small>
+                                        <small th:if="${statusName == 'CANCEL_HR_ACKNOWLEDGED'}"
+                                               class="d-block text-muted">
+                                            HR acknowledged – Awaiting final decision
+                                        </small>
                                         <small th:if="${statusName == 'RETURNED' and app.remarks != null}"
                                                class="d-block text-muted"
                                                th:text="${app.remarks.length() > 35 ? app.remarks.substring(0,35) + '…' : app.remarks}"></small>
@@ -343,8 +364,9 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex flex-wrap justify-content-center">
-                                            <!-- Endorse (PENDING only) -->
-                                            <button th:if="${statusName == 'PENDING'}"
+                                            <!-- Endorse (PENDING only, simple workflow) -->
+                                            <button th:if="${statusName == 'PENDING'
+                                                            and (app.leaveType == null or !app.leaveType.requiresHrVerification)}"
                                                     type="button"
                                                     class="btn btn-xs btn-info btnEndorse m-1"
                                                     th:data-id="${app.id}"
@@ -354,8 +376,51 @@
                                                 <i class="icon-forward3 mr-1"></i>
                                                 <span class="d-none d-md-inline">Endorse</span>
                                             </button>
-                                            <!-- Approve (PENDING or ENDORSED) -->
-                                            <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                            <!-- HR Verify (PENDING, new workflow, HR/ADMIN only) -->
+                                            <button th:if="${statusName == 'PENDING'
+                                                            and app.leaveType != null
+                                                            and app.leaveType.requiresHrVerification
+                                                            and (actorUserType == 'ROLE_HR' or actorUserType == 'ROLE_ADMIN')}"
+                                                    type="button"
+                                                    class="btn btn-xs btnHrVerify m-1"
+                                                    style="background:#20c997;color:#fff;"
+                                                    th:data-id="${app.id}"
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}">
+                                                <i class="icon-checkmark3 mr-1"></i>
+                                                <span class="d-none d-md-inline">HR Verify</span>
+                                            </button>
+                                            <!-- Division Endorse (HR_VERIFIED, division head or ADMIN) -->
+                                            <button th:if="${statusName == 'HR_VERIFIED'
+                                                            and (actorUserType == 'ROLE_ADMIN'
+                                                                 or (app.employee != null
+                                                                     and app.employee.division != null
+                                                                     and ((app.employee.division.approver1 != null and app.employee.division.approver1.id == actorId)
+                                                                          or (app.employee.division.approver2 != null and app.employee.division.approver2.id == actorId))))}"
+                                                    type="button"
+                                                    class="btn btn-xs btnDivisionEndorse m-1"
+                                                    style="background:#6610f2;color:#fff;"
+                                                    th:data-id="${app.id}"
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}">
+                                                <i class="icon-forward3 mr-1"></i>
+                                                <span class="d-none d-md-inline">Endorse (Div)</span>
+                                            </button>
+                                            <!-- Secretary Endorse (ENDORSED_DIV + requiresHigherApproval, Secretary/ADMIN) -->
+                                            <button th:if="${statusName == 'ENDORSED_DIV'
+                                                            and app.requiresHigherApproval
+                                                            and (actorUserType == 'ROLE_SECRETARY' or actorUserType == 'ROLE_ADMIN')}"
+                                                    type="button"
+                                                    class="btn btn-xs btnSecretaryEndorse m-1"
+                                                    style="background:#6f42c1;color:#fff;"
+                                                    th:data-id="${app.id}"
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown Employee'}">
+                                                <i class="icon-forward3 mr-1"></i>
+                                                <span class="d-none d-md-inline">Endorse (Sec)</span>
+                                            </button>
+                                            <!-- Approve: old path (PENDING/ENDORSED) or new path terminal states -->
+                                            <button th:if="${(statusName == 'PENDING' or statusName == 'ENDORSED'
+                                                              or statusName == 'ENDORSED_DIV' or statusName == 'ENDORSED_SEC'
+                                                              or statusName == 'HR_VERIFIED')
+                                                            and (actorUserType == 'ROLE_VICE_MAYOR' or actorUserType == 'ROLE_ADMIN')}"
                                                     type="button"
                                                     class="btn btn-xs btn-success btnApprove m-1"
                                                     th:data-id="${app.id}"
@@ -364,8 +429,11 @@
                                                 <i class="icon-checkmark3 mr-1"></i>
                                                 <span class="d-none d-md-inline">Approve</span>
                                             </button>
-                                            <!-- Disapprove (PENDING or ENDORSED) -->
-                                            <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                            <!-- Disapprove (any pre-approved status) -->
+                                            <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'
+                                                            or statusName == 'HR_VERIFIED'
+                                                            or statusName == 'ENDORSED_DIV'
+                                                            or statusName == 'ENDORSED_SEC'}"
                                                     type="button"
                                                     class="btn btn-xs btn-danger btnDisapprove m-1"
                                                     th:data-id="${app.id}"
@@ -374,8 +442,11 @@
                                                 <i class="icon-cross2 mr-1"></i>
                                                 <span class="d-none d-md-inline">Disapprove</span>
                                             </button>
-                                            <!-- Return for Correction (PENDING or ENDORSED) -->
-                                            <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                            <!-- Return for Correction (any pre-approved status) -->
+                                            <button th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'
+                                                            or statusName == 'HR_VERIFIED'
+                                                            or statusName == 'ENDORSED_DIV'
+                                                            or statusName == 'ENDORSED_SEC'}"
                                                     type="button"
                                                     class="btn btn-xs btn-secondary btnReturn m-1"
                                                     th:data-id="${app.id}"
@@ -384,9 +455,9 @@
                                                 <i class="icon-undo2 mr-1"></i>
                                                 <span class="d-none d-md-inline">Return</span>
                                             </button>
-                                            <!-- Cancel (active statuses) -->
-                                            <form th:if="${statusName == 'PENDING' or statusName == 'ENDORSED' or statusName == 'APPROVED'}"
-th:action="@{|/leave-cancel-admin/${app.id}|}"
+                                            <!-- Cancel (PENDING or ENDORSED only — APPROVED goes through 2-step workflow) -->
+                                            <form th:if="${statusName == 'PENDING' or statusName == 'ENDORSED'}"
+                                                  th:action="@{|/leave-cancel-admin/${app.id}|}"
                                                   method="post" style="display:inline-block;"
                                                   onsubmit="return confirm('Cancel this leave application?');"
                                                   class="m-1">
@@ -395,6 +466,38 @@ th:action="@{|/leave-cancel-admin/${app.id}|}"
                                                     <span class="d-none d-md-inline">Cancel</span>
                                                 </button>
                                             </form>
+                                            <!-- HR Acknowledge (TL in CANCEL_REQUESTED only) -->
+                                            <button th:if="${statusName == 'CANCEL_REQUESTED'
+                                                            and app.leaveType != null
+                                                            and app.leaveType.leaveCode == 'TL'}"
+                                                    type="button"
+                                                    class="btn btn-xs btn-primary btnHrAcknowledge m-1"
+                                                    th:data-id="${app.id}"
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}">
+                                                <i class="icon-check mr-1"></i>
+                                                <span class="d-none d-md-inline">HR Acknowledge</span>
+                                            </button>
+                                            <!-- Approve Cancellation:
+                                                 non-TL in CANCEL_REQUESTED, OR any in CANCEL_HR_ACKNOWLEDGED -->
+                                            <button th:if="${(statusName == 'CANCEL_REQUESTED'
+                                                              and (app.leaveType == null or app.leaveType.leaveCode != 'TL'))
+                                                             or statusName == 'CANCEL_HR_ACKNOWLEDGED'}"
+                                                    type="button"
+                                                    class="btn btn-xs btn-warning text-dark btnApproveCancellation m-1"
+                                                    th:data-id="${app.id}"
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}">
+                                                <i class="icon-checkmark2 mr-1"></i>
+                                                <span class="d-none d-md-inline">Approve Cancel</span>
+                                            </button>
+                                            <!-- Reject Cancellation (CANCEL_REQUESTED or CANCEL_HR_ACKNOWLEDGED) -->
+                                            <button th:if="${statusName == 'CANCEL_REQUESTED' or statusName == 'CANCEL_HR_ACKNOWLEDGED'}"
+                                                    type="button"
+                                                    class="btn btn-xs btn-outline-danger btnRejectCancellation m-1"
+                                                    th:data-id="${app.id}"
+                                                    th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}">
+                                                <i class="icon-cross2 mr-1"></i>
+                                                <span class="d-none d-md-inline">Reject</span>
+                                            </button>
                                             <!-- Attachment (if present) -->
                                             <a th:if="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath)}"
                                                th:href="@{|/leave-attachment/${app.id}|}"
@@ -402,6 +505,15 @@ th:action="@{|/leave-cancel-admin/${app.id}|}"
                                                target="_blank"
                                                th:title="${app.attachmentFileName != null ? app.attachmentFileName : 'View Attachment'}">
                                                 <i class="icon-attachment"></i>
+                                            </a>
+                                            <!-- Cancellation letter (if present) -->
+                                            <a th:if="${app.cancellationLetterPath != null and !#strings.isEmpty(app.cancellationLetterPath)}"
+                                               th:href="@{|/leave-cancellation-letter/${app.id}|}"
+                                               class="btn btn-xs btn-outline-warning m-1"
+                                               target="_blank"
+                                               title="View Cancellation Letter">
+                                                <i class="icon-file-text2 mr-1"></i>
+                                                <span class="d-none d-md-inline">Letter</span>
                                             </a>
                                             <!-- History -->
                                             <a th:href="@{|/leave-history/${app.id}|}"
@@ -495,6 +607,68 @@ $(document).ready(function () {
         $('#actionSubmitBtn').text('Return for Correction').attr('class', 'btn bg-secondary');
         $('#modalAction').modal('show');
         });
+
+        // Approve Cancellation
+        $('.btnApproveCancellation').off('click').on('click', function () {
+            let id = $(this).data('id'), name = $(this).data('name');
+            if (!confirm('Approve cancellation request for application #' + id + ' (' + name + ')?\n\nLeave credits will be restored only if the leave has not yet started.')) return;
+            let form = document.createElement('form');
+            form.method = 'post';
+            form.action = ctx + 'leave-cancel-approve/' + id;
+            let csrf = document.querySelector('input[name="_csrf"]');
+            if (csrf) {
+                let t = document.createElement('input');
+                t.type = 'hidden'; t.name = csrf.name; t.value = csrf.value;
+                form.appendChild(t);
+            }
+            document.body.appendChild(form);
+            form.submit();
+        });
+
+        // Reject Cancellation — opens remarks modal
+        $('.btnRejectCancellation').off('click').on('click', function () {
+            let id = $(this).data('id'), name = $(this).data('name');
+            $('#rejectCancelForm').attr('action', ctx + 'leave-cancel-reject/' + id);
+            $('#rejectCancelEmployeeName').text(name + ' (Application #' + id + ')');
+            $('#rejectCancelRemarks').val('');
+            $('#modalRejectCancel').modal('show');
+        });
+
+        // HR Acknowledge — Travel Leave cancellation only
+        $('.btnHrAcknowledge').off('click').on('click', function () {
+            let id = $(this).data('id'), name = $(this).data('name');
+            $('#hrAcknowledgeForm').attr('action', ctx + 'leave-cancel-hr-acknowledge/' + id);
+            $('#hrAcknowledgeEmployeeName').text(name + ' (Application #' + id + ')');
+            $('#hrAcknowledgeRemarks').val('');
+            $('#modalHrAcknowledge').modal('show');
+        });
+
+        // HR Verify — new hierarchical workflow (PENDING → HR_VERIFIED)
+        $('.btnHrVerify').off('click').on('click', function () {
+            let id = $(this).data('id'), name = $(this).data('name');
+            $('#hrVerifyForm').attr('action', ctx + 'leave-hr-verify/' + id);
+            $('#hrVerifyEmployeeName').text(name + ' (Application #' + id + ')');
+            $('#hrVerifyRemarks').val('');
+            $('#modalHrVerify').modal('show');
+        });
+
+        // Division Endorse — new hierarchical workflow (HR_VERIFIED → ENDORSED_DIV)
+        $('.btnDivisionEndorse').off('click').on('click', function () {
+            let id = $(this).data('id'), name = $(this).data('name');
+            $('#divisionEndorseForm').attr('action', ctx + 'leave-division-endorse/' + id);
+            $('#divisionEndorseEmployeeName').text(name + ' (Application #' + id + ')');
+            $('#divisionEndorseRemarks').val('');
+            $('#modalDivisionEndorse').modal('show');
+        });
+
+        // Secretary Endorse — new hierarchical workflow (ENDORSED_DIV → ENDORSED_SEC)
+        $('.btnSecretaryEndorse').off('click').on('click', function () {
+            let id = $(this).data('id'), name = $(this).data('name');
+            $('#secretaryEndorseForm').attr('action', ctx + 'leave-secretary-endorse/' + id);
+            $('#secretaryEndorseEmployeeName').text(name + ' (Application #' + id + ')');
+            $('#secretaryEndorseRemarks').val('');
+            $('#modalSecretaryEndorse').modal('show');
+        });
     }
 
     // DataTable
@@ -524,6 +698,197 @@ $(document).ready(function () {
     
 });
 </script>
+
+<!-- ══ REJECT CANCELLATION MODAL ═══════════════════════════════════════════ -->
+<div id="modalRejectCancel" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Cancellation Request</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="rejectCancelForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="text-muted small">Application</label>
+                        <p id="rejectCancelEmployeeName" class="font-weight-semibold mb-2"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="rejectCancelRemarks">
+                            Reason for Rejection <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" name="remarks"
+                                  id="rejectCancelRemarks" rows="3" required
+                                  placeholder="Explain why the cancellation request is rejected..."></textarea>
+                    </div>
+                    <div class="alert alert-info py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        The application will revert to <strong>APPROVED</strong>.
+                        No balance change will occur.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="icon-cross2 mr-1"></i> Reject Cancellation
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- /modalRejectCancel -->
+
+<!-- ══ HR ACKNOWLEDGE CANCELLATION MODAL ════════════════════════════════════ -->
+<div id="modalHrAcknowledge" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="icon-check mr-1"></i> HR Acknowledge — Travel Leave Cancellation
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="hrAcknowledgeForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="text-muted small">Application</label>
+                        <p id="hrAcknowledgeEmployeeName" class="font-weight-semibold mb-2"></p>
+                    </div>
+                    <div class="alert alert-info py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        Acknowledging this Travel Leave cancellation confirms HR has reviewed the request
+                        and forwards it to the Head of Agency for final decision.
+                        No balance change occurs at this stage.
+                    </div>
+                    <div class="form-group">
+                        <label for="hrAcknowledgeRemarks">HR Remarks (optional)</label>
+                        <textarea class="form-control" name="remarks"
+                                  id="hrAcknowledgeRemarks" rows="3"
+                                  placeholder="Optional notes for the record..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="icon-check mr-1"></i> Confirm HR Acknowledgment
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- /modalHrAcknowledge -->
+
+<!-- ══ HR VERIFY MODAL ══════════════════════════════════════════════════════ -->
+<div id="modalHrVerify" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background:#20c997;">
+                <h5 class="modal-title"><i class="icon-checkmark3 mr-1"></i> HR Verify Leave Application</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="hrVerifyForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="text-muted small">Application</label>
+                        <p id="hrVerifyEmployeeName" class="font-weight-semibold mb-2"></p>
+                    </div>
+                    <div class="alert alert-info py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        HR Verification confirms leave credits and document completeness.
+                        The application will be forwarded to the Division Head for endorsement.
+                    </div>
+                    <div class="form-group">
+                        <label for="hrVerifyRemarks">HR Remarks (optional)</label>
+                        <textarea class="form-control" name="remarks" id="hrVerifyRemarks" rows="3"
+                                  placeholder="Optional notes..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn text-white" style="background:#20c997;">
+                        <i class="icon-checkmark3 mr-1"></i> Confirm HR Verification
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- /modalHrVerify -->
+
+<!-- ══ DIVISION ENDORSE MODAL ═══════════════════════════════════════════════ -->
+<div id="modalDivisionEndorse" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background:#6610f2;">
+                <h5 class="modal-title"><i class="icon-forward3 mr-1"></i> Division Head Endorsement</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="divisionEndorseForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="text-muted small">Application</label>
+                        <p id="divisionEndorseEmployeeName" class="font-weight-semibold mb-2"></p>
+                    </div>
+                    <div class="alert alert-info py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        Endorsing this application forwards it to the next approval level.
+                    </div>
+                    <div class="form-group">
+                        <label for="divisionEndorseRemarks">Division Head Remarks (optional)</label>
+                        <textarea class="form-control" name="remarks" id="divisionEndorseRemarks" rows="3"
+                                  placeholder="Optional notes..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn text-white" style="background:#6610f2;">
+                        <i class="icon-forward3 mr-1"></i> Confirm Division Endorsement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- /modalDivisionEndorse -->
+
+<!-- ══ SECRETARY ENDORSE MODAL ══════════════════════════════════════════════ -->
+<div id="modalSecretaryEndorse" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header text-white" style="background:#6f42c1;">
+                <h5 class="modal-title"><i class="icon-forward3 mr-1"></i> Secretary Endorsement</h5>
+                <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
+            </div>
+            <form id="secretaryEndorseForm" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="text-muted small">Application</label>
+                        <p id="secretaryEndorseEmployeeName" class="font-weight-semibold mb-2"></p>
+                    </div>
+                    <div class="alert alert-warning py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        This leave exceeds the extended-leave threshold and requires Secretary endorsement
+                        before final approval by the Vice Mayor.
+                    </div>
+                    <div class="form-group">
+                        <label for="secretaryEndorseRemarks">Secretary Remarks (optional)</label>
+                        <textarea class="form-control" name="remarks" id="secretaryEndorseRemarks" rows="3"
+                                  placeholder="Optional notes..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn text-white" style="background:#6f42c1;">
+                        <i class="icon-forward3 mr-1"></i> Confirm Secretary Endorsement
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div><!-- /modalSecretaryEndorse -->
 
 <th:block th:replace="fragments/common :: sidebar-activation"></th:block>
 </body>

@@ -487,19 +487,47 @@
 
                                     <!-- Status badge -->
                                     <td>
-                                        <span th:text="${app.status}"
-                                              th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
-                                                               statusName == 'ENDORSED'    ? ' badge badge-info'      :
-                                                               statusName == 'APPROVED'    ? ' badge badge-success'   :
-                                                               statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
-                                                               statusName == 'RETURNED'    ? ' badge badge-secondary' :
-                                                                                             ' badge badge-light'}">
+                                        <span th:text="${statusName == 'CANCEL_REQUESTED'       ? 'Cancel Requested' :
+                                                            statusName == 'CANCEL_HR_ACKNOWLEDGED' ? 'HR Acknowledged'   :
+                                                            statusName == 'HR_VERIFIED'            ? 'HR Verified'       :
+                                                            statusName == 'ENDORSED_DIV'           ? 'Div Endorsed'      :
+                                                            statusName == 'ENDORSED_SEC'           ? 'Sec Endorsed'      :
+                                                            app.status}"
+                                              th:classappend="${statusName == 'PENDING'                  ? ' badge badge-warning'   :
+                                                               statusName == 'ENDORSED'                  ? ' badge badge-info'      :
+                                                               statusName == 'APPROVED'                  ? ' badge badge-success'   :
+                                                               statusName == 'CANCEL_REQUESTED'          ? ' badge badge-warning'   :
+                                                               statusName == 'CANCEL_HR_ACKNOWLEDGED'    ? ' badge badge-primary'   :
+                                                               statusName == 'HR_VERIFIED'               ? ' badge badge-teal'      :
+                                                               statusName == 'ENDORSED_DIV'              ? ' badge badge-indigo'    :
+                                                               statusName == 'ENDORSED_SEC'              ? ' badge badge-purple'    :
+                                                               statusName == 'DISAPPROVED'               ? ' badge badge-danger'    :
+                                                               statusName == 'RETURNED'                  ? ' badge badge-secondary' :
+                                                                                                          ' badge badge-light'}">
                                         </span>
                                         <small th:if="${statusName == 'APPROVED' and !app.withPay}"
                                                class="d-block text-danger font-weight-bold small">LWOP</small>
-                                                 <small th:if="${statusName == 'APPROVED' and app.withPay}"
-                                                     class="d-block text-success small"
-                                                     th:text="${'With Pay — ' + (app.finalDaysWithPay != null ? app.finalDaysWithPay : 0) + ' days'}"></small>
+                                        <small th:if="${statusName == 'APPROVED' and app.withPay}"
+                                               class="d-block text-success small"
+                                               th:text="${'With Pay — ' + (app.finalDaysWithPay != null ? app.finalDaysWithPay : 0) + ' days'}"></small>
+                                        <!-- TL CANCEL_REQUESTED: awaiting HR acknowledgment -->
+                                        <small th:if="${statusName == 'CANCEL_REQUESTED'
+                                                       and app.leaveType != null and app.leaveType.leaveCode == 'TL'}"
+                                               class="d-block text-muted small">Pending HR acknowledgment</small>
+                                        <!-- Non-TL CANCEL_REQUESTED: awaiting final decision -->
+                                        <small th:if="${statusName == 'CANCEL_REQUESTED'
+                                                       and (app.leaveType == null or app.leaveType.leaveCode != 'TL')}"
+                                               class="d-block text-muted small">Pending head decision</small>
+                                        <!-- CANCEL_HR_ACKNOWLEDGED: HR done, awaiting final -->
+                                        <small th:if="${statusName == 'CANCEL_HR_ACKNOWLEDGED'}"
+                                               class="d-block text-muted small">HR acknowledged – Awaiting final decision</small>
+                                        <!-- New hierarchical workflow status messages -->
+                                        <small th:if="${statusName == 'HR_VERIFIED'}"
+                                               class="d-block text-muted small">Verified by HR – Awaiting Division endorsement</small>
+                                        <small th:if="${statusName == 'ENDORSED_DIV'}"
+                                               class="d-block text-muted small">Endorsed by Division Head – Awaiting approval</small>
+                                        <small th:if="${statusName == 'ENDORSED_SEC'}"
+                                               class="d-block text-muted small">Endorsed by Secretary – Awaiting Vice Mayor approval</small>
                                     </td>
 
                                     <!-- HR remarks -->
@@ -530,10 +558,23 @@
                                                 th:data-details="${app.leaveDetails}">
                                             <i class="icon-redo2 mr-1"></i> Re-submit
                                         </button>
+                                        <!-- Request Cancellation (APPROVED only) -->
+                                        <button th:if="${statusName == 'APPROVED'}"
+                                                type="button"
+                                                class="btn btn-xs btn-outline-warning btnRequestCancel"
+                                                th:data-id="${app.id}"
+                                                th:data-leave="${app.leaveType.leaveName}"
+                                                th:data-from="${app.dateFrom}"
+                                                th:data-to="${app.dateTo}">
+                                            <i class="icon-cancel2 mr-1"></i> Request Cancel
+                                        </button>
+                                        <!-- CANCEL_REQUESTED or CANCEL_HR_ACKNOWLEDGED — pending decision indicator -->
+                                        <span th:if="${statusName == 'CANCEL_REQUESTED' or statusName == 'CANCEL_HR_ACKNOWLEDGED'}"
+                                              class="text-warning small">
+                                            <i class="icon-spinner2 mr-1"></i> Awaiting decision
+                                        </span>
                                         <!-- Terminal states — no action -->
-                                        <span th:if="${statusName == 'APPROVED' or
-                                                       statusName == 'DISAPPROVED' or
-                                                       statusName == 'CANCELLED'}"
+                                        <span th:if="${statusName == 'DISAPPROVED' or statusName == 'CANCELLED'}"
                                               class="text-muted small">—</span>
                                         <!-- Attachment link (always show if present) -->
                                         <a th:if="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath)}"
@@ -542,6 +583,16 @@
                                            target="_blank"
                                            th:title="${app.attachmentFileName != null ? app.attachmentFileName : 'View Attachment'}">
                                             <i class="icon-attachment"></i>
+                                        </a>
+                                        <!-- Cancellation letter link (show for CANCEL_REQUESTED, CANCEL_HR_ACKNOWLEDGED and CANCELLED) -->
+                                        <a th:if="${(statusName == 'CANCEL_REQUESTED' or statusName == 'CANCEL_HR_ACKNOWLEDGED' or statusName == 'CANCELLED') and
+                                                    app.cancellationLetterPath != null and
+                                                    !#strings.isEmpty(app.cancellationLetterPath)}"
+                                           th:href="@{|/my-leave-cancellation-letter/${app.id}|}"
+                                           class="btn btn-xs btn-outline-secondary ml-1"
+                                           target="_blank"
+                                           title="View Cancellation Letter">
+                                            <i class="icon-file-text2"></i> Letter
                                         </a>
                                     </td>
 
@@ -611,6 +662,71 @@
         </div><!-- /modal-content -->
     </div><!-- /modal-dialog -->
 </div><!-- /modalResubmit -->
+
+
+<!-- ══ CANCEL REQUEST MODAL (for APPROVED applications) ═══════════════════ -->
+<div id="modalCancelRequest" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title">
+                    <i class="icon-cancel2 mr-1"></i> Request Leave Cancellation
+                </h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+
+            <form id="cancelRequestForm" method="post" enctype="multipart/form-data"
+                  autocomplete="off">
+                <!--
+                  CSRF token must be injected manually — the form action is set by JS
+                  so Thymeleaf cannot auto-inject it via th:action.
+                -->
+                <input type="hidden" th:name="${_csrf.parameterName}"
+                                     th:value="${_csrf.token}"/>
+
+                <div class="modal-body">
+                    <div class="alert alert-warning py-2 px-3 small">
+                        <i class="icon-info22 mr-1"></i>
+                        This action requires the Head of Agency's approval.
+                        Leave credits are only restored if the leave has <strong>not yet started</strong>.
+                    </div>
+                    <div class="form-group">
+                        <label>Leave Application</label>
+                        <p id="cancelRequestSummary" class="form-control-plaintext font-weight-semibold"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="cancellationReason">Reason for Cancellation</label>
+                        <textarea class="form-control" id="cancellationReason"
+                                  name="cancellationReason" rows="3"
+                                  placeholder="State your reason for requesting cancellation..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="cancellationLetter">
+                            Letter of Cancellation <span class="text-danger">*</span>
+                        </label>
+                        <input type="file" class="form-control-file" id="cancellationLetter"
+                               name="cancellationLetter"
+                               accept=".pdf,.jpg,.jpeg,.png" required/>
+                        <small class="text-muted">
+                            Upload your signed letter of cancellation (PDF, JPEG, or PNG, max 5 MB).
+                        </small>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-warning text-dark">
+                        <i class="icon-upload2 mr-1"></i> Submit Cancellation Request
+                    </button>
+                </div>
+            </form>
+
+        </div><!-- /modal-content -->
+    </div><!-- /modal-dialog -->
+</div><!-- /modalCancelRequest -->
+
 
 <!--
   sidebar-activation: standalone fragment include — activates the "My Account → My Leave"

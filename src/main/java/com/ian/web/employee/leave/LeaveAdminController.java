@@ -18,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
+import com.ian.web.systemsettings.division.Division;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -68,25 +69,38 @@ public class LeaveAdminController {
         noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
 
+        Employee actor = getActor(request);
         try {
-            long pendingCount  = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
-            long endorsedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
-            model.addAttribute("applications",    applicationRepo.findAllFetched());
-            model.addAttribute("pendingCount",    pendingCount);
-            model.addAttribute("endorsedCount",   endorsedCount);
-            model.addAttribute("actionableCount", pendingCount + endorsedCount);
-            model.addAttribute("leaveTypes",      leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",       employeeRepository.findAllWithAssociationsFetched());
-            model.addAttribute("currentYear",     LocalDate.now().getYear());
+            long pendingCount         = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
+            long endorsedCount        = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
+            long cancelRequestedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.CANCEL_REQUESTED)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.CANCEL_HR_ACKNOWLEDGED);
+            long actionableCount      = pendingCount + endorsedCount
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.HR_VERIFIED)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_DIV)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_SEC);
+            model.addAttribute("applications",         applicationRepo.findAllFetched());
+            model.addAttribute("pendingCount",         pendingCount);
+            model.addAttribute("endorsedCount",        endorsedCount);
+            model.addAttribute("actionableCount",      actionableCount);
+            model.addAttribute("cancelRequestedCount", cancelRequestedCount);
+            model.addAttribute("leaveTypes",           leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
+            model.addAttribute("employees",            employeeRepository.findAllWithAssociationsFetched());
+            model.addAttribute("currentYear",          LocalDate.now().getYear());
+            model.addAttribute("actorUserType",        actor != null ? actor.getUserType() : "");
+            model.addAttribute("actorId",              actor != null ? actor.getId() : null);
         } catch (Exception e) {
             log.error("Leave management page error", e);
-            model.addAttribute("applications",    java.util.Collections.emptyList());
-            model.addAttribute("pendingCount",    0L);
-            model.addAttribute("endorsedCount",   0L);
-            model.addAttribute("actionableCount", 0L);
-            model.addAttribute("leaveTypes",      java.util.Collections.emptyList());
-            model.addAttribute("employees",       java.util.Collections.emptyList());
-            model.addAttribute("currentYear",     LocalDate.now().getYear());
+            model.addAttribute("applications",         java.util.Collections.emptyList());
+            model.addAttribute("pendingCount",         0L);
+            model.addAttribute("endorsedCount",        0L);
+            model.addAttribute("actionableCount",      0L);
+            model.addAttribute("cancelRequestedCount", 0L);
+            model.addAttribute("leaveTypes",           java.util.Collections.emptyList());
+            model.addAttribute("employees",            java.util.Collections.emptyList());
+            model.addAttribute("currentYear",          LocalDate.now().getYear());
+            model.addAttribute("actorUserType",        "");
+            model.addAttribute("actorId",              null);
             model.addAttribute("uxmessage",
                 new UXMessage("ERROR", "DB error: " + e.getMessage()
                     + " — Run leave_migration.sql then restart."));
@@ -99,27 +113,40 @@ public class LeaveAdminController {
                               HttpServletResponse response) {
         noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
+        Employee actor = getActor(request);
         try {
-            long pendingCount  = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
-            long endorsedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
-            model.addAttribute("applications",    applicationRepo.findAllPendingFetched());
-            model.addAttribute("filterLabel",     "Pending Only");
-            model.addAttribute("pendingCount",    pendingCount);
-            model.addAttribute("endorsedCount",   endorsedCount);
-            model.addAttribute("actionableCount", pendingCount + endorsedCount);
-            model.addAttribute("leaveTypes",      leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",       employeeRepository.findAllWithAssociationsFetched());
-            model.addAttribute("currentYear",     LocalDate.now().getYear());
+            long pendingCount         = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
+            long endorsedCount        = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
+            long cancelRequestedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.CANCEL_REQUESTED)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.CANCEL_HR_ACKNOWLEDGED);
+            long actionableCount      = pendingCount + endorsedCount
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.HR_VERIFIED)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_DIV)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_SEC);
+            model.addAttribute("applications",         applicationRepo.findAllPendingFetched());
+            model.addAttribute("filterLabel",          "Pending Only");
+            model.addAttribute("pendingCount",         pendingCount);
+            model.addAttribute("endorsedCount",        endorsedCount);
+            model.addAttribute("actionableCount",      actionableCount);
+            model.addAttribute("cancelRequestedCount", cancelRequestedCount);
+            model.addAttribute("leaveTypes",           leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
+            model.addAttribute("employees",            employeeRepository.findAllWithAssociationsFetched());
+            model.addAttribute("currentYear",          LocalDate.now().getYear());
+            model.addAttribute("actorUserType",        actor != null ? actor.getUserType() : "");
+            model.addAttribute("actorId",              actor != null ? actor.getId() : null);
         } catch (Exception e) {
             log.error("Leave management pending page error", e);
-            model.addAttribute("applications",    java.util.Collections.emptyList());
-            model.addAttribute("filterLabel",     "Pending Only");
-            model.addAttribute("pendingCount",    0L);
-            model.addAttribute("endorsedCount",   0L);
-            model.addAttribute("actionableCount", 0L);
-            model.addAttribute("leaveTypes",      java.util.Collections.emptyList());
-            model.addAttribute("employees",       java.util.Collections.emptyList());
-            model.addAttribute("currentYear",     LocalDate.now().getYear());
+            model.addAttribute("applications",         java.util.Collections.emptyList());
+            model.addAttribute("filterLabel",          "Pending Only");
+            model.addAttribute("pendingCount",         0L);
+            model.addAttribute("endorsedCount",        0L);
+            model.addAttribute("actionableCount",      0L);
+            model.addAttribute("cancelRequestedCount", 0L);
+            model.addAttribute("leaveTypes",           java.util.Collections.emptyList());
+            model.addAttribute("employees",            java.util.Collections.emptyList());
+            model.addAttribute("currentYear",          LocalDate.now().getYear());
+            model.addAttribute("actorUserType",        "");
+            model.addAttribute("actorId",              null);
             model.addAttribute("uxmessage",
                 new UXMessage("ERROR", "DB error: " + e.getMessage()
                     + " — Run leave_migration.sql then restart."));
@@ -132,29 +159,45 @@ public class LeaveAdminController {
                                  HttpServletResponse response) {
         noCache(response);
         if (!isAdmin(request)) return "redirect:/dashboard";
+        Employee actor = getActor(request);
         try {
-            long pendingCount  = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
-            long endorsedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
-            model.addAttribute("applications",    applicationRepo.findAllActionableFetched(
+            long pendingCount         = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.PENDING);
+            long endorsedCount        = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED);
+            long cancelRequestedCount = applicationRepo.countByStatus(LeaveApplication.LeaveStatus.CANCEL_REQUESTED)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.CANCEL_HR_ACKNOWLEDGED);
+            long actionableCount      = pendingCount + endorsedCount
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.HR_VERIFIED)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_DIV)
+                    + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_SEC);
+            model.addAttribute("applications",         applicationRepo.findAllActionableFetched(
                         java.util.Arrays.asList(LeaveApplication.LeaveStatus.PENDING,
-                                                LeaveApplication.LeaveStatus.ENDORSED)));
-            model.addAttribute("filterLabel",     "Pending & Endorsed");
-            model.addAttribute("pendingCount",    pendingCount);
-            model.addAttribute("endorsedCount",   endorsedCount);
-            model.addAttribute("actionableCount", pendingCount + endorsedCount);
-            model.addAttribute("leaveTypes",      leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",       employeeRepository.findAllWithAssociationsFetched());
-            model.addAttribute("currentYear",     LocalDate.now().getYear());
+                                                LeaveApplication.LeaveStatus.ENDORSED,
+                                                LeaveApplication.LeaveStatus.HR_VERIFIED,
+                                                LeaveApplication.LeaveStatus.ENDORSED_DIV,
+                                                LeaveApplication.LeaveStatus.ENDORSED_SEC)));
+            model.addAttribute("filterLabel",          "Pending & Endorsed");
+            model.addAttribute("pendingCount",         pendingCount);
+            model.addAttribute("endorsedCount",        endorsedCount);
+            model.addAttribute("actionableCount",      actionableCount);
+            model.addAttribute("cancelRequestedCount", cancelRequestedCount);
+            model.addAttribute("leaveTypes",           leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
+            model.addAttribute("employees",            employeeRepository.findAllWithAssociationsFetched());
+            model.addAttribute("currentYear",          LocalDate.now().getYear());
+            model.addAttribute("actorUserType",        actor != null ? actor.getUserType() : "");
+            model.addAttribute("actorId",              actor != null ? actor.getId() : null);
         } catch (Exception e) {
             log.error("Leave management actionable page error", e);
-            model.addAttribute("applications",    java.util.Collections.emptyList());
-            model.addAttribute("filterLabel",     "Pending & Endorsed");
-            model.addAttribute("pendingCount",    0L);
-            model.addAttribute("endorsedCount",   0L);
-            model.addAttribute("actionableCount", 0L);
-            model.addAttribute("leaveTypes",      java.util.Collections.emptyList());
-            model.addAttribute("employees",       java.util.Collections.emptyList());
-            model.addAttribute("currentYear",     LocalDate.now().getYear());
+            model.addAttribute("applications",         java.util.Collections.emptyList());
+            model.addAttribute("filterLabel",          "Pending & Endorsed");
+            model.addAttribute("pendingCount",         0L);
+            model.addAttribute("endorsedCount",        0L);
+            model.addAttribute("actionableCount",      0L);
+            model.addAttribute("cancelRequestedCount", 0L);
+            model.addAttribute("leaveTypes",           java.util.Collections.emptyList());
+            model.addAttribute("employees",            java.util.Collections.emptyList());
+            model.addAttribute("currentYear",          LocalDate.now().getYear());
+            model.addAttribute("actorUserType",        "");
+            model.addAttribute("actorId",              null);
             model.addAttribute("uxmessage",
                 new UXMessage("ERROR", "DB error: " + e.getMessage()
                     + " — Run leave_migration.sql then restart."));
@@ -341,6 +384,113 @@ public class LeaveAdminController {
             redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
         }
         return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // APPROVE CANCELLATION REQUEST (CANCEL_REQUESTED → CANCELLED)
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/leave-cancel-approve/{id}")
+    public String approveCancellation(
+            @PathVariable Long id,
+            @RequestParam(required = false) String remarks,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        Employee actor = getActor(request);
+        if (!isAdmin(request)) return "redirect:/dashboard";
+        try {
+            leaveService.approveCancellation(id, actor.getId(), actor.getDisplayName(), remarks);
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("SUCCESS",
+                        "Cancellation request #" + id + " approved. Application cancelled."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // HR ACKNOWLEDGE CANCELLATION REQUEST (CANCEL_REQUESTED → CANCEL_HR_ACKNOWLEDGED)
+    // Travel Leave (TL) only — intermediate step before final approval.
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/leave-cancel-hr-acknowledge/{id}")
+    public String hrAcknowledgeCancellation(
+            @PathVariable Long id,
+            @RequestParam(required = false) String remarks,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        Employee actor = getActor(request);
+        if (!isAdmin(request)) return "redirect:/dashboard";
+        try {
+            leaveService.hrAcknowledgeCancellation(id, actor.getId(), actor.getDisplayName(), remarks);
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("SUCCESS",
+                        "Travel Leave cancellation #" + id + " acknowledged by HR. Forwarded for final approval."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // REJECT CANCELLATION REQUEST (CANCEL_REQUESTED → APPROVED)
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/leave-cancel-reject/{id}")
+    public String rejectCancellation(
+            @PathVariable Long id,
+            @RequestParam(required = false) String remarks,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        Employee actor = getActor(request);
+        if (!isAdmin(request)) return "redirect:/dashboard";
+        try {
+            leaveService.rejectCancellation(id, actor.getId(), actor.getDisplayName(), remarks);
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("SUCCESS",
+                        "Cancellation request #" + id + " rejected. Application reverted to APPROVED."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // CANCELLATION LETTER DOWNLOAD (admin)
+    // -----------------------------------------------------------------------
+
+    @GetMapping("/leave-cancellation-letter/{id}")
+    @ResponseBody
+    public ResponseEntity<Resource> downloadCancellationLetter(
+            @PathVariable Long id,
+            HttpServletRequest request) {
+
+        if (!isAdmin(request)) return ResponseEntity.status(403).build();
+
+        LeaveApplication app = applicationRepo.findById(id).orElse(null);
+        if (app == null || app.getCancellationLetterPath() == null
+                || app.getCancellationLetterPath().isBlank()) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            Resource resource = fileStorageService.load(app.getCancellationLetterPath());
+            String contentType = app.getCancellationLetterMimeType() != null
+                    ? app.getCancellationLetterMimeType() : "application/octet-stream";
+            String displayName = app.getCancellationLetterFileName() != null
+                    ? app.getCancellationLetterFileName() : "cancellation-letter";
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline; filename=\"" + displayName + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            log.warn("Cancellation letter not found for application #{}: {}", id, e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -538,6 +688,127 @@ public class LeaveAdminController {
     }
 
     // -----------------------------------------------------------------------
+    // HR VERIFY (PENDING → HR_VERIFIED) — new hierarchical workflow
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/leave-hr-verify/{id}")
+    public String hrVerify(
+            @PathVariable Long id,
+            @RequestParam(required = false) String remarks,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        if (!isHR(request)) return "redirect:/dashboard";
+        Employee actor = getActor(request);
+        try {
+            leaveService.hrVerifyLeave(id, actor.getId(), actor.getDisplayName(), remarks);
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("SUCCESS", "Leave application #" + id + " HR-verified."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // DIVISION ENDORSE (HR_VERIFIED → ENDORSED_DIV) — new hierarchical workflow
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/leave-division-endorse/{id}")
+    public String divisionEndorse(
+            @PathVariable Long id,
+            @RequestParam(required = false) String remarks,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        LeaveApplication app = applicationRepo.findById(id).orElse(null);
+        if (app == null || !isDivisionEndorser(request, app)) return "redirect:/dashboard";
+        Employee actor = getActor(request);
+        try {
+            leaveService.endorseDivisionLeave(id, actor.getId(), actor.getDisplayName(), remarks);
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("SUCCESS", "Leave application #" + id + " endorsed by Division Head."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // SECRETARY ENDORSE (ENDORSED_DIV → ENDORSED_SEC) — new hierarchical workflow
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/leave-secretary-endorse/{id}")
+    public String secretaryEndorse(
+            @PathVariable Long id,
+            @RequestParam(required = false) String remarks,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        if (!isSecretary(request)) return "redirect:/dashboard";
+        Employee actor = getActor(request);
+        try {
+            leaveService.endorseSecretaryLeave(id, actor.getId(), actor.getDisplayName(), remarks);
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("SUCCESS", "Leave application #" + id + " endorsed by Secretary."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/leave-management";
+    }
+
+    // -----------------------------------------------------------------------
+    // ENDORSEMENT QUEUE — role-scoped view for each workflow actor
+    // -----------------------------------------------------------------------
+
+    @GetMapping("/endorsement-queue")
+    public String endorsementQueue(HttpServletRequest request, HttpServletResponse response, Model model) {
+        noCache(response);
+        Employee actor = getActor(request);
+        if (actor == null) return "redirect:/login";
+
+        String userType = actor.getUserType();
+        String queueLabel;
+        java.util.List<LeaveApplication> applications;
+
+        if ("ROLE_HR".equals(userType) || "ROLE_ADMIN".equals(userType)) {
+            applications = applicationRepo.findAllActionableFetched(
+                    java.util.Arrays.asList(LeaveApplication.LeaveStatus.PENDING));
+            queueLabel = "Pending HR Verification";
+        } else if ("ROLE_SECRETARY".equals(userType)) {
+            applications = applicationRepo.findAllActionableFetched(
+                    java.util.Arrays.asList(LeaveApplication.LeaveStatus.ENDORSED_DIV))
+                    .stream().filter(LeaveApplication::isRequiresHigherApproval)
+                    .collect(java.util.stream.Collectors.toList());
+            queueLabel = "Pending Secretary Endorsement";
+        } else if ("ROLE_VICE_MAYOR".equals(userType)) {
+            applications = applicationRepo.findAllActionableFetched(
+                    java.util.Arrays.asList(LeaveApplication.LeaveStatus.ENDORSED_DIV,
+                                            LeaveApplication.LeaveStatus.ENDORSED_SEC));
+            queueLabel = "Pending Vice Mayor Approval";
+        } else {
+            Long actorId = actor.getId();
+            applications = applicationRepo.findAllActionableFetched(
+                    java.util.Arrays.asList(LeaveApplication.LeaveStatus.HR_VERIFIED))
+                    .stream()
+                    .filter(a -> a.getEmployee() != null && a.getEmployee().getDivision() != null)
+                    .filter(a -> {
+                        Division div = a.getEmployee().getDivision();
+                        return (div.getApprover1() != null && actorId.equals(div.getApprover1().getId()))
+                            || (div.getApprover2() != null && actorId.equals(div.getApprover2().getId()));
+                    })
+                    .collect(java.util.stream.Collectors.toList());
+            queueLabel = "Pending Division Endorsement";
+        }
+
+        model.addAttribute("applications", applications);
+        model.addAttribute("queueLabel",   queueLabel);
+        model.addAttribute("actorUserType", userType);
+        model.addAttribute("actorId",       actor.getId());
+        return "employee/leave/endorsement-queue";
+    }
+
+    // -----------------------------------------------------------------------
     // STATUS HISTORY PAGE
     // -----------------------------------------------------------------------
 
@@ -584,6 +855,35 @@ public class LeaveAdminController {
         Employee actor = getActor(request);
         return actor != null && actor.getUserType() != null
                 && "ROLE_ADMIN".equals(actor.getUserType());
+    }
+
+    private boolean isHR(HttpServletRequest request) {
+        Employee actor = getActor(request);
+        return actor != null && ("ROLE_HR".equals(actor.getUserType())
+                || "ROLE_ADMIN".equals(actor.getUserType()));
+    }
+
+    private boolean isSecretary(HttpServletRequest request) {
+        Employee actor = getActor(request);
+        return actor != null && ("ROLE_SECRETARY".equals(actor.getUserType())
+                || "ROLE_ADMIN".equals(actor.getUserType()));
+    }
+
+    private boolean isViceMayor(HttpServletRequest request) {
+        Employee actor = getActor(request);
+        return actor != null && ("ROLE_VICE_MAYOR".equals(actor.getUserType())
+                || "ROLE_ADMIN".equals(actor.getUserType()));
+    }
+
+    private boolean isDivisionEndorser(HttpServletRequest request, LeaveApplication app) {
+        Employee actor = getActor(request);
+        if (actor == null) return false;
+        if ("ROLE_ADMIN".equals(actor.getUserType())) return true;
+        if (app.getEmployee() == null || app.getEmployee().getDivision() == null) return false;
+        Division div = app.getEmployee().getDivision();
+        Long actorId = actor.getId();
+        return (div.getApprover1() != null && actorId.equals(div.getApprover1().getId()))
+            || (div.getApprover2() != null && actorId.equals(div.getApprover2().getId()));
     }
 
     private LeaveApplication buildBlankApplication(Employee employee) {

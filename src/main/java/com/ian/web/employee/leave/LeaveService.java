@@ -116,7 +116,86 @@ public class LeaveService {
     }
 
     /**
-     * HR Admin returns an application for correction (PENDING|ENDORSED → RETURNED).
+     * HR verifies leave credits and documents (PENDING → HR_VERIFIED).
+     * Only for leave types with requiresHrVerification=true (new hierarchical workflow).
+     */
+    @Transactional
+    public LeaveApplication hrVerifyLeave(Long applicationId,
+                                           Long actorId, String actorName,
+                                           String remarks) {
+        LeaveApplication app = findOrThrow(applicationId);
+        if (app.getStatus() != LeaveStatus.PENDING) {
+            throw new IllegalStateException(
+                "Only PENDING applications can be HR-verified. Status: " + app.getStatus());
+        }
+        if (!app.getLeaveType().isRequiresHrVerification()) {
+            throw new IllegalStateException(
+                "This leave type does not use the HR verification step.");
+        }
+        app.setStatus(LeaveStatus.HR_VERIFIED);
+        LeaveApplication saved = applicationRepo.save(app);
+        recordHistory(saved, LeaveStatus.PENDING, LeaveStatus.HR_VERIFIED,
+                actorId, actorName, "HR",
+                "HR verified leave credits and documents."
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+        return saved;
+    }
+
+    /**
+     * Division Head (Division.approver1 or approver2) endorses an HR-verified application
+     * (HR_VERIFIED → ENDORSED_DIV). Role/division check must be done at controller level.
+     */
+    @Transactional
+    public LeaveApplication endorseDivisionLeave(Long applicationId,
+                                                  Long actorId, String actorName,
+                                                  String remarks) {
+        LeaveApplication app = findOrThrow(applicationId);
+        if (app.getStatus() != LeaveStatus.HR_VERIFIED) {
+            throw new IllegalStateException(
+                "Only HR_VERIFIED applications can receive Division endorsement. Status: " + app.getStatus());
+        }
+        app.setSupervisorId(actorId);
+        app.setSupervisorName(actorName);
+        app.setSupervisorActionDate(LocalDate.now());
+        app.setSupervisorRemarks(remarks);
+        app.setStatus(LeaveStatus.ENDORSED_DIV);
+        LeaveApplication saved = applicationRepo.save(app);
+        recordHistory(saved, LeaveStatus.HR_VERIFIED, LeaveStatus.ENDORSED_DIV,
+                actorId, actorName, "Division Head",
+                "Division Head endorsed."
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+        return saved;
+    }
+
+    /**
+     * Secretary endorses an ENDORSED_DIV application (ENDORSED_DIV → ENDORSED_SEC).
+     * Only required when requiresHigherApproval=true (leave exceeds extendedLeaveDays threshold).
+     */
+    @Transactional
+    public LeaveApplication endorseSecretaryLeave(Long applicationId,
+                                                   Long actorId, String actorName,
+                                                   String remarks) {
+        LeaveApplication app = findOrThrow(applicationId);
+        if (app.getStatus() != LeaveStatus.ENDORSED_DIV) {
+            throw new IllegalStateException(
+                "Only ENDORSED_DIV applications can receive Secretary endorsement. Status: " + app.getStatus());
+        }
+        if (!app.isRequiresHigherApproval()) {
+            throw new IllegalStateException(
+                "Secretary endorsement is only required for extended leaves (exceeds "
+                + app.getLeaveType().getExtendedLeaveDays() + " working days).");
+        }
+        app.setStatus(LeaveStatus.ENDORSED_SEC);
+        LeaveApplication saved = applicationRepo.save(app);
+        recordHistory(saved, LeaveStatus.ENDORSED_DIV, LeaveStatus.ENDORSED_SEC,
+                actorId, actorName, "Secretary",
+                "Secretary endorsed."
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+        return saved;
+    }
+
+    /**
+     * HR Admin returns an application for correction (PENDING|ENDORSED|new statuses → RETURNED).
      * Employee must re-submit after correcting.
      */
     @Transactional
@@ -124,9 +203,12 @@ public class LeaveService {
                                                  Long actorId, String actorName,
                                                  String remarks) {
         LeaveApplication app = findOrThrow(applicationId);
-        if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED) {
+        if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED
+                && app.getStatus() != LeaveStatus.HR_VERIFIED
+                && app.getStatus() != LeaveStatus.ENDORSED_DIV
+                && app.getStatus() != LeaveStatus.ENDORSED_SEC) {
             throw new IllegalStateException(
-                    "Only PENDING or ENDORSED applications can be returned for correction.");
+                    "Cannot return for correction from status: " + app.getStatus());
         }
         LeaveStatus prev = app.getStatus();
         app.setStatus(LeaveStatus.RETURNED);
@@ -193,20 +275,35 @@ public class LeaveService {
                                           Long approverEmployeeId, String approverName,
                                           String remarks) {
         LeaveApplication app = findOrThrow(applicationId);
-        if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED) {
-            throw new IllegalStateException(
-                    "Only PENDING or ENDORSED applications can be approved.");
-        }
 
-        // Extended leave policy: endorsement is mandatory before approval
-        if (app.isRequiresHigherApproval()
-                && (app.getLeaveType().getRequiresEndorsementForExtended() == Boolean.TRUE)
-                && app.getStatus() == LeaveStatus.PENDING) {
-            Integer thr = app.getLeaveType().getExtendedLeaveDays();
-            int threshold = (thr != null) ? thr : 0;
-            throw new IllegalStateException(
-                "Leave application #" + applicationId + " exceeds " + threshold
-                + " working days and must be endorsed before it can be approved.");
+        // Hierarchical workflow routing: enforce the required pre-approval status
+        if (app.getLeaveType().isRequiresDivisionEndorsement()) {
+            LeaveStatus required = app.isRequiresHigherApproval()
+                    ? LeaveStatus.ENDORSED_SEC : LeaveStatus.ENDORSED_DIV;
+            if (app.getStatus() != required) {
+                throw new IllegalStateException(
+                    "This leave type requires " + required + " before approval. Current: " + app.getStatus());
+            }
+        } else if (app.getLeaveType().isRequiresHrVerification()) {
+            if (app.getStatus() != LeaveStatus.HR_VERIFIED) {
+                throw new IllegalStateException(
+                    "This leave type requires HR_VERIFIED before approval. Current: " + app.getStatus());
+            }
+        } else {
+            // Simple workflow: accept PENDING or ENDORSED; enforce extended-leave endorsement rule
+            if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED) {
+                throw new IllegalStateException(
+                        "Only PENDING or ENDORSED applications can be approved.");
+            }
+            if (app.isRequiresHigherApproval()
+                    && (app.getLeaveType().getRequiresEndorsementForExtended() == Boolean.TRUE)
+                    && app.getStatus() == LeaveStatus.PENDING) {
+                Integer thr = app.getLeaveType().getExtendedLeaveDays();
+                int threshold = (thr != null) ? thr : 0;
+                throw new IllegalStateException(
+                    "Leave application #" + applicationId + " exceeds " + threshold
+                    + " working days and must be endorsed before it can be approved.");
+            }
         }
 
         int year = app.getDateFrom().getYear();
@@ -269,9 +366,12 @@ public class LeaveService {
                                              Long approverEmployeeId, String approverName,
                                              String remarks) {
         LeaveApplication app = findOrThrow(applicationId);
-        if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED) {
+        if (app.getStatus() != LeaveStatus.PENDING && app.getStatus() != LeaveStatus.ENDORSED
+                && app.getStatus() != LeaveStatus.HR_VERIFIED
+                && app.getStatus() != LeaveStatus.ENDORSED_DIV
+                && app.getStatus() != LeaveStatus.ENDORSED_SEC) {
             throw new IllegalStateException(
-                    "Only PENDING or ENDORSED applications can be disapproved.");
+                    "Cannot disapprove application in status: " + app.getStatus());
         }
         LeaveStatus prev = app.getStatus();
         app.setStatus(LeaveStatus.DISAPPROVED);
@@ -305,6 +405,12 @@ public class LeaveService {
         }
         if (app.getStatus() == LeaveStatus.DISAPPROVED) {
             throw new IllegalStateException("A disapproved application cannot be cancelled.");
+        }
+        if (app.getStatus() == LeaveStatus.CANCEL_REQUESTED
+                || app.getStatus() == LeaveStatus.CANCEL_HR_ACKNOWLEDGED) {
+            throw new IllegalStateException(
+                "Application #" + applicationId + " has a pending cancellation request. "
+                + "Use 'Approve Cancellation' or 'Reject Cancellation' instead.");
         }
 
         // Reverse ledger debit if leave was approved with pay
@@ -348,6 +454,162 @@ public class LeaveService {
     @Transactional
     public LeaveApplication cancelLeave(Long applicationId) {
         return cancelLeave(applicationId, null, "System", null);
+    }
+
+    /**
+     * Employee submits a letter requesting cancellation of their own APPROVED leave.
+     * Sets status to CANCEL_REQUESTED — no balance change at this point.
+     * Balance reversal happens only if the Head of Agency approves AND the leave has not started.
+     */
+    @Transactional
+    public LeaveApplication requestCancellation(Long applicationId,
+                                                 Long requestorId, String requestorName,
+                                                 String letterPath, String letterFileName,
+                                                 String letterMimeType) {
+        LeaveApplication app = findOrThrow(applicationId);
+        if (app.getStatus() != LeaveStatus.APPROVED) {
+            throw new IllegalStateException(
+                "Cancellation requests can only be filed for APPROVED applications.");
+        }
+        if (app.getEmployee().getId() != requestorId.longValue()) {
+            throw new SecurityException("You may only request cancellation of your own applications.");
+        }
+
+        app.setCancellationLetterPath(letterPath);
+        app.setCancellationLetterFileName(letterFileName);
+        app.setCancellationLetterMimeType(letterMimeType);
+        app.setCancellationRequestedById(requestorId);
+        app.setCancellationRequestedByName(requestorName);
+        app.setCancellationRequestedDate(LocalDate.now());
+
+        app.setStatus(LeaveStatus.CANCEL_REQUESTED);
+        LeaveApplication saved = applicationRepo.save(app);
+        recordHistory(saved, LeaveStatus.APPROVED, LeaveStatus.CANCEL_REQUESTED,
+                requestorId, requestorName, "Employee",
+                "Employee submitted a letter requesting cancellation of approved leave.");
+        emailService.notifyCancellationRequested(saved);
+        return saved;
+    }
+
+    /**
+     * HR Admin acknowledges a Travel Leave (TL) cancellation request.
+     * Only valid for Travel Leave (leaveCode = "TL").
+     * Transitions CANCEL_REQUESTED → CANCEL_HR_ACKNOWLEDGED.
+     * No balance change at this stage.
+     */
+    @Transactional
+    public LeaveApplication hrAcknowledgeCancellation(Long applicationId,
+                                                       Long actorId, String actorName,
+                                                       String remarks) {
+        LeaveApplication app = findOrThrow(applicationId);
+        if (app.getStatus() != LeaveStatus.CANCEL_REQUESTED) {
+            throw new IllegalStateException(
+                "Only CANCEL_REQUESTED applications can be HR-acknowledged. Status: " + app.getStatus());
+        }
+        String leaveCode = app.getLeaveType() != null ? app.getLeaveType().getLeaveCode() : null;
+        if (!"TL".equals(leaveCode)) {
+            throw new IllegalStateException(
+                "HR Acknowledgment is only applicable to Travel Leave (TL). Type: " + leaveCode);
+        }
+        app.setHrAcknowledgedById(actorId);
+        app.setHrAcknowledgedByName(actorName);
+        app.setHrAcknowledgedDate(LocalDate.now());
+        app.setHrAcknowledgmentRemarks(remarks);
+        app.setStatus(LeaveStatus.CANCEL_HR_ACKNOWLEDGED);
+        LeaveApplication saved = applicationRepo.save(app);
+        recordHistory(saved, LeaveStatus.CANCEL_REQUESTED, LeaveStatus.CANCEL_HR_ACKNOWLEDGED,
+                actorId, actorName, "HR Admin",
+                "Travel Leave cancellation request acknowledged by HR."
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+        emailService.notifyCancellationHrAcknowledged(saved);
+        return saved;
+    }
+
+    /**
+     * Head of Agency approves the cancellation request (CANCEL_REQUESTED → CANCELLED for non-TL,
+     * CANCEL_HR_ACKNOWLEDGED → CANCELLED for Travel Leave).
+     * Balance reversal only if leave has NOT started (dateFrom strictly after today).
+     */
+    @Transactional
+    public LeaveApplication approveCancellation(Long applicationId,
+                                                  Long approverEmployeeId, String approverName,
+                                                  String remarks) {
+        LeaveApplication app = findOrThrow(applicationId);
+        String leaveCode = app.getLeaveType() != null ? app.getLeaveType().getLeaveCode() : null;
+        boolean isTravelLeave = "TL".equals(leaveCode);
+        LeaveStatus requiredStatus = isTravelLeave ? LeaveStatus.CANCEL_HR_ACKNOWLEDGED : LeaveStatus.CANCEL_REQUESTED;
+        if (app.getStatus() != requiredStatus) {
+            throw new IllegalStateException(
+                "Cannot approve cancellation. Expected status: " + requiredStatus
+                + ", but application #" + applicationId + " is currently: " + app.getStatus());
+        }
+        LeaveStatus previousStatus = app.getStatus();
+
+        // Reverse ledger only when leave has not yet started
+        boolean leaveNotStarted = app.getDateFrom().isAfter(LocalDate.now());
+        if (leaveNotStarted && app.isLedgerPosted() && app.isWithPay()) {
+            int year = app.getDateFrom().getYear();
+            LeaveBalance balance = getOrCreateBalance(app.getEmployee(), app.getLeaveType(), year);
+            balance.setTotalUsed(Math.max(0, balance.getTotalUsed() - app.getNumberOfDays()));
+            balance.setBalance(balance.getTotalEarned() - balance.getTotalUsed());
+            balanceRepo.save(balance);
+
+            LeaveLedger void_ = new LeaveLedger();
+            void_.setEmployee(app.getEmployee());
+            void_.setLeaveType(app.getLeaveType());
+            void_.setTransactionDate(LocalDate.now());
+            void_.setTransactionType(TransactionType.VOID);
+            void_.setDays(app.getNumberOfDays());
+            void_.setRunningBalance(balance.getBalance());
+            void_.setReference("VOID-APP-" + applicationId);
+            void_.setRemarks("Cancellation approved for leave #" + applicationId
+                + " (leave not yet started).");
+            ledgerRepo.save(void_);
+        }
+
+        // Populate cancellation metadata (existing fields reused)
+        app.setCancelledById(approverEmployeeId);
+        app.setCancelledByName(approverName);
+        app.setCancelledDate(LocalDate.now());
+        app.setCancelReason(remarks);
+
+        app.setStatus(LeaveStatus.CANCELLED);
+        LeaveApplication saved = applicationRepo.save(app);
+        String note = leaveNotStarted
+            ? "Cancellation approved; leave credits restored."
+            : "Cancellation approved; leave credits NOT restored (leave already started).";
+        recordHistory(saved, previousStatus, LeaveStatus.CANCELLED,
+                approverEmployeeId, approverName, "HR Admin",
+                note + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+        emailService.notifyCancellationApproved(saved);
+        return saved;
+    }
+
+    /**
+     * Rejects the cancellation request — reverts to APPROVED from either
+     * CANCEL_REQUESTED (non-TL direct rejection) or CANCEL_HR_ACKNOWLEDGED (TL post-ack rejection).
+     * No balance change — application simply reverts to its previous approved state.
+     */
+    @Transactional
+    public LeaveApplication rejectCancellation(Long applicationId,
+                                                 Long approverEmployeeId, String approverName,
+                                                 String remarks) {
+        LeaveApplication app = findOrThrow(applicationId);
+        if (app.getStatus() != LeaveStatus.CANCEL_REQUESTED
+                && app.getStatus() != LeaveStatus.CANCEL_HR_ACKNOWLEDGED) {
+            throw new IllegalStateException(
+                "Only CANCEL_REQUESTED or CANCEL_HR_ACKNOWLEDGED applications "
+                + "can have their cancellation rejected. Status: " + app.getStatus());
+        }
+        LeaveStatus previousStatus = app.getStatus();
+        app.setStatus(LeaveStatus.APPROVED);
+        LeaveApplication saved = applicationRepo.save(app);
+        recordHistory(saved, previousStatus, LeaveStatus.APPROVED,
+                approverEmployeeId, approverName, "HR Admin",
+                "Cancellation request rejected. Application reverted to APPROVED."
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+        emailService.notifyCancellationRejected(saved);
+        return saved;
     }
 
     // -----------------------------------------------------------------------

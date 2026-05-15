@@ -81,6 +81,47 @@ public class LeaveEmailService {
         sendToEmployee(app, "CANCELLED", subject, body);
     }
 
+    @Async
+    public void notifyCancellationRequested(LeaveApplication app) {
+        String subject = "[Leave] Cancellation Request #" + app.getId() + " Submitted";
+        String body = buildBody(app,
+            "Your request to cancel this approved leave has been submitted and is pending review "
+            + "by the Head of Agency. You will be notified once a decision has been made.", null);
+        sendToEmployee(app, "CANCEL_REQUESTED", subject, body);
+    }
+
+    @Async
+    public void notifyCancellationHrAcknowledged(LeaveApplication app) {
+        String subject = "[Leave] Cancellation Request #" + app.getId() + " Acknowledged by HR";
+        String body = buildBody(app,
+            "Your Travel Leave cancellation request has been acknowledged by HR and forwarded "
+            + "to the Head of Agency for final decision. You will be notified once a decision "
+            + "has been made.", null);
+        sendToEmployee(app, "CANCELLATION_HR_ACKNOWLEDGED", subject, body);
+    }
+
+    @Async
+    public void notifyCancellationApproved(LeaveApplication app) {
+        String subject = "[Leave] Cancellation Request #" + app.getId() + " Approved";
+        boolean restored = app.isLedgerPosted() && app.isWithPay()
+                && app.getDateFrom() != null && app.getDateFrom().isAfter(java.time.LocalDate.now());
+        String detail = restored
+            ? "Your cancellation has been approved and your leave credits have been restored."
+            : "Your cancellation has been approved. Leave credits were not restored because the "
+              + "leave had already started.";
+        String body = buildBody(app, detail, app.getCancelReason());
+        sendToEmployee(app, "CANCELLATION_APPROVED", subject, body);
+    }
+
+    @Async
+    public void notifyCancellationRejected(LeaveApplication app) {
+        String subject = "[Leave] Cancellation Request #" + app.getId() + " Rejected";
+        String body = buildBody(app,
+            "Your request to cancel this approved leave has been rejected. "
+            + "The application remains APPROVED. Please contact HR if you have questions.", null);
+        sendToEmployee(app, "CANCELLATION_REJECTED", subject, body);
+    }
+
     // -----------------------------------------------------------------------
     // Private helpers
     // -----------------------------------------------------------------------

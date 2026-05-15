@@ -17,9 +17,10 @@ import lombok.*;
  *   PENDING     → employee submitted, waiting for HR processing
  *   ENDORSED    → HR admin has endorsed (supervisor action recorded)
  *   RETURNED    → returned to employee for correction
- *   APPROVED    → final approval by head/authorised approver
- *   DISAPPROVED → disapproved
- *   CANCELLED   → cancelled by employee (PENDING only) or admin
+ *   APPROVED         → final approval by head/authorised approver
+ *   CANCEL_REQUESTED → employee filed a cancellation request for an APPROVED leave
+ *   DISAPPROVED      → disapproved
+ *   CANCELLED        → cancelled by employee (PENDING only) or admin
  */
 @Entity
 @Table(name = "leave_application")
@@ -173,7 +174,7 @@ public class LeaveApplication {
     // -----------------------------------------------------------------------
 
     @Enumerated(EnumType.STRING)
-    @Column(length = 20)
+    @Column(length = 25)
     private LeaveStatus status = LeaveStatus.PENDING;
 
     /** Whether the final approved leave is with or without pay. */
@@ -214,6 +215,47 @@ public class LeaveApplication {
     @Column(columnDefinition = "TEXT")
     private String cancelReason;
 
+    // Cancellation REQUEST tracking (2-step workflow for APPROVED leaves)
+    /** Server-side path of the letter of cancellation upload. */
+    @Column(length = 500)
+    private String cancellationLetterPath;
+
+    /** Original filename of the cancellation letter (shown in admin UI). */
+    @Column(length = 255)
+    private String cancellationLetterFileName;
+
+    /** MIME type of the cancellation letter (for safe Content-Type on download). */
+    @Column(length = 100)
+    private String cancellationLetterMimeType;
+
+    /** Employee ID of the person who submitted the cancellation request. */
+    private Long cancellationRequestedById;
+
+    /** Display name of the requester (denormalised for reports). */
+    @Column(length = 255)
+    private String cancellationRequestedByName;
+
+    /** Date the cancellation was requested. */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate cancellationRequestedDate;
+
+    // HR Acknowledgment tracking (Travel Leave 3-step cancellation workflow only)
+
+    /** Employee ID of the HR admin who acknowledged the TL cancellation request. */
+    private Long hrAcknowledgedById;
+
+    /** Display name of the acknowledging HR admin (denormalised for reports). */
+    @Column(length = 255)
+    private String hrAcknowledgedByName;
+
+    /** Date the HR acknowledgment was recorded. */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate hrAcknowledgedDate;
+
+    /** Optional remarks from the HR admin at acknowledgment time. */
+    @Column(columnDefinition = "TEXT")
+    private String hrAcknowledgmentRemarks;
+
     // -----------------------------------------------------------------------
     // TRANSIENT
     // -----------------------------------------------------------------------
@@ -230,10 +272,26 @@ public class LeaveApplication {
         PENDING,
         /** HR admin has endorsed (forwarded to approving authority). */
         ENDORSED,
+        /** HR has verified leave credits and document completeness (new hierarchical workflow). */
+        HR_VERIFIED,
+        /** Division Head (Division.approver1 or approver2) has endorsed (new hierarchical workflow). */
+        ENDORSED_DIV,
+        /** Secretary has endorsed — only required when requiresHigherApproval=true (new hierarchical workflow). */
+        ENDORSED_SEC,
         /** Returned to employee for correction or additional documents. */
         RETURNED,
         /** Final approval granted by head of agency / authorised approver. */
         APPROVED,
+        /**
+         * Employee has submitted a letter requesting cancellation of an APPROVED leave.
+         * Awaiting decision by the Head of Agency / Final Approver.
+         */
+        CANCEL_REQUESTED,
+        /**
+         * HR Admin has acknowledged the Travel Leave (TL) cancellation request.
+         * Intermediate step for Travel Leave only — awaiting final approval.
+         */
+        CANCEL_HR_ACKNOWLEDGED,
         /** Disapproved by approving authority. */
         DISAPPROVED,
         /** Cancelled by employee (while PENDING) or admin. */
