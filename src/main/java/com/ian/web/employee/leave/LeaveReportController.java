@@ -389,13 +389,18 @@ public class LeaveReportController {
             HttpServletRequest request,
             HttpServletResponse response) {
 
-        if (!isAdmin(request)) { response.setStatus(403); return; }
+        Employee actor = getActor(request);
+        if (actor == null) { response.setStatus(403); return; }
 
         Optional<LeaveApplication> opt = applicationRepo.findById(leaveId);
         if (opt.isEmpty()) { response.setStatus(404); return; }
 
-        LeaveApplication app   = opt.get();
-        Employee         emp   = app.getEmployee();
+        LeaveApplication app = opt.get();
+        Employee         emp = app.getEmployee();
+
+        boolean isAdminUser = actor.getUserType() != null && "ROLE_ADMIN".equals(actor.getUserType());
+        boolean isOwner     = emp != null && emp.getId() == actor.getId();
+        if (!isAdminUser && !isOwner) { response.setStatus(403); return; }
         LeaveType        lt    = app.getLeaveType();
         String           ltName = lt != null ? lt.getLeaveName() : "";
 
@@ -546,8 +551,10 @@ public class LeaveReportController {
         params.put("slTotalEarned",   slTotalEarned);
         params.put("slLessThisApp",   slLessThisApp);
         params.put("slBalance",       slBalance);
-        params.put("certifiedBy",     app.getHrmoName()      != null ? app.getHrmoName()      : "");
+        params.put("certifiedBy",      app.getHrmoName() != null ? app.getHrmoName() : "");
         params.put("certifiedByTitle", "HRMO");
+        params.put("certDaysWithPay",    app.getCertDaysWithPay()    != null ? fmt(app.getCertDaysWithPay())    : "");
+        params.put("certDaysWithoutPay", app.getCertDaysWithoutPay() != null ? fmt(app.getCertDaysWithoutPay()) : "");
 
         params.put("chkForApproval",    chkForApproval);
         params.put("chkForDisapproval", chkForDisapproval);

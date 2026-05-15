@@ -172,6 +172,12 @@
     <parameter name="certifiedByTitle" class="java.lang.String">
         <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
     </parameter>
+    <parameter name="certDaysWithPay" class="java.lang.String">
+        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+    </parameter>
+    <parameter name="certDaysWithoutPay" class="java.lang.String">
+        <defaultValueExpression><![CDATA[""]]></defaultValueExpression>
+    </parameter>
 
     <!-- 7B Recommendation -->
     <parameter name="chkForApproval" class="java.lang.Boolean">
@@ -366,7 +372,7 @@
             <!-- LEAVE TYPES (6A) + DETAILS (6B)                                  -->
             <!-- ================================================================ -->
 
-            <!-- ---- Vacation Leave (y=166) ---- -->
+            <!-- Vacation Leave (y=166) -->
             <rectangle>
                 <reportElement x="4" y="167" width="8" height="8" uuid="aa000027-0000-0000-0000-000000000027"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -482,7 +488,7 @@
                 <textFieldExpression><![CDATA[$P{abroadSpec}]]></textFieldExpression>
             </textField>
 
-            <!-- ---- Mandatory/Forced Leave (y=204) ---- -->
+            <!-- Mandatory/Forced Leave (y=204) -->
             <rectangle>
                 <reportElement x="4" y="204" width="8" height="8" uuid="aa000045-0000-0000-0000-000000000045"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -502,7 +508,7 @@
                 <text><![CDATA[Mandatory/Forced Leave]]></text>
             </staticText>
 
-            <!-- ---- Sick Leave (y=217) ---- -->
+            <!-- Sick Leave (y=217) -->
             <rectangle>
                 <reportElement x="4" y="217" width="8" height="8" uuid="aa000048-0000-0000-0000-000000000048"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -618,7 +624,7 @@
                 <textFieldExpression><![CDATA[$P{outPatientSpec}]]></textFieldExpression>
             </textField>
 
-            <!-- ---- Maternity Leave (y=256) ---- -->
+            <!-- Maternity Leave (y=256) -->
             <rectangle>
                 <reportElement x="4" y="256" width="8" height="8" uuid="aa000066-0000-0000-0000-000000000066"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -638,7 +644,7 @@
                 <text><![CDATA[Maternity Leave]]></text>
             </staticText>
 
-            <!-- ---- Paternity Leave (y=269) ---- -->
+            <!-- Paternity Leave (y=269) -->
             <rectangle>
                 <reportElement x="4" y="269" width="8" height="8" uuid="aa000069-0000-0000-0000-000000000069"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -658,7 +664,7 @@
                 <text><![CDATA[Paternity Leave]]></text>
             </staticText>
 
-            <!-- ---- Special Privilege Leave (y=282) ---- -->
+            <!-- Special Privilege Leave (y=282) -->
             <rectangle>
                 <reportElement x="4" y="282" width="8" height="8" uuid="aa000072-0000-0000-0000-000000000072"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -678,7 +684,7 @@
                 <text><![CDATA[Special Privilege Leave]]></text>
             </staticText>
 
-            <!-- ---- Solo Parent Leave (y=295) ---- -->
+            <!-- Solo Parent Leave (y=295) -->
             <rectangle>
                 <reportElement x="4" y="295" width="8" height="8" uuid="aa000075-0000-0000-0000-000000000075"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -698,7 +704,7 @@
                 <text><![CDATA[Solo Parent Leave (R.A. 8972)]]></text>
             </staticText>
 
-            <!-- ---- Study Leave (y=308) ---- -->
+            <!-- Study Leave (y=308) -->
             <rectangle>
                 <reportElement x="4" y="308" width="8" height="8" uuid="aa000078-0000-0000-0000-000000000078"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -802,7 +808,7 @@
                 <text><![CDATA[BAR/Board Examination Review]]></text>
             </staticText>
 
-            <!-- ---- 10-Day VAWC Leave (y=347) ---- -->
+            <!-- 10-Day VAWC Leave (y=347) -->
             <rectangle>
                 <reportElement x="4" y="347" width="8" height="8" uuid="aa000094-0000-0000-0000-000000000094"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -822,7 +828,7 @@
                 <text><![CDATA[10-Day VAWC Leave (R.A. 9262)]]></text>
             </staticText>
 
-            <!-- ---- Rehabilitation Privilege (y=360) ---- -->
+            <!-- Rehabilitation Privilege (y=360) -->
             <rectangle>
                 <reportElement x="4" y="360" width="8" height="8" uuid="aa000097-0000-0000-0000-000000000097"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -842,7 +848,7 @@
                 <text><![CDATA[Rehabilitation Privilege]]></text>
             </staticText>
 
-            <!-- ---- Special Leave Benefits for Women (y=373) ---- -->
+            <!-- Special Leave Benefits for Women (y=373) -->
             <rectangle>
                 <reportElement x="4" y="373" width="8" height="8" uuid="aa000100-0000-0000-0000-000000000100"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -891,7 +897,7 @@
                 <textFieldExpression><![CDATA[$P{womenSpec}]]></textFieldExpression>
             </textField>
 
-            <!-- ---- Special Emergency (Calamity) Leave (y=399) ---- -->
+            <!-- Special Emergency (Calamity) Leave (y=399) -->
             <rectangle>
                 <reportElement x="4" y="399" width="8" height="8" uuid="aa000108-0000-0000-0000-000000000108"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -911,7 +917,7 @@
                 <text><![CDATA[Special Emergency (Calamity) Leave]]></text>
             </staticText>
 
-            <!-- ---- Others (y=412) ---- -->
+            <!-- Others (y=412) -->
             <rectangle>
                 <reportElement x="4" y="412" width="8" height="8" uuid="aa000111-0000-0000-0000-000000000111"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
@@ -1263,7 +1269,9 @@
             <textField>
                 <reportElement x="2" y="669" width="265" height="11" uuid="aa000166-0000-0000-0000-000000000166"/>
                 <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
-                <textFieldExpression><![CDATA[$P{certifiedByTitle}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[($P{certDaysWithPay} != null && !$P{certDaysWithPay}.isEmpty())
+  ? ("Cert: " + $P{certDaysWithPay} + " w/pay;  " + ($P{certDaysWithoutPay} != null ? $P{certDaysWithoutPay} : "") + " w/o pay")
+  : $P{certifiedByTitle}]]></textFieldExpression>
             </textField>
 
             <!-- ================================================================ -->
@@ -1415,7 +1423,7 @@
                 <textFieldExpression><![CDATA[$P{approvedByName}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="0" y="756" width="539" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
+                <reportElement x="0" y="756" width="539" height="9" uuid="aa000190-0000-0000-0000-000000000190"/>
                 <textElement textAlignment="Center"><font fontName="Arial" size="6"/></textElement>
                 <text><![CDATA[(Authorized Official/Approving Authority)]]></text>
             </staticText>

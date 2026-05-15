@@ -22,6 +22,13 @@
                         <span class="font-weight-semibold">Application #<span th:text="${app != null ? app.id : ''}"></span> - Status History</span>
                     </h4>
                 </div>
+                <div class="header-elements d-none d-md-flex" th:if="${app != null}">
+                    <a th:href="@{|/viewLeaveApplicationPdf/${app.id}|}"
+                       class="btn btn-sm btn-outline-primary"
+                       target="_blank">
+                        <i class="icon-printer mr-1"></i> Print Form
+                    </a>
+                </div>
             </div>
         </div>
 
