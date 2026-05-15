@@ -109,17 +109,19 @@ public class LeaveType {
      * If true, HR must verify leave credits/documents (HR_VERIFIED step) before Division Head
      * can endorse. Activates the new hierarchical endorsement workflow for this leave type.
      * Defaults to false so existing leave types keep the old simple workflow.
+     * Boxed Boolean to handle NULL values from existing DB records.
      */
     @Column(name = "requires_hr_verification")
-    private boolean requiresHrVerification = false;
+    private Boolean requiresHrVerification = false;
 
     /**
      * If true, a Division Head (Division.approver1 or approver2) must endorse before final approval.
      * When combined with requiresHrVerification, full chain: PENDING → HR_VERIFIED → ENDORSED_DIV
      * (→ ENDORSED_SEC if requiresHigherApproval) → APPROVED.
+     * Boxed Boolean to handle NULL values from existing DB records.
      */
     @Column(name = "requires_division_endorsement")
-    private boolean requiresDivisionEndorsement = false;
+    private Boolean requiresDivisionEndorsement = false;
 
     @Transient
     private String showMode;

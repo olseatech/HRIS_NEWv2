@@ -128,7 +128,7 @@ public class LeaveService {
             throw new IllegalStateException(
                 "Only PENDING applications can be HR-verified. Status: " + app.getStatus());
         }
-        if (!app.getLeaveType().isRequiresHrVerification()) {
+        if (app.getLeaveType().getRequiresHrVerification() != Boolean.TRUE) {
             throw new IllegalStateException(
                 "This leave type does not use the HR verification step.");
         }
@@ -277,14 +277,14 @@ public class LeaveService {
         LeaveApplication app = findOrThrow(applicationId);
 
         // Hierarchical workflow routing: enforce the required pre-approval status
-        if (app.getLeaveType().isRequiresDivisionEndorsement()) {
+        if (app.getLeaveType().getRequiresDivisionEndorsement() == Boolean.TRUE) {
             LeaveStatus required = app.isRequiresHigherApproval()
                     ? LeaveStatus.ENDORSED_SEC : LeaveStatus.ENDORSED_DIV;
             if (app.getStatus() != required) {
                 throw new IllegalStateException(
                     "This leave type requires " + required + " before approval. Current: " + app.getStatus());
             }
-        } else if (app.getLeaveType().isRequiresHrVerification()) {
+        } else if (app.getLeaveType().getRequiresHrVerification() == Boolean.TRUE) {
             if (app.getStatus() != LeaveStatus.HR_VERIFIED) {
                 throw new IllegalStateException(
                     "This leave type requires HR_VERIFIED before approval. Current: " + app.getStatus());
