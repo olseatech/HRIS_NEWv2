@@ -70,6 +70,14 @@
                                                                                                       ' badge badge-light'}">
                                     </span>
                                 </div>
+                                <!-- Forwarded To — visible only when the endorser set a forward target -->
+                                <div class="col-sm-3"
+                                     th:if="${app.forwardedToName != null and !#strings.isEmpty(app.forwardedToName)}">
+                                    <small class="text-muted d-block">Forwarded To</small>
+                                    <span class="font-weight-semibold" th:text="${app.forwardedToName}"></span>
+                                    <small class="d-block text-muted" th:if="${app.forwardedAt != null}"
+                                           th:text="${app.forwardedAt}"></small>
+                                </div>
                             </div>
                         </div>
                     </div>

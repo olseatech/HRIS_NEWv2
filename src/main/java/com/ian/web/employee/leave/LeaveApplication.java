@@ -157,6 +157,21 @@ public class LeaveApplication {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate supervisorActionDate;
 
+    // -----------------------------------------------------------------------
+    // FORWARDING TRACKING — who this step was explicitly forwarded to
+    // -----------------------------------------------------------------------
+
+    /** Employee ID of the person this endorsement step was forwarded to. */
+    private Long forwardedToId;
+
+    /** Denormalised display name of the forwarded-to person (for reports and history). */
+    @Column(length = 255)
+    private String forwardedToName;
+
+    /** Date the forwarding was recorded. */
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private LocalDate forwardedAt;
+
     // Part 3: Approved For (final decision by Head of Agency)
     // -----------------------------------------------------------------------
 

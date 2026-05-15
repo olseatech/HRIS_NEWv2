@@ -19,6 +19,7 @@ import com.ian.web.common.model.UXMessage;
 import com.ian.web.employee.Employee;
 import com.ian.web.employee.EmployeeRepository;
 import com.ian.web.systemsettings.division.Division;
+import com.ian.web.systemsettings.division.DivisionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,6 +49,7 @@ public class LeaveAdminController {
     private final LeaveApplicationRepository   applicationRepo;
     private final LeaveService                 leaveService;
     private final EmployeeRepository           employeeRepository;
+    private final DivisionRepository           divisionRepository;
     private final LeaveTypeRepository          leaveTypeRepo;
     private final LeaveBalanceRepository       balanceRepo;
     private final LeaveStatusHistoryRepository historyRepo;
@@ -79,16 +81,18 @@ public class LeaveAdminController {
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.HR_VERIFIED)
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_DIV)
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_SEC);
+            List<Employee> allEmployees = employeeRepository.findAllWithAssociationsFetched();
             model.addAttribute("applications",         applicationRepo.findAllFetched());
             model.addAttribute("pendingCount",         pendingCount);
             model.addAttribute("endorsedCount",        endorsedCount);
             model.addAttribute("actionableCount",      actionableCount);
             model.addAttribute("cancelRequestedCount", cancelRequestedCount);
             model.addAttribute("leaveTypes",           leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",            employeeRepository.findAllWithAssociationsFetched());
+            model.addAttribute("employees",            allEmployees);
             model.addAttribute("currentYear",          LocalDate.now().getYear());
             model.addAttribute("actorUserType",        actor != null ? actor.getUserType() : "");
             model.addAttribute("actorId",              actor != null ? actor.getId() : null);
+            addEndorsementModelAttributes(model, allEmployees);
         } catch (Exception e) {
             log.error("Leave management page error", e);
             model.addAttribute("applications",         java.util.Collections.emptyList());
@@ -98,6 +102,9 @@ public class LeaveAdminController {
             model.addAttribute("cancelRequestedCount", 0L);
             model.addAttribute("leaveTypes",           java.util.Collections.emptyList());
             model.addAttribute("employees",            java.util.Collections.emptyList());
+            model.addAttribute("divisionApprovers",    java.util.Collections.emptyList());
+            model.addAttribute("secretaries",          java.util.Collections.emptyList());
+            model.addAttribute("viceMayors",           java.util.Collections.emptyList());
             model.addAttribute("currentYear",          LocalDate.now().getYear());
             model.addAttribute("actorUserType",        "");
             model.addAttribute("actorId",              null);
@@ -123,6 +130,7 @@ public class LeaveAdminController {
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.HR_VERIFIED)
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_DIV)
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_SEC);
+            List<Employee> allEmployees = employeeRepository.findAllWithAssociationsFetched();
             model.addAttribute("applications",         applicationRepo.findAllPendingFetched());
             model.addAttribute("filterLabel",          "Pending Only");
             model.addAttribute("pendingCount",         pendingCount);
@@ -130,10 +138,11 @@ public class LeaveAdminController {
             model.addAttribute("actionableCount",      actionableCount);
             model.addAttribute("cancelRequestedCount", cancelRequestedCount);
             model.addAttribute("leaveTypes",           leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",            employeeRepository.findAllWithAssociationsFetched());
+            model.addAttribute("employees",            allEmployees);
             model.addAttribute("currentYear",          LocalDate.now().getYear());
             model.addAttribute("actorUserType",        actor != null ? actor.getUserType() : "");
             model.addAttribute("actorId",              actor != null ? actor.getId() : null);
+            addEndorsementModelAttributes(model, allEmployees);
         } catch (Exception e) {
             log.error("Leave management pending page error", e);
             model.addAttribute("applications",         java.util.Collections.emptyList());
@@ -144,6 +153,9 @@ public class LeaveAdminController {
             model.addAttribute("cancelRequestedCount", 0L);
             model.addAttribute("leaveTypes",           java.util.Collections.emptyList());
             model.addAttribute("employees",            java.util.Collections.emptyList());
+            model.addAttribute("divisionApprovers",    java.util.Collections.emptyList());
+            model.addAttribute("secretaries",          java.util.Collections.emptyList());
+            model.addAttribute("viceMayors",           java.util.Collections.emptyList());
             model.addAttribute("currentYear",          LocalDate.now().getYear());
             model.addAttribute("actorUserType",        "");
             model.addAttribute("actorId",              null);
@@ -169,6 +181,7 @@ public class LeaveAdminController {
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.HR_VERIFIED)
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_DIV)
                     + applicationRepo.countByStatus(LeaveApplication.LeaveStatus.ENDORSED_SEC);
+            List<Employee> allEmployees = employeeRepository.findAllWithAssociationsFetched();
             model.addAttribute("applications",         applicationRepo.findAllActionableFetched(
                         java.util.Arrays.asList(LeaveApplication.LeaveStatus.PENDING,
                                                 LeaveApplication.LeaveStatus.ENDORSED,
@@ -181,10 +194,11 @@ public class LeaveAdminController {
             model.addAttribute("actionableCount",      actionableCount);
             model.addAttribute("cancelRequestedCount", cancelRequestedCount);
             model.addAttribute("leaveTypes",           leaveTypeRepo.findByActiveTrueOrderBySortOrderAscLeaveNameAsc());
-            model.addAttribute("employees",            employeeRepository.findAllWithAssociationsFetched());
+            model.addAttribute("employees",            allEmployees);
             model.addAttribute("currentYear",          LocalDate.now().getYear());
             model.addAttribute("actorUserType",        actor != null ? actor.getUserType() : "");
             model.addAttribute("actorId",              actor != null ? actor.getId() : null);
+            addEndorsementModelAttributes(model, allEmployees);
         } catch (Exception e) {
             log.error("Leave management actionable page error", e);
             model.addAttribute("applications",         java.util.Collections.emptyList());
@@ -195,6 +209,9 @@ public class LeaveAdminController {
             model.addAttribute("cancelRequestedCount", 0L);
             model.addAttribute("leaveTypes",           java.util.Collections.emptyList());
             model.addAttribute("employees",            java.util.Collections.emptyList());
+            model.addAttribute("divisionApprovers",    java.util.Collections.emptyList());
+            model.addAttribute("secretaries",          java.util.Collections.emptyList());
+            model.addAttribute("viceMayors",           java.util.Collections.emptyList());
             model.addAttribute("currentYear",          LocalDate.now().getYear());
             model.addAttribute("actorUserType",        "");
             model.addAttribute("actorId",              null);
@@ -694,14 +711,19 @@ public class LeaveAdminController {
     @PostMapping("/leave-hr-verify/{id}")
     public String hrVerify(
             @PathVariable Long id,
-            @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String  remarks,
+            @RequestParam(required = false) Long    forwardedToId,
+            @RequestParam(required = false) String  forwardedToName,
+            @RequestParam(required = false) Double  certDaysWithPay,
+            @RequestParam(required = false) Double  certDaysWithoutPay,
             HttpServletRequest request,
             final RedirectAttributes redirect) {
 
         if (!isHR(request)) return "redirect:/dashboard";
         Employee actor = getActor(request);
         try {
-            leaveService.hrVerifyLeave(id, actor.getId(), actor.getDisplayName(), remarks);
+            leaveService.hrVerifyLeave(id, actor.getId(), actor.getDisplayName(), remarks,
+                    forwardedToId, forwardedToName, certDaysWithPay, certDaysWithoutPay);
             redirect.addFlashAttribute("uxmessage",
                     new UXMessage("SUCCESS", "Leave application #" + id + " HR-verified."));
         } catch (Exception e) {
@@ -718,6 +740,9 @@ public class LeaveAdminController {
     public String divisionEndorse(
             @PathVariable Long id,
             @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) String supervisorRecommendation,
+            @RequestParam(required = false) Long   forwardedToId,
+            @RequestParam(required = false) String forwardedToName,
             HttpServletRequest request,
             final RedirectAttributes redirect) {
 
@@ -725,7 +750,8 @@ public class LeaveAdminController {
         if (app == null || !isDivisionEndorser(request, app)) return "redirect:/dashboard";
         Employee actor = getActor(request);
         try {
-            leaveService.endorseDivisionLeave(id, actor.getId(), actor.getDisplayName(), remarks);
+            leaveService.endorseDivisionLeave(id, actor.getId(), actor.getDisplayName(), remarks,
+                    supervisorRecommendation, forwardedToId, forwardedToName);
             redirect.addFlashAttribute("uxmessage",
                     new UXMessage("SUCCESS", "Leave application #" + id + " endorsed by Division Head."));
         } catch (Exception e) {
@@ -742,13 +768,16 @@ public class LeaveAdminController {
     public String secretaryEndorse(
             @PathVariable Long id,
             @RequestParam(required = false) String remarks,
+            @RequestParam(required = false) Long   forwardedToId,
+            @RequestParam(required = false) String forwardedToName,
             HttpServletRequest request,
             final RedirectAttributes redirect) {
 
         if (!isSecretary(request)) return "redirect:/dashboard";
         Employee actor = getActor(request);
         try {
-            leaveService.endorseSecretaryLeave(id, actor.getId(), actor.getDisplayName(), remarks);
+            leaveService.endorseSecretaryLeave(id, actor.getId(), actor.getDisplayName(), remarks,
+                    forwardedToId, forwardedToName);
             redirect.addFlashAttribute("uxmessage",
                     new UXMessage("SUCCESS", "Leave application #" + id + " endorsed by Secretary."));
         } catch (Exception e) {
@@ -801,10 +830,13 @@ public class LeaveAdminController {
             queueLabel = "Pending Division Endorsement";
         }
 
-        model.addAttribute("applications", applications);
-        model.addAttribute("queueLabel",   queueLabel);
+        List<Employee> allEmployees = employeeRepository.findAllWithAssociationsFetched();
+        model.addAttribute("applications",  applications);
+        model.addAttribute("queueLabel",    queueLabel);
         model.addAttribute("actorUserType", userType);
         model.addAttribute("actorId",       actor.getId());
+        model.addAttribute("employees",     allEmployees);
+        addEndorsementModelAttributes(model, allEmployees);
         return "employee/leave/endorsement-queue";
     }
 
@@ -838,6 +870,55 @@ public class LeaveAdminController {
     // -----------------------------------------------------------------------
     // HELPERS
     // -----------------------------------------------------------------------
+
+    /**
+     * Populates model with three lightweight ID+name maps for endorsement modal dropdowns.
+     * Uses plain Maps (not Employee objects) to avoid Jackson circular-reference issues
+     * when Thymeleaf serialises these lists to inline JavaScript arrays.
+     *
+     *   divisionApprovers — deduplicated approver1/approver2 across all configured divisions
+     *   secretaries       — employees with userType = ROLE_SECRETARY
+     *   viceMayors        — employees with userType = ROLE_VICE_MAYOR
+     */
+    private void addEndorsementModelAttributes(Model model, List<Employee> allEmployees) {
+        try {
+            List<Division> divs = divisionRepository.findAllWithApprovers();
+            java.util.LinkedHashMap<Long, java.util.Map<String, Object>> approverMap =
+                    new java.util.LinkedHashMap<>();
+            divs.forEach(d -> {
+                if (d.getApprover1() != null) {
+                    Employee a = d.getApprover1();
+                    approverMap.put(a.getId(), empEntry(a));
+                }
+                if (d.getApprover2() != null) {
+                    Employee a = d.getApprover2();
+                    approverMap.put(a.getId(), empEntry(a));
+                }
+            });
+            model.addAttribute("divisionApprovers", new java.util.ArrayList<>(approverMap.values()));
+        } catch (Exception e) {
+            log.warn("Failed to load division approvers: {}", e.getMessage());
+            model.addAttribute("divisionApprovers", java.util.Collections.emptyList());
+        }
+        model.addAttribute("secretaries",
+                allEmployees.stream()
+                        .filter(e -> "ROLE_SECRETARY".equals(e.getUserType()))
+                        .map(this::empEntry)
+                        .collect(java.util.stream.Collectors.toList()));
+        model.addAttribute("viceMayors",
+                allEmployees.stream()
+                        .filter(e -> "ROLE_VICE_MAYOR".equals(e.getUserType()))
+                        .map(this::empEntry)
+                        .collect(java.util.stream.Collectors.toList()));
+    }
+
+    /** Minimal {id, displayName} map — safe to inline as JSON without circular refs. */
+    private java.util.Map<String, Object> empEntry(Employee e) {
+        java.util.Map<String, Object> m = new java.util.LinkedHashMap<>();
+        m.put("id",          e.getId());
+        m.put("displayName", e.getDisplayName());
+        return m;
+    }
 
     private Employee getActor(HttpServletRequest request) {
         Employee actor = (Employee) request.getSession().getAttribute("actorObj");

@@ -118,11 +118,14 @@ public class LeaveService {
     /**
      * HR verifies leave credits and documents (PENDING → HR_VERIFIED).
      * Only for leave types with requiresHrVerification=true (new hierarchical workflow).
+     * Also records HRMO certification of leave credit balance and explicit forwarding target.
      */
     @Transactional
     public LeaveApplication hrVerifyLeave(Long applicationId,
                                            Long actorId, String actorName,
-                                           String remarks) {
+                                           String remarks,
+                                           Long forwardedToId, String forwardedToName,
+                                           Double certDaysWithPay, Double certDaysWithoutPay) {
         LeaveApplication app = findOrThrow(applicationId);
         if (app.getStatus() != LeaveStatus.PENDING) {
             throw new IllegalStateException(
@@ -132,23 +135,38 @@ public class LeaveService {
             throw new IllegalStateException(
                 "This leave type does not use the HR verification step.");
         }
+        // HRMO certification of leave credits
+        app.setHrmoId(actorId);
+        app.setHrmoName(actorName);
+        app.setHrmoCertDate(LocalDate.now());
+        app.setCertDaysWithPay(certDaysWithPay != null ? certDaysWithPay : app.getNumberOfDays());
+        app.setCertDaysWithoutPay(certDaysWithoutPay != null ? certDaysWithoutPay : 0.0);
+        // Forwarding tracking
+        app.setForwardedToId(forwardedToId);
+        app.setForwardedToName(forwardedToName);
+        app.setForwardedAt(LocalDate.now());
         app.setStatus(LeaveStatus.HR_VERIFIED);
         LeaveApplication saved = applicationRepo.save(app);
         recordHistory(saved, LeaveStatus.PENDING, LeaveStatus.HR_VERIFIED,
                 actorId, actorName, "HR",
                 "HR verified leave credits and documents."
-                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : "")
+                + (forwardedToName != null && !forwardedToName.isBlank()
+                   ? " Forwarded to: " + forwardedToName : ""));
         return saved;
     }
 
     /**
      * Division Head (Division.approver1 or approver2) endorses an HR-verified application
      * (HR_VERIFIED → ENDORSED_DIV). Role/division check must be done at controller level.
+     * Records supervisor recommendation and explicit forwarding target (Secretary or Vice Mayor).
      */
     @Transactional
     public LeaveApplication endorseDivisionLeave(Long applicationId,
                                                   Long actorId, String actorName,
-                                                  String remarks) {
+                                                  String remarks,
+                                                  String supervisorRecommendation,
+                                                  Long forwardedToId, String forwardedToName) {
         LeaveApplication app = findOrThrow(applicationId);
         if (app.getStatus() != LeaveStatus.HR_VERIFIED) {
             throw new IllegalStateException(
@@ -158,23 +176,34 @@ public class LeaveService {
         app.setSupervisorName(actorName);
         app.setSupervisorActionDate(LocalDate.now());
         app.setSupervisorRemarks(remarks);
+        if (supervisorRecommendation != null && !supervisorRecommendation.isBlank()) {
+            app.setSupervisorRecommendation(supervisorRecommendation);
+        }
+        // Forwarding tracking
+        app.setForwardedToId(forwardedToId);
+        app.setForwardedToName(forwardedToName);
+        app.setForwardedAt(LocalDate.now());
         app.setStatus(LeaveStatus.ENDORSED_DIV);
         LeaveApplication saved = applicationRepo.save(app);
         recordHistory(saved, LeaveStatus.HR_VERIFIED, LeaveStatus.ENDORSED_DIV,
                 actorId, actorName, "Division Head",
                 "Division Head endorsed."
-                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : "")
+                + (forwardedToName != null && !forwardedToName.isBlank()
+                   ? " Forwarded to: " + forwardedToName : ""));
         return saved;
     }
 
     /**
      * Secretary endorses an ENDORSED_DIV application (ENDORSED_DIV → ENDORSED_SEC).
      * Only required when requiresHigherApproval=true (leave exceeds extendedLeaveDays threshold).
+     * Records explicit forwarding target (Vice Mayor).
      */
     @Transactional
     public LeaveApplication endorseSecretaryLeave(Long applicationId,
                                                    Long actorId, String actorName,
-                                                   String remarks) {
+                                                   String remarks,
+                                                   Long forwardedToId, String forwardedToName) {
         LeaveApplication app = findOrThrow(applicationId);
         if (app.getStatus() != LeaveStatus.ENDORSED_DIV) {
             throw new IllegalStateException(
@@ -185,12 +214,18 @@ public class LeaveService {
                 "Secretary endorsement is only required for extended leaves (exceeds "
                 + app.getLeaveType().getExtendedLeaveDays() + " working days).");
         }
+        // Forwarding tracking
+        app.setForwardedToId(forwardedToId);
+        app.setForwardedToName(forwardedToName);
+        app.setForwardedAt(LocalDate.now());
         app.setStatus(LeaveStatus.ENDORSED_SEC);
         LeaveApplication saved = applicationRepo.save(app);
         recordHistory(saved, LeaveStatus.ENDORSED_DIV, LeaveStatus.ENDORSED_SEC,
                 actorId, actorName, "Secretary",
                 "Secretary endorsed."
-                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : ""));
+                + (remarks != null && !remarks.isBlank() ? " Remarks: " + remarks : "")
+                + (forwardedToName != null && !forwardedToName.isBlank()
+                   ? " Forwarded to: " + forwardedToName : ""));
         return saved;
     }
 

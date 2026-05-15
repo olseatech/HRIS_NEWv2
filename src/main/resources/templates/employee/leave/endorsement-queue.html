@@ -127,7 +127,12 @@
                                                         class="btn btn-xs btnHrVerify m-1 text-white"
                                                         style="background:#20c997;"
                                                         th:data-id="${app.id}"
-                                                        th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}">
+                                                        th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}"
+                                                        th:data-days="${app.numberOfDays}"
+                                                        th:data-div-approver1-id="${app.employee != null and app.employee.division != null and app.employee.division.approver1 != null ? app.employee.division.approver1.id : ''}"
+                                                        th:data-requires-higher="${app.requiresHigherApproval}"
+                                                        th:data-attachment-url="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath) ? '/leave-attachment/' + app.id : ''}"
+                                                        th:data-attachment-name="${app.attachmentFileName}">
                                                     <i class="icon-checkmark3 mr-1"></i> HR Verify
                                                 </button>
                                                 <!-- Division Endorse action -->
@@ -141,7 +146,10 @@
                                                         class="btn btn-xs btnDivisionEndorse m-1 text-white"
                                                         style="background:#6610f2;"
                                                         th:data-id="${app.id}"
-                                                        th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}">
+                                                        th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}"
+                                                        th:data-requires-higher="${app.requiresHigherApproval}"
+                                                        th:data-attachment-url="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath) ? '/leave-attachment/' + app.id : ''}"
+                                                        th:data-attachment-name="${app.attachmentFileName}">
                                                     <i class="icon-forward3 mr-1"></i> Endorse (Div)
                                                 </button>
                                                 <!-- Secretary Endorse action -->
@@ -152,7 +160,10 @@
                                                         class="btn btn-xs btnSecretaryEndorse m-1 text-white"
                                                         style="background:#6f42c1;"
                                                         th:data-id="${app.id}"
-                                                        th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}">
+                                                        th:data-name="${app.employee != null ? app.employee.displayName : 'Unknown'}"
+                                                        th:data-requires-higher="${app.requiresHigherApproval}"
+                                                        th:data-attachment-url="${app.attachmentPath != null and !#strings.isEmpty(app.attachmentPath) ? '/leave-attachment/' + app.id : ''}"
+                                                        th:data-attachment-name="${app.attachmentFileName}">
                                                     <i class="icon-forward3 mr-1"></i> Endorse (Sec)
                                                 </button>
                                                 <!-- Approve action (Vice Mayor / Admin) -->
@@ -195,9 +206,9 @@
     </div>
 </div>
 
-<!-- ══ HR VERIFY MODAL ══════════════════════════════════════════════════════ -->
+<!-- ══ HR VERIFY MODAL (modal-lg) ════════════════════════════════════════════ -->
 <div id="modalHrVerify" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header text-white" style="background:#20c997;">
                 <h5 class="modal-title"><i class="icon-checkmark3 mr-1"></i> HR Verify Leave Application</h5>
@@ -205,23 +216,54 @@
             </div>
             <form id="hrVerifyForm" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="forwardedToId"   id="hrVerifyForwardId"/>
+                <input type="hidden" name="forwardedToName" id="hrVerifyForwardName"/>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="text-muted small">Application</label>
-                        <p id="hrVerifyEmployeeName" class="font-weight-semibold mb-2"></p>
+                    <div class="form-group mb-1">
+                        <label class="text-muted small mb-0">Application</label>
+                        <p id="hrVerifyEmployeeName" class="font-weight-semibold mb-0"></p>
                     </div>
-                    <div class="alert alert-info py-2 px-3 small">
-                        HR Verification confirms leave credits and document completeness.
-                        Forwards to the Division Head for endorsement.
+                    <hr class="mt-2 mb-3"/>
+                    <div id="hrVerifyDocumentRow" class="form-group mb-3" style="display:none;">
+                        <label class="text-muted small mb-1">Supporting Document</label><br/>
+                        <a id="hrVerifyDocumentLink" href="#" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i class="icon-file-text2 mr-1"></i><span id="hrVerifyDocumentName">View Document</span>
+                        </a>
                     </div>
-                    <div class="form-group">
-                        <label for="hrVerifyRemarks">HR Remarks (optional)</label>
-                        <textarea class="form-control" name="remarks" id="hrVerifyRemarks" rows="3"></textarea>
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <label class="text-muted small mb-1">Days With Pay (HRMO Cert)</label>
+                            <input type="number" name="certDaysWithPay" id="hrVerifyCertWithPay"
+                                   step="0.5" min="0" class="form-control form-control-sm" placeholder="Auto-fill"/>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="text-muted small mb-1">Days Without Pay (LWOP)</label>
+                            <input type="number" name="certDaysWithoutPay" id="hrVerifyCertWithoutPay"
+                                   step="0.5" min="0" class="form-control form-control-sm" value="0"/>
+                        </div>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-muted small mb-1">Forward To (Division Head)</label>
+                        <select id="hrVerifyForwardSelect" class="form-control form-control-sm">
+                            <option value="">-- Select Division Head --</option>
+                        </select>
+                        <small class="text-muted">Pre-selects the employee's own Division Head if configured.</small>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="text-muted small mb-1">HR Remarks (optional)</label>
+                        <textarea class="form-control form-control-sm" name="remarks" id="hrVerifyRemarks" rows="2"></textarea>
+                    </div>
+                    <hr class="mt-3 mb-2"/>
+                    <div class="d-flex align-items-center">
+                        <button type="button" id="hrVerifyDisapproveBtn" class="btn btn-sm btn-outline-danger mr-2">
+                            <i class="icon-cross2 mr-1"></i> Disapprove Instead
+                        </button>
+                        <small class="text-muted">Enter a reason in Remarks before disapproving.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn text-white" style="background:#20c997;">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-sm text-white" style="background:#20c997;">
                         <i class="icon-checkmark3 mr-1"></i> Confirm HR Verification
                     </button>
                 </div>
@@ -230,9 +272,9 @@
     </div>
 </div>
 
-<!-- ══ DIVISION ENDORSE MODAL ═══════════════════════════════════════════════ -->
+<!-- ══ DIVISION ENDORSE MODAL (modal-lg) ════════════════════════════════════ -->
 <div id="modalDivisionEndorse" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header text-white" style="background:#6610f2;">
                 <h5 class="modal-title"><i class="icon-forward3 mr-1"></i> Division Head Endorsement</h5>
@@ -240,22 +282,49 @@
             </div>
             <form id="divisionEndorseForm" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="forwardedToId"   id="divEndForwardId"/>
+                <input type="hidden" name="forwardedToName" id="divEndForwardName"/>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="text-muted small">Application</label>
-                        <p id="divisionEndorseEmployeeName" class="font-weight-semibold mb-2"></p>
+                    <div class="form-group mb-1">
+                        <label class="text-muted small mb-0">Application</label>
+                        <p id="divisionEndorseEmployeeName" class="font-weight-semibold mb-0"></p>
                     </div>
-                    <div class="alert alert-info py-2 px-3 small">
-                        Endorsing this application forwards it to the next approval level.
+                    <hr class="mt-2 mb-3"/>
+                    <div id="divEndDocumentRow" class="form-group mb-3" style="display:none;">
+                        <label class="text-muted small mb-1">Supporting Document</label><br/>
+                        <a id="divEndDocumentLink" href="#" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i class="icon-file-text2 mr-1"></i><span id="divEndDocumentName">View Document</span>
+                        </a>
                     </div>
-                    <div class="form-group">
-                        <label for="divisionEndorseRemarks">Division Head Remarks (optional)</label>
-                        <textarea class="form-control" name="remarks" id="divisionEndorseRemarks" rows="3"></textarea>
+                    <div class="form-group mb-3">
+                        <label class="text-muted small mb-1">Forward To</label>
+                        <select id="divEndForwardSelect" class="form-control form-control-sm">
+                            <option value="">-- Select Next Approver --</option>
+                        </select>
+                        <small id="divEndForwardNote" class="text-muted"></small>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-muted small mb-1">Supervisor Recommendation</label>
+                        <select name="supervisorRecommendation" class="form-control form-control-sm">
+                            <option value="APPROVED_WITH_PAY">Approve — With Pay</option>
+                            <option value="APPROVED_WITHOUT_PAY">Approve — Without Pay (LWOP)</option>
+                        </select>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="text-muted small mb-1">Division Head Remarks (optional)</label>
+                        <textarea class="form-control form-control-sm" name="remarks" id="divisionEndorseRemarks" rows="2"></textarea>
+                    </div>
+                    <hr class="mt-3 mb-2"/>
+                    <div class="d-flex align-items-center">
+                        <button type="button" id="divEndDisapproveBtn" class="btn btn-sm btn-outline-danger mr-2">
+                            <i class="icon-cross2 mr-1"></i> Disapprove Instead
+                        </button>
+                        <small class="text-muted">Enter a reason in Remarks before disapproving.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn text-white" style="background:#6610f2;">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-sm text-white" style="background:#6610f2;">
                         <i class="icon-forward3 mr-1"></i> Confirm Division Endorsement
                     </button>
                 </div>
@@ -264,9 +333,9 @@
     </div>
 </div>
 
-<!-- ══ SECRETARY ENDORSE MODAL ══════════════════════════════════════════════ -->
+<!-- ══ SECRETARY ENDORSE MODAL (modal-lg) ═══════════════════════════════════ -->
 <div id="modalSecretaryEndorse" class="modal fade" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header text-white" style="background:#6f42c1;">
                 <h5 class="modal-title"><i class="icon-forward3 mr-1"></i> Secretary Endorsement</h5>
@@ -274,23 +343,46 @@
             </div>
             <form id="secretaryEndorseForm" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" name="forwardedToId"   id="secEndForwardId"/>
+                <input type="hidden" name="forwardedToName" id="secEndForwardName"/>
                 <div class="modal-body">
-                    <div class="form-group">
-                        <label class="text-muted small">Application</label>
-                        <p id="secretaryEndorseEmployeeName" class="font-weight-semibold mb-2"></p>
+                    <div class="form-group mb-1">
+                        <label class="text-muted small mb-0">Application</label>
+                        <p id="secretaryEndorseEmployeeName" class="font-weight-semibold mb-0"></p>
                     </div>
-                    <div class="alert alert-warning py-2 px-3 small">
-                        This leave exceeds the extended-leave threshold and requires Secretary endorsement
-                        before final Vice Mayor approval.
+                    <div class="alert alert-warning py-2 px-3 small mt-2">
+                        <i class="icon-info22 mr-1"></i>
+                        This leave exceeds the extended-leave threshold — requires Secretary endorsement before Vice Mayor approval.
                     </div>
-                    <div class="form-group">
-                        <label for="secretaryEndorseRemarks">Secretary Remarks (optional)</label>
-                        <textarea class="form-control" name="remarks" id="secretaryEndorseRemarks" rows="3"></textarea>
+                    <hr class="mt-2 mb-3"/>
+                    <div id="secEndDocumentRow" class="form-group mb-3" style="display:none;">
+                        <label class="text-muted small mb-1">Supporting Document</label><br/>
+                        <a id="secEndDocumentLink" href="#" target="_blank" class="btn btn-sm btn-outline-secondary">
+                            <i class="icon-file-text2 mr-1"></i><span id="secEndDocumentName">View Document</span>
+                        </a>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label class="text-muted small mb-1">Forward To (Vice Mayor)</label>
+                        <select id="secEndForwardSelect" class="form-control form-control-sm">
+                            <option value="">-- Select Vice Mayor --</option>
+                        </select>
+                        <small class="text-muted">Secretary endorsement forwards to Vice Mayor for final approval.</small>
+                    </div>
+                    <div class="form-group mb-2">
+                        <label class="text-muted small mb-1">Secretary Remarks (optional)</label>
+                        <textarea class="form-control form-control-sm" name="remarks" id="secretaryEndorseRemarks" rows="2"></textarea>
+                    </div>
+                    <hr class="mt-3 mb-2"/>
+                    <div class="d-flex align-items-center">
+                        <button type="button" id="secEndDisapproveBtn" class="btn btn-sm btn-outline-danger mr-2">
+                            <i class="icon-cross2 mr-1"></i> Disapprove Instead
+                        </button>
+                        <small class="text-muted">Enter a reason in Remarks before disapproving.</small>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn text-white" style="background:#6f42c1;">
+                    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-sm text-white" style="background:#6f42c1;">
                         <i class="icon-forward3 mr-1"></i> Confirm Secretary Endorsement
                     </button>
                 </div>
@@ -330,6 +422,15 @@
     </div>
 </div>
 
+<!-- JSON data for Forward-To dropdowns -->
+<script th:inline="javascript">
+/*<![CDATA[*/
+var divisionApproversData = /*[[${divisionApprovers}]]*/ [];
+var secretariesData       = /*[[${secretaries}]]*/ [];
+var viceMayorsData        = /*[[${viceMayors}]]*/ [];
+/*]]>*/
+</script>
+
 <script th:inline="javascript">
 $(document).ready(function () {
     const ctx = /*[[@{/}]]*/ '/';
@@ -345,33 +446,125 @@ $(document).ready(function () {
         swal({ title: "Success", text: msgDesc, icon: "success", buttons: false, timer: 2200 });
     }
 
+    function syncHiddenForwardTo(selectId, hiddenIdField, hiddenNameField, dataArray) {
+        var selectedId = $(selectId).val();
+        $(hiddenIdField).val(selectedId || '');
+        if (!selectedId) { $(hiddenNameField).val(''); return; }
+        $.each(dataArray, function(_, emp) {
+            if (String(emp.id) === String(selectedId)) { $(hiddenNameField).val(emp.displayName); return false; }
+        });
+    }
+
+    function populateForwardSelect(selectId, dataArray, preSelectId) {
+        var $sel = $(selectId).empty().append('<option value="">-- Select --</option>');
+        $.each(dataArray, function(_, emp) {
+            var $opt = $('<option>').val(emp.id).text(emp.displayName);
+            if (preSelectId && String(emp.id) === String(preSelectId)) $opt.prop('selected', true);
+            $sel.append($opt);
+        });
+        if (dataArray.length === 1) $sel.find('option:last').prop('selected', true);
+    }
+
+    $('#hrVerifyForwardSelect').on('change', function() {
+        syncHiddenForwardTo('#hrVerifyForwardSelect', '#hrVerifyForwardId', '#hrVerifyForwardName', divisionApproversData);
+    });
+    $('#divEndForwardSelect').on('change', function() {
+        var arr = $('#divEndForwardSelect').data('useSecretaries') ? secretariesData : viceMayorsData;
+        syncHiddenForwardTo('#divEndForwardSelect', '#divEndForwardId', '#divEndForwardName', arr);
+    });
+    $('#secEndForwardSelect').on('change', function() {
+        syncHiddenForwardTo('#secEndForwardSelect', '#secEndForwardId', '#secEndForwardName', viceMayorsData);
+    });
+
     function attachHandlers() {
         $('.btnHrVerify').off('click').on('click', function () {
-            let id = $(this).data('id'), name = $(this).data('name');
+            var $btn = $(this);
+            var id = $btn.data('id'), name = $btn.data('name');
+            var days = $btn.data('days'), approver1Id = $btn.data('div-approver1-id');
+            var attachUrl = $btn.data('attachment-url'), attachName = $btn.data('attachment-name');
             $('#hrVerifyForm').attr('action', ctx + 'leave-hr-verify/' + id);
-            $('#hrVerifyEmployeeName').text(name + ' (Application #' + id + ')');
+            $('#hrVerifyEmployeeName').text(name + ' (Application #' + id + ', ' + days + ' day(s))');
+            $('#hrVerifyCertWithPay').val(days);
+            $('#hrVerifyCertWithoutPay').val('');
             $('#hrVerifyRemarks').val('');
+            populateForwardSelect('#hrVerifyForwardSelect', divisionApproversData, approver1Id);
+            syncHiddenForwardTo('#hrVerifyForwardSelect', '#hrVerifyForwardId', '#hrVerifyForwardName', divisionApproversData);
+            if (attachUrl) {
+                $('#hrVerifyDocumentLink').attr('href', ctx.replace(/\/$/, '') + attachUrl);
+                $('#hrVerifyDocumentName').text(attachName || 'View Document');
+                $('#hrVerifyDocumentRow').show();
+            } else { $('#hrVerifyDocumentRow').hide(); }
+            $('#hrVerifyDisapproveBtn').off('click').on('click', function () {
+                if (!confirm('Disapprove #' + id + ' for ' + name + '?')) return;
+                var remarks = $('#hrVerifyRemarks').val();
+                var form = document.createElement('form'); form.method = 'post'; form.action = ctx + 'leave-disapprove/' + id;
+                var csrf = document.querySelector('input[name="_csrf"]');
+                if (csrf) { var t = document.createElement('input'); t.type='hidden'; t.name=csrf.name; t.value=csrf.value; form.appendChild(t); }
+                if (remarks) { var r = document.createElement('input'); r.type='hidden'; r.name='remarks'; r.value=remarks; form.appendChild(r); }
+                document.body.appendChild(form); form.submit();
+            });
             $('#modalHrVerify').modal('show');
         });
 
         $('.btnDivisionEndorse').off('click').on('click', function () {
-            let id = $(this).data('id'), name = $(this).data('name');
+            var $btn = $(this);
+            var id = $btn.data('id'), name = $btn.data('name');
+            var requiresHigher = $btn.data('requires-higher');
+            var attachUrl = $btn.data('attachment-url'), attachName = $btn.data('attachment-name');
             $('#divisionEndorseForm').attr('action', ctx + 'leave-division-endorse/' + id);
             $('#divisionEndorseEmployeeName').text(name + ' (Application #' + id + ')');
             $('#divisionEndorseRemarks').val('');
+            var forwardArr = requiresHigher ? secretariesData : viceMayorsData;
+            var note = requiresHigher ? 'Extended leave — forward to Secretary for endorsement.' : 'Short leave — forward to Vice Mayor for approval.';
+            $('#divEndForwardNote').text(note);
+            $('#divEndForwardSelect').data('useSecretaries', !!requiresHigher);
+            populateForwardSelect('#divEndForwardSelect', forwardArr, null);
+            syncHiddenForwardTo('#divEndForwardSelect', '#divEndForwardId', '#divEndForwardName', forwardArr);
+            if (attachUrl) {
+                $('#divEndDocumentLink').attr('href', ctx.replace(/\/$/, '') + attachUrl);
+                $('#divEndDocumentName').text(attachName || 'View Document');
+                $('#divEndDocumentRow').show();
+            } else { $('#divEndDocumentRow').hide(); }
+            $('#divEndDisapproveBtn').off('click').on('click', function () {
+                if (!confirm('Disapprove #' + id + ' for ' + name + '?')) return;
+                var remarks = $('#divisionEndorseRemarks').val();
+                var form = document.createElement('form'); form.method = 'post'; form.action = ctx + 'leave-disapprove/' + id;
+                var csrf = document.querySelector('input[name="_csrf"]');
+                if (csrf) { var t = document.createElement('input'); t.type='hidden'; t.name=csrf.name; t.value=csrf.value; form.appendChild(t); }
+                if (remarks) { var r = document.createElement('input'); r.type='hidden'; r.name='remarks'; r.value=remarks; form.appendChild(r); }
+                document.body.appendChild(form); form.submit();
+            });
             $('#modalDivisionEndorse').modal('show');
         });
 
         $('.btnSecretaryEndorse').off('click').on('click', function () {
-            let id = $(this).data('id'), name = $(this).data('name');
+            var $btn = $(this);
+            var id = $btn.data('id'), name = $btn.data('name');
+            var attachUrl = $btn.data('attachment-url'), attachName = $btn.data('attachment-name');
             $('#secretaryEndorseForm').attr('action', ctx + 'leave-secretary-endorse/' + id);
             $('#secretaryEndorseEmployeeName').text(name + ' (Application #' + id + ')');
             $('#secretaryEndorseRemarks').val('');
+            populateForwardSelect('#secEndForwardSelect', viceMayorsData, null);
+            syncHiddenForwardTo('#secEndForwardSelect', '#secEndForwardId', '#secEndForwardName', viceMayorsData);
+            if (attachUrl) {
+                $('#secEndDocumentLink').attr('href', ctx.replace(/\/$/, '') + attachUrl);
+                $('#secEndDocumentName').text(attachName || 'View Document');
+                $('#secEndDocumentRow').show();
+            } else { $('#secEndDocumentRow').hide(); }
+            $('#secEndDisapproveBtn').off('click').on('click', function () {
+                if (!confirm('Disapprove #' + id + ' for ' + name + '?')) return;
+                var remarks = $('#secretaryEndorseRemarks').val();
+                var form = document.createElement('form'); form.method = 'post'; form.action = ctx + 'leave-disapprove/' + id;
+                var csrf = document.querySelector('input[name="_csrf"]');
+                if (csrf) { var t = document.createElement('input'); t.type='hidden'; t.name=csrf.name; t.value=csrf.value; form.appendChild(t); }
+                if (remarks) { var r = document.createElement('input'); r.type='hidden'; r.name='remarks'; r.value=remarks; form.appendChild(r); }
+                document.body.appendChild(form); form.submit();
+            });
             $('#modalSecretaryEndorse').modal('show');
         });
 
         $('.btnApprove').off('click').on('click', function () {
-            let id = $(this).data('id'), name = $(this).data('name');
+            var id = $(this).data('id'), name = $(this).data('name');
             $('#approveForm').attr('action', ctx + 'leave-approve/' + id);
             $('#approveEmployeeName').text(name + ' (Application #' + id + ')');
             $('#approveRemarks').val('');

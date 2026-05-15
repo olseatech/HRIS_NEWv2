@@ -60,6 +60,20 @@
             $('#modalResubmit').modal('show');
         });
 
+        // Cancellation request modal — for APPROVED leaves (2-step workflow)
+        $(document).on('click', '.btnRequestCancel', function () {
+            var id    = $(this).data('id');
+            var type  = $(this).data('leave') || '';
+            var from  = $(this).data('from')  || '';
+            var to    = $(this).data('to')    || '';
+            $('#cancelRequestForm').attr('action', ctx + '/my-leave-cancel-request/' + id);
+            $('#cancelRequestSummary').text(type + '  —  ' + from + ' to ' + to);
+            // Clear previous file selection
+            $('#cancellationLetter').val('');
+            $('#cancellationReason').val('');
+            $('#modalCancelRequest').modal('show');
+        });
+
         // Auto-calculate days when either date input changes
         $('#inputDateFrom, #inputDateTo').on('change', calculateDays);
 

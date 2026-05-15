@@ -310,6 +310,91 @@ public class LeaveMyAccountController {
     }
 
     // -----------------------------------------------------------------------
+    // POST — request cancellation of own APPROVED application (2-step workflow)
+    // -----------------------------------------------------------------------
+
+    @PostMapping("/my-leave-cancel-request/{id}")
+    public String requestCancellation(
+            @PathVariable Long id,
+            @RequestParam(value = "cancellationReason", required = false) String cancellationReason,
+            @RequestParam(value = "cancellationLetter", required = false) MultipartFile letter,
+            HttpServletRequest request,
+            final RedirectAttributes redirect) {
+
+        Employee actor = getActor(request);
+        if (actor == null) return "redirect:/login";
+
+        LeaveApplication app = applicationRepo.findById(id).orElse(null);
+        if (app == null || app.getEmployee().getId() != actor.getId()) {
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("ERROR", "Application not found or does not belong to you."));
+            return "redirect:/my-leave";
+        }
+        if (app.getStatus() != LeaveApplication.LeaveStatus.APPROVED) {
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("ERROR",
+                        "Cancellation requests can only be filed for APPROVED applications."));
+            return "redirect:/my-leave";
+        }
+        if (letter == null || letter.isEmpty()) {
+            redirect.addFlashAttribute("uxmessage",
+                    new UXMessage("ERROR",
+                        "A letter of cancellation (PDF or image) is required."));
+            return "redirect:/my-leave";
+        }
+        try {
+            String letterPath = fileStorageService.store(letter, letter.getOriginalFilename());
+            String letterName = letter.getOriginalFilename();
+            String letterMime = fileStorageService.detectMimeType(letter);
+            leaveService.requestCancellation(id, actor.getId(), actor.getDisplayName(),
+                    letterPath, letterName, letterMime);
+            redirect.addFlashAttribute("uxmessage", new UXMessage("SUCCESS",
+                "Cancellation request submitted. Awaiting approval by the Head of Agency."));
+        } catch (Exception e) {
+            redirect.addFlashAttribute("uxmessage", new UXMessage("ERROR", e.getMessage()));
+        }
+        return "redirect:/my-leave";
+    }
+
+    // -----------------------------------------------------------------------
+    // GET — employee views own cancellation letter
+    // -----------------------------------------------------------------------
+
+    @GetMapping("/my-leave-cancellation-letter/{id}")
+    @ResponseBody
+    public ResponseEntity<Resource> viewCancellationLetter(
+            @PathVariable Long id,
+            HttpServletRequest request) {
+
+        Employee actor = getActor(request);
+        if (actor == null) return ResponseEntity.status(401).build();
+
+        LeaveApplication app = applicationRepo.findById(id).orElse(null);
+        if (app == null || app.getEmployee().getId() != actor.getId()) {
+            return ResponseEntity.status(403).build();
+        }
+        if (app.getCancellationLetterPath() == null
+                || app.getCancellationLetterPath().isBlank()) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            Resource resource = fileStorageService.load(app.getCancellationLetterPath());
+            String contentType = app.getCancellationLetterMimeType() != null
+                    ? app.getCancellationLetterMimeType() : "application/octet-stream";
+            String displayName = app.getCancellationLetterFileName() != null
+                    ? app.getCancellationLetterFileName() : "cancellation-letter";
+            return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "inline; filename=\"" + displayName + "\"")
+                    .body(resource);
+        } catch (Exception e) {
+            log.warn("Cancellation letter not found for application #{}: {}", id, e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    // -----------------------------------------------------------------------
     // ATTACHMENT VIEW (employee views own attachment)
     // -----------------------------------------------------------------------
 

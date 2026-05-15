@@ -297,14 +297,15 @@
                                     <td class="text-center font-weight-semibold" th:text="${app.numberOfDays}"></td>
                                     <td th:text="${app.reason}"></td>
                                     <td>
-                                        <span th:text="${app.status != null ? app.status : 'UNKNOWN'}"
-                                              th:classappend="${statusName == 'PENDING'     ? ' badge badge-warning'   :
-                                                               statusName == 'ENDORSED'    ? ' badge badge-info'      :
-                                                               statusName == 'APPROVED'    ? ' badge badge-success'   :
-                                                               statusName == 'DISAPPROVED' ? ' badge badge-danger'    :
-                                                               statusName == 'RETURNED'    ? ' badge badge-secondary' :
-                                                               statusName == 'CANCELLED'   ? ' badge badge-dark'      :
-                                                                                            ' badge badge-light'}">
+                                        <span th:text="${statusName == 'CANCEL_REQUESTED' ? 'Cancel Requested' : (app.status != null ? app.status : 'UNKNOWN')}"
+                                              th:classappend="${statusName == 'PENDING'          ? ' badge badge-warning'   :
+                                                               statusName == 'ENDORSED'         ? ' badge badge-info'      :
+                                                               statusName == 'APPROVED'         ? ' badge badge-success'   :
+                                                               statusName == 'CANCEL_REQUESTED' ? ' badge badge-warning'   :
+                                                               statusName == 'DISAPPROVED'      ? ' badge badge-danger'    :
+                                                               statusName == 'RETURNED'         ? ' badge badge-secondary' :
+                                                               statusName == 'CANCELLED'        ? ' badge badge-dark'      :
+                                                                                                  ' badge badge-light'}">
                                         </span>
                                         <small th:if="${statusName == 'APPROVED' and !app.withPay}"
                                                class="d-block text-danger font-weight-semibold">LWOP</small>
