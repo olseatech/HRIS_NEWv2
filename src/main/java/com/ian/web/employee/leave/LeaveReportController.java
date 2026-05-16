@@ -564,7 +564,7 @@ public class LeaveReportController {
 
         params.put("daysWithPay",          daysWithPay);
         params.put("daysWithoutPay",       daysWithoutPay);
-        params.put("othersApprovalSpec",   "");
+        params.put("othersApprovalSpec",   ""); // TODO: wire when LeaveApplication.approvalSpecification column is added
         params.put("disapprovedDueTo",     disapprovedDueTo);
         params.put("approvedByName",       app.getApprovedByName() != null ? app.getApprovedByName() : "");
         params.put("approvedByTitle",      "Authorized Official");

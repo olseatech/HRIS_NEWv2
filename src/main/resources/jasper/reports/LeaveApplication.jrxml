@@ -221,7 +221,7 @@
     </background>
 
     <title>
-        <band height="765" splitType="Stretch">
+        <band height="780" splitType="Stretch">
 
             <!-- ================================================================ -->
             <!-- SECTION A: FORM HEADER                                           -->
@@ -1423,12 +1423,12 @@
                 <textFieldExpression><![CDATA[$P{approvedByName}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="0" y="756" width="539" height="9" uuid="aa000190-0000-0000-0000-000000000190"/>
+                <reportElement x="0" y="769" width="539" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
                 <textElement textAlignment="Center"><font fontName="Arial" size="6"/></textElement>
                 <text><![CDATA[(Authorized Official/Approving Authority)]]></text>
             </staticText>
             <textField>
-                <reportElement x="0" y="752" width="539" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
+                <reportElement x="0" y="757" width="539" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
                 <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByTitle}]]></textFieldExpression>
             </textField>
