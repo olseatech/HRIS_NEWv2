@@ -9,7 +9,7 @@
     leftMargin="28"
     rightMargin="28"
     topMargin="28"
-    bottomMargin="28"
+    bottomMargin="14"
     uuid="3f7a89b2-c1d4-4e56-8f90-a2b3c4d5e6f7">
 
     <!-- ===== PARAMETERS ===== -->
@@ -221,7 +221,7 @@
     </background>
 
     <title>
-        <band height="786" splitType="Stretch">
+        <band height="800" splitType="Stretch">
 
             <!-- ================================================================ -->
             <!-- SECTION A: FORM HEADER                                           -->
@@ -1068,11 +1068,11 @@
             </staticText>
             <!-- Not Requested -->
             <rectangle>
-                <reportElement x="271" y="467" width="8" height="8" uuid="aa000134-0000-0000-0000-000000000134"/>
+                <reportElement x="271" y="464" width="8" height="8" uuid="aa000134-0000-0000-0000-000000000134"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
             </rectangle>
             <textField>
-                <reportElement x="271" y="467" width="8" height="8" uuid="aa000135-0000-0000-0000-000000000135">
+                <reportElement x="271" y="464" width="8" height="8" uuid="aa000135-0000-0000-0000-000000000135">
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkCommutationNotRequested})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
@@ -1081,17 +1081,17 @@
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="281" y="466" width="256" height="11" uuid="aa000136-0000-0000-0000-000000000136"/>
+                <reportElement x="281" y="463" width="256" height="11" uuid="aa000136-0000-0000-0000-000000000136"/>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Not Requested]]></text>
             </staticText>
             <!-- Requested -->
             <rectangle>
-                <reportElement x="271" y="481" width="8" height="8" uuid="aa000137-0000-0000-0000-000000000137"/>
+                <reportElement x="271" y="477" width="8" height="8" uuid="aa000137-0000-0000-0000-000000000137"/>
                 <graphicElement><pen lineWidth="0.5"/></graphicElement>
             </rectangle>
             <textField>
-                <reportElement x="271" y="481" width="8" height="8" uuid="aa000138-0000-0000-0000-000000000138">
+                <reportElement x="271" y="477" width="8" height="8" uuid="aa000138-0000-0000-0000-000000000138">
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkCommutationRequested})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
@@ -1100,7 +1100,7 @@
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="281" y="480" width="256" height="11" uuid="aa000139-0000-0000-0000-000000000139"/>
+                <reportElement x="281" y="476" width="256" height="11" uuid="aa000139-0000-0000-0000-000000000139"/>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Requested]]></text>
             </staticText>
@@ -1111,10 +1111,10 @@
             <!-- Signature line and label sit in the 6D right column (x=271)    -->
             <!-- after the "Requested" checkbox (bottom y=491), before y=508     -->
             <line>
-                <reportElement x="271" y="495" width="268" height="1" uuid="cc000141-0000-0000-0000-000000000141"/>
+                <reportElement x="271" y="508" width="268" height="1" uuid="cc000141-0000-0000-0000-000000000141"/>
             </line>
             <staticText>
-                <reportElement x="271" y="497" width="268" height="9" uuid="cc000142-0000-0000-0000-000000000142"/>
+                <reportElement x="271" y="510" width="268" height="9" uuid="cc000142-0000-0000-0000-000000000142"/>
                 <textElement textAlignment="Center">
                     <font fontName="DejaVu Sans" size="6"/>
                 </textElement>
@@ -1122,7 +1122,7 @@
             </staticText>
             <!-- Full-width separator between section 6 and section 7 -->
             <line>
-                <reportElement x="0" y="508" width="539" height="1" uuid="aa000140-0000-0000-0000-000000000140"/>
+                <reportElement x="0" y="522" width="539" height="1" uuid="aa000140-0000-0000-0000-000000000140"/>
             </line>
 
             <!-- ================================================================ -->
@@ -1142,7 +1142,7 @@
 
             <!-- Vertical divider 7A | 7B, 7C | 7D (y=566 to y=740) -->
             <line>
-                <reportElement x="269" y="566" width="1" height="181" uuid="aa000146-0000-0000-0000-000000000146"/>
+                <reportElement x="269" y="566" width="1" height="185" uuid="aa000146-0000-0000-0000-000000000146"/>
             </line>
 
             <!-- 7A / 7B sub-headers -->
@@ -1363,25 +1363,25 @@
 
             <!-- 7C: Days without pay -->
             <textField>
-                <reportElement x="2" y="719" width="55" height="11" uuid="aa000183-0000-0000-0000-000000000183"/>
+                <reportElement x="2" y="717" width="55" height="11" uuid="aa000183-0000-0000-0000-000000000183"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{daysWithoutPay}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="59" y="719" width="200" height="11" uuid="aa000184-0000-0000-0000-000000000184"/>
+                <reportElement x="59" y="717" width="200" height="11" uuid="aa000184-0000-0000-0000-000000000184"/>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[ days without pay]]></text>
             </staticText>
 
             <!-- 7C: Others specify -->
             <staticText>
-                <reportElement x="2" y="732" width="60" height="11" uuid="aa000185-0000-0000-0000-000000000185"/>
+                <reportElement x="2" y="728" width="60" height="11" uuid="aa000185-0000-0000-0000-000000000185"/>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Others (Specify):]]></text>
             </staticText>
             <textField>
-                <reportElement x="63" y="732" width="205" height="11" uuid="aa000186-0000-0000-0000-000000000186"/>
+                <reportElement x="63" y="728" width="205" height="11" uuid="aa000186-0000-0000-0000-000000000186"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{othersApprovalSpec}]]></textFieldExpression>
@@ -1389,7 +1389,7 @@
 
             <!-- 7D: Disapproved due to box -->
             <textField>
-                <reportElement x="271" y="706" width="266" height="40" uuid="aa000187-0000-0000-0000-000000000187"/>
+                <reportElement x="271" y="706" width="266" height="30" uuid="aa000187-0000-0000-0000-000000000187"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{disapprovedDueTo}]]></textFieldExpression>
@@ -1399,24 +1399,27 @@
             <!-- FINAL APPROVAL SIGNATURE (full width)                            -->
             <!-- ================================================================ -->
             <line>
-                <reportElement x="0" y="747" width="539" height="1" uuid="aa000188-0000-0000-0000-000000000188"/>
+                <reportElement x="0" y="751" width="539" height="1" uuid="aa000188-0000-0000-0000-000000000188"/>
+            </line>
+            <!-- Signature line for Authorized Official (blank space y=752..763 = 12 px for handwriting) -->
+            <line>
+                <reportElement x="170" y="764" width="200" height="1" uuid="cc000192-0000-0000-0000-000000000192"/>
             </line>
             <textField>
-                <reportElement x="170" y="749" width="200" height="13" uuid="aa000189-0000-0000-0000-000000000189"/>
-                <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
+                <reportElement x="170" y="766" width="200" height="11" uuid="aa000189-0000-0000-0000-000000000189"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="9" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByName}]]></textFieldExpression>
             </textField>
-            <staticText>
-                <reportElement x="170" y="775" width="200" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
-                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
-                <text><![CDATA[(Authorized Official/Approving Authority)]]></text>
-            </staticText>
             <textField>
-                <reportElement x="170" y="763" width="200" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
+                <reportElement x="170" y="778" width="200" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByTitle}]]></textFieldExpression>
             </textField>
+            <staticText>
+                <reportElement x="170" y="790" width="200" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
+                <text><![CDATA[(Authorized Official/Approving Authority)]]></text>
+            </staticText>
 
         </band>
     </title>
