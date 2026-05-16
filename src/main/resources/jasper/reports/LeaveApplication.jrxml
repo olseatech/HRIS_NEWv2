@@ -228,18 +228,18 @@
             <!-- ================================================================ -->
             <staticText>
                 <reportElement x="0" y="0" width="200" height="11" uuid="aa000001-0000-0000-0000-000000000001"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[CS Form No. 6]]></text>
             </staticText>
             <staticText>
                 <reportElement x="0" y="11" width="200" height="11" uuid="aa000002-0000-0000-0000-000000000002"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Revised 2020]]></text>
             </staticText>
             <staticText>
                 <reportElement x="0" y="24" width="539" height="22" uuid="aa000003-0000-0000-0000-000000000003"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="14" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="14" isBold="true"/>
                 </textElement>
                 <text><![CDATA[APPLICATION FOR LEAVE]]></text>
             </staticText>
@@ -248,12 +248,12 @@
             </line>
             <staticText>
                 <reportElement x="0" y="49" width="539" height="16" uuid="aa000005-0000-0000-0000-000000000005"/>
-                <textElement><font fontName="Arial" size="6" isItalic="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="6" isItalic="true"/></textElement>
                 <text><![CDATA[WARNING: Any misrepresentation made in the Personal Data Sheet and the Work Experience Sheet shall cause the filing of administrative/criminal case/s against the person concerned.]]></text>
             </staticText>
             <staticText>
                 <reportElement x="0" y="66" width="539" height="10" uuid="aa000006-0000-0000-0000-000000000006"/>
-                <textElement><font fontName="Arial" size="6" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="6" isBold="true"/></textElement>
                 <text><![CDATA[READ THE ATTACHED GUIDE TO FILLING OUT THE APPLICATION FOR LEAVE (CS FORM NO. 6) BEFORE ACCOMPLISHING THE APPLICATION FORM.]]></text>
             </staticText>
 
@@ -268,13 +268,13 @@
             <!-- Row 1: Office | Name -->
             <staticText>
                 <reportElement x="2" y="79" width="130" height="11" uuid="aa000008-0000-0000-0000-000000000008"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[1.  OFFICE/DEPARTMENT]]></text>
             </staticText>
             <textField>
                 <reportElement x="2" y="91" width="130" height="13" uuid="aa000009-0000-0000-0000-000000000009"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="8"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{officeDepartment}]]></textFieldExpression>
             </textField>
             <line>
@@ -282,13 +282,13 @@
             </line>
             <staticText>
                 <reportElement x="137" y="79" width="400" height="11" uuid="aa000011-0000-0000-0000-000000000011"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[2.  NAME:                         (Last)                                     (First)                                  (Middle)]]></text>
             </staticText>
             <textField>
                 <reportElement x="137" y="91" width="400" height="13" uuid="aa000012-0000-0000-0000-000000000012"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="8"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{lastName} + ",  " + $P{firstName} + "  " + $P{middleName}]]></textFieldExpression>
             </textField>
 
@@ -298,13 +298,13 @@
             </line>
             <staticText>
                 <reportElement x="2" y="107" width="130" height="11" uuid="aa000014-0000-0000-0000-000000000014"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[3.  DATE OF FILING]]></text>
             </staticText>
             <textField>
                 <reportElement x="2" y="119" width="130" height="13" uuid="aa000015-0000-0000-0000-000000000015"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="8"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{dateOfFiling}]]></textFieldExpression>
             </textField>
             <line>
@@ -312,13 +312,13 @@
             </line>
             <staticText>
                 <reportElement x="137" y="107" width="260" height="11" uuid="aa000017-0000-0000-0000-000000000017"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[4.  POSITION]]></text>
             </staticText>
             <textField>
                 <reportElement x="137" y="119" width="260" height="13" uuid="aa000018-0000-0000-0000-000000000018"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="8"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{position}]]></textFieldExpression>
             </textField>
             <line>
@@ -326,13 +326,13 @@
             </line>
             <staticText>
                 <reportElement x="402" y="107" width="135" height="11" uuid="aa000020-0000-0000-0000-000000000020"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[5.  SALARY]]></text>
             </staticText>
             <textField>
                 <reportElement x="402" y="119" width="135" height="13" uuid="aa000021-0000-0000-0000-000000000021"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="8"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{salary}]]></textFieldExpression>
             </textField>
 
@@ -346,7 +346,7 @@
             <staticText>
                 <reportElement x="0" y="134" width="539" height="17" backcolor="#CCCCCC" mode="Opaque" uuid="aa000023-0000-0000-0000-000000000023"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="9" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="9" isBold="true"/>
                 </textElement>
                 <text><![CDATA[6.  DETAILS OF APPLICATION]]></text>
             </staticText>
@@ -359,12 +359,12 @@
             <!-- 6A / 6B sub-headers -->
             <staticText>
                 <reportElement x="2" y="152" width="264" height="13" uuid="aa000025-0000-0000-0000-000000000025"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[6A.  TYPE OF LEAVE TO BE AVAILED OF]]></text>
             </staticText>
             <staticText>
                 <reportElement x="271" y="152" width="266" height="13" uuid="aa000026-0000-0000-0000-000000000026"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[6B.  DETAILS OF LEAVE]]></text>
             </staticText>
 
@@ -382,19 +382,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkVacation})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="166" width="254" height="11" uuid="aa000029-0000-0000-0000-000000000029"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Vacation Leave]]></text>
             </staticText>
             <!-- 6B: Vacation header -->
             <staticText>
                 <reportElement x="271" y="166" width="266" height="11" uuid="aa000030-0000-0000-0000-000000000030"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[For Vacation/Mandatory/Forced Leave:]]></text>
             </staticText>
 
@@ -408,13 +408,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkWithinPhilippines})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="178" width="244" height="11" uuid="aa000033-0000-0000-0000-000000000033"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Within the Philippines]]></text>
             </staticText>
             <!-- 6B: Within Philippines -->
@@ -427,19 +427,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkWithinPhilippines})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="178" width="80" height="11" uuid="aa000036-0000-0000-0000-000000000036"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Within the Philippines ]]></text>
             </staticText>
             <textField>
                 <reportElement x="361" y="178" width="176" height="11" uuid="aa000037-0000-0000-0000-000000000037"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{withinPhilippinesSpec}]]></textFieldExpression>
             </textField>
 
@@ -453,13 +453,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkAbroad})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="190" width="244" height="11" uuid="aa000040-0000-0000-0000-000000000040"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Abroad (Specify)]]></text>
             </staticText>
             <!-- 6B: Abroad -->
@@ -472,19 +472,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkAbroad})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="190" width="60" height="11" uuid="aa000043-0000-0000-0000-000000000043"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Abroad (Specify) ]]></text>
             </staticText>
             <textField>
                 <reportElement x="341" y="190" width="196" height="11" uuid="aa000044-0000-0000-0000-000000000044"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{abroadSpec}]]></textFieldExpression>
             </textField>
 
@@ -498,13 +498,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkMandatory})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="203" width="254" height="11" uuid="aa000047-0000-0000-0000-000000000047"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Mandatory/Forced Leave]]></text>
             </staticText>
 
@@ -518,19 +518,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkSick})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="216" width="254" height="11" uuid="aa000050-0000-0000-0000-000000000050"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Sick Leave]]></text>
             </staticText>
             <!-- 6B: Sick Leave header -->
             <staticText>
                 <reportElement x="271" y="216" width="266" height="11" uuid="aa000051-0000-0000-0000-000000000051"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[For Sick Leave:]]></text>
             </staticText>
 
@@ -544,13 +544,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkInHospital})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="229" width="244" height="11" uuid="aa000054-0000-0000-0000-000000000054"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[In Hospital (Specify Illness)]]></text>
             </staticText>
             <!-- 6B: In Hospital -->
@@ -563,19 +563,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkInHospital})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="229" width="60" height="11" uuid="aa000057-0000-0000-0000-000000000057"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[In Hospital ]]></text>
             </staticText>
             <textField>
                 <reportElement x="341" y="229" width="196" height="11" uuid="aa000058-0000-0000-0000-000000000058"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{inHospitalSpec}]]></textFieldExpression>
             </textField>
 
@@ -589,13 +589,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkOutPatient})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="242" width="244" height="11" uuid="aa000061-0000-0000-0000-000000000061"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Out Patient (Specify Illness)]]></text>
             </staticText>
             <!-- 6B: Out Patient -->
@@ -608,19 +608,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkOutPatient})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="242" width="60" height="11" uuid="aa000064-0000-0000-0000-000000000064"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Out Patient ]]></text>
             </staticText>
             <textField>
                 <reportElement x="341" y="242" width="196" height="11" uuid="aa000065-0000-0000-0000-000000000065"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{outPatientSpec}]]></textFieldExpression>
             </textField>
 
@@ -634,13 +634,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkMaternity})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="255" width="254" height="11" uuid="aa000068-0000-0000-0000-000000000068"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Maternity Leave]]></text>
             </staticText>
 
@@ -654,13 +654,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkPaternity})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="268" width="254" height="11" uuid="aa000071-0000-0000-0000-000000000071"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Paternity Leave]]></text>
             </staticText>
 
@@ -674,13 +674,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkSpecialPrivilege})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="281" width="254" height="11" uuid="aa000074-0000-0000-0000-000000000074"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Special Privilege Leave]]></text>
             </staticText>
 
@@ -694,13 +694,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkSoloParent})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="294" width="254" height="11" uuid="aa000077-0000-0000-0000-000000000077"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Solo Parent Leave (R.A. 8972)]]></text>
             </staticText>
 
@@ -714,19 +714,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkStudy})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="307" width="254" height="11" uuid="aa000080-0000-0000-0000-000000000080"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Study Leave]]></text>
             </staticText>
             <!-- 6B: Study Leave header -->
             <staticText>
                 <reportElement x="271" y="307" width="266" height="11" uuid="aa000081-0000-0000-0000-000000000081"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[For Study Leave:]]></text>
             </staticText>
 
@@ -740,13 +740,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkMastersDegree})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="320" width="244" height="11" uuid="aa000084-0000-0000-0000-000000000084"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Completion of Master's Degree]]></text>
             </staticText>
             <!-- 6B: Master's Degree -->
@@ -759,13 +759,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkMastersDegree})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="320" width="256" height="11" uuid="aa000087-0000-0000-0000-000000000087"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Completion of Master's Degree]]></text>
             </staticText>
 
@@ -779,13 +779,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkBoardExam})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="333" width="244" height="11" uuid="aa000090-0000-0000-0000-000000000090"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[BAR/Board Examination Review]]></text>
             </staticText>
             <!-- 6B: Board Exam -->
@@ -798,13 +798,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkBoardExam})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="333" width="256" height="11" uuid="aa000093-0000-0000-0000-000000000093"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[BAR/Board Examination Review]]></text>
             </staticText>
 
@@ -818,13 +818,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkVAWC})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="346" width="254" height="11" uuid="aa000096-0000-0000-0000-000000000096"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[10-Day VAWC Leave (R.A. 9262)]]></text>
             </staticText>
 
@@ -838,13 +838,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkRehabilitation})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="359" width="254" height="11" uuid="aa000099-0000-0000-0000-000000000099"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Rehabilitation Privilege]]></text>
             </staticText>
 
@@ -858,42 +858,42 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkWomen})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="372" width="254" height="11" uuid="aa000102-0000-0000-0000-000000000102"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Special Leave Benefits for Women (R.A. 9710)]]></text>
             </staticText>
             <!-- Women's SLB specify (left) -->
             <staticText>
                 <reportElement x="14" y="386" width="40" height="11" uuid="aa000103-0000-0000-0000-000000000103"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Specify:]]></text>
             </staticText>
             <textField>
                 <reportElement x="55" y="386" width="213" height="11" uuid="aa000104-0000-0000-0000-000000000104"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{womenSpec}]]></textFieldExpression>
             </textField>
             <!-- 6B: Women's SLB -->
             <staticText>
                 <reportElement x="271" y="372" width="266" height="11" uuid="aa000105-0000-0000-0000-000000000105"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[For Special Leave Benefits for Women:]]></text>
             </staticText>
             <staticText>
                 <reportElement x="271" y="386" width="40" height="11" uuid="aa000106-0000-0000-0000-000000000106"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Specify:]]></text>
             </staticText>
             <textField>
                 <reportElement x="311" y="386" width="226" height="11" uuid="aa000107-0000-0000-0000-000000000107"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{womenSpec}]]></textFieldExpression>
             </textField>
 
@@ -907,13 +907,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkCalamity})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="398" width="254" height="11" uuid="aa000110-0000-0000-0000-000000000110"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Special Emergency (Calamity) Leave]]></text>
             </staticText>
 
@@ -927,25 +927,25 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkOthers})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="14" y="411" width="55" height="11" uuid="aa000113-0000-0000-0000-000000000113"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Others (Specify):]]></text>
             </staticText>
             <textField>
                 <reportElement x="70" y="411" width="198" height="11" uuid="aa000114-0000-0000-0000-000000000114"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{othersSpec}]]></textFieldExpression>
             </textField>
             <!-- 6B: Others header -->
             <staticText>
                 <reportElement x="271" y="411" width="266" height="11" uuid="aa000115-0000-0000-0000-000000000115"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[For Others:]]></text>
             </staticText>
 
@@ -959,13 +959,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkMonetization})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="424" width="244" height="11" uuid="aa000118-0000-0000-0000-000000000118"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Monetization of Leave Credits]]></text>
             </staticText>
             <!-- 6B: Monetization -->
@@ -978,13 +978,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkMonetization})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="424" width="256" height="11" uuid="aa000121-0000-0000-0000-000000000121"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Monetization of Leave Credits]]></text>
             </staticText>
 
@@ -998,13 +998,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkTerminalLeave})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="24" y="437" width="244" height="11" uuid="aa000124-0000-0000-0000-000000000124"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Terminal Leave]]></text>
             </staticText>
             <!-- 6B: Terminal Leave -->
@@ -1017,13 +1017,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkTerminalLeave})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="437" width="256" height="11" uuid="aa000127-0000-0000-0000-000000000127"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Terminal Leave]]></text>
             </staticText>
 
@@ -1037,33 +1037,33 @@
             <!-- 6C: Working Days -->
             <staticText>
                 <reportElement x="2" y="453" width="264" height="11" uuid="aa000129-0000-0000-0000-000000000129"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[6C.  NUMBER OF WORKING DAYS APPLIED FOR]]></text>
             </staticText>
             <textField>
                 <reportElement x="2" y="465" width="264" height="13" uuid="aa000130-0000-0000-0000-000000000130"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="8"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{numberOfWorkingDays}]]></textFieldExpression>
             </textField>
 
             <!-- 6C: Inclusive Dates -->
             <staticText>
                 <reportElement x="2" y="480" width="264" height="11" uuid="aa000131-0000-0000-0000-000000000131"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[INCLUSIVE DATES:]]></text>
             </staticText>
             <textField>
                 <reportElement x="2" y="492" width="264" height="13" uuid="aa000132-0000-0000-0000-000000000132"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="8"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{inclusiveDates}]]></textFieldExpression>
             </textField>
 
             <!-- 6D: Commutation -->
             <staticText>
                 <reportElement x="271" y="453" width="266" height="11" uuid="aa000133-0000-0000-0000-000000000133"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[6D.  COMMUTATION]]></text>
             </staticText>
             <!-- Not Requested -->
@@ -1076,13 +1076,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkCommutationNotRequested})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="466" width="256" height="11" uuid="aa000136-0000-0000-0000-000000000136"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Not Requested]]></text>
             </staticText>
             <!-- Requested -->
@@ -1095,13 +1095,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkCommutationRequested})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="480" width="256" height="11" uuid="aa000139-0000-0000-0000-000000000139"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Requested]]></text>
             </staticText>
 
@@ -1111,20 +1111,24 @@
             <line>
                 <reportElement x="0" y="508" width="539" height="1" uuid="aa000140-0000-0000-0000-000000000140"/>
             </line>
+            <!-- Signature line — 7 px blank space above, applicant signs here -->
+            <line>
+                <reportElement x="310" y="515" width="227" height="1" uuid="bb000141-0000-0000-0000-000000000141"/>
+            </line>
             <staticText>
-                <reportElement x="310" y="510" width="227" height="11" uuid="aa000141-0000-0000-0000-000000000141"/>
-                <textElement textAlignment="Right"><font fontName="Arial" size="7"/></textElement>
-                <text><![CDATA[Signature of Applicant:]]></text>
+                <reportElement x="310" y="517" width="227" height="10" uuid="aa000141-0000-0000-0000-000000000141"/>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
+                <text><![CDATA[Signature of Applicant]]></text>
             </staticText>
             <textField>
-                <reportElement x="310" y="522" width="227" height="12" uuid="aa000142-0000-0000-0000-000000000142"/>
+                <reportElement x="310" y="528" width="227" height="11" uuid="aa000142-0000-0000-0000-000000000142"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="8"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{applicantSignDate}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="310" y="535" width="227" height="10" uuid="aa000143-0000-0000-0000-000000000143"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="6"/></textElement>
+                <reportElement x="310" y="540" width="227" height="7" uuid="aa000143-0000-0000-0000-000000000143"/>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Date)]]></text>
             </staticText>
 
@@ -1138,7 +1142,7 @@
             <staticText>
                 <reportElement x="0" y="548" width="539" height="17" backcolor="#CCCCCC" mode="Opaque" uuid="aa000145-0000-0000-0000-000000000145"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="9" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="9" isBold="true"/>
                 </textElement>
                 <text><![CDATA[7.  DETAILS OF ACTION ON APPLICATION]]></text>
             </staticText>
@@ -1151,12 +1155,12 @@
             <!-- 7A / 7B sub-headers -->
             <staticText>
                 <reportElement x="2" y="566" width="264" height="11" uuid="aa000147-0000-0000-0000-000000000147"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[7A.  CERTIFICATION OF LEAVE CREDITS]]></text>
             </staticText>
             <staticText>
                 <reportElement x="271" y="566" width="266" height="11" uuid="aa000148-0000-0000-0000-000000000148"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[7B.  RECOMMENDATION]]></text>
             </staticText>
 
@@ -1166,17 +1170,17 @@
             <!-- Column headers -->
             <staticText>
                 <reportElement x="2" y="578" width="82" height="11" uuid="aa000149-0000-0000-0000-000000000149"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[As of:]]></text>
             </staticText>
             <staticText>
                 <reportElement x="85" y="578" width="90" height="11" uuid="aa000150-0000-0000-0000-000000000150"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[Vacation Leave]]></text>
             </staticText>
             <staticText>
                 <reportElement x="178" y="578" width="90" height="11" uuid="aa000151-0000-0000-0000-000000000151"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[Sick Leave]]></text>
             </staticText>
 
@@ -1184,70 +1188,70 @@
             <textField>
                 <reportElement x="85" y="590" width="90" height="11" uuid="aa000152-0000-0000-0000-000000000152"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{vacAsOf}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="178" y="590" width="90" height="11" uuid="aa000153-0000-0000-0000-000000000153"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{slAsOf}]]></textFieldExpression>
             </textField>
 
             <!-- Total Earned -->
             <staticText>
                 <reportElement x="2" y="603" width="82" height="11" uuid="aa000154-0000-0000-0000-000000000154"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Total Earned:]]></text>
             </staticText>
             <textField>
                 <reportElement x="85" y="603" width="90" height="11" uuid="aa000155-0000-0000-0000-000000000155"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{vacTotalEarned}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="178" y="603" width="90" height="11" uuid="aa000156-0000-0000-0000-000000000156"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{slTotalEarned}]]></textFieldExpression>
             </textField>
 
             <!-- Less this application -->
             <staticText>
                 <reportElement x="2" y="616" width="82" height="11" uuid="aa000157-0000-0000-0000-000000000157"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Less this application:]]></text>
             </staticText>
             <textField>
                 <reportElement x="85" y="616" width="90" height="11" uuid="aa000158-0000-0000-0000-000000000158"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{vacLessThisApp}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="178" y="616" width="90" height="11" uuid="aa000159-0000-0000-0000-000000000159"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{slLessThisApp}]]></textFieldExpression>
             </textField>
 
             <!-- Balance -->
             <staticText>
                 <reportElement x="2" y="629" width="82" height="11" uuid="aa000160-0000-0000-0000-000000000160"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Balance:]]></text>
             </staticText>
             <textField>
                 <reportElement x="85" y="629" width="90" height="11" uuid="aa000161-0000-0000-0000-000000000161"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{vacBalance}]]></textFieldExpression>
             </textField>
             <textField>
                 <reportElement x="178" y="629" width="90" height="11" uuid="aa000162-0000-0000-0000-000000000162"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{slBalance}]]></textFieldExpression>
             </textField>
 
@@ -1258,17 +1262,17 @@
             <textField>
                 <reportElement x="2" y="644" width="265" height="13" uuid="aa000164-0000-0000-0000-000000000164"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="8"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{certifiedBy}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="2" y="658" width="265" height="10" uuid="aa000165-0000-0000-0000-000000000165"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="6"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Authorized Officer)]]></text>
             </staticText>
             <textField>
                 <reportElement x="2" y="669" width="265" height="11" uuid="aa000166-0000-0000-0000-000000000166"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[($P{certDaysWithPay} != null && !$P{certDaysWithPay}.isEmpty())
   ? ("Cert: " + $P{certDaysWithPay} + " w/pay;  " + ($P{certDaysWithoutPay} != null ? $P{certDaysWithoutPay} : "") + " w/o pay")
   : $P{certifiedByTitle}]]></textFieldExpression>
@@ -1287,13 +1291,13 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkForApproval})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="577" width="256" height="11" uuid="aa000169-0000-0000-0000-000000000169"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[For approval]]></text>
             </staticText>
 
@@ -1307,19 +1311,19 @@
                     <printWhenExpression><![CDATA[Boolean.TRUE.equals($P{chkForDisapproval})]]></printWhenExpression>
                 </reportElement>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font fontName="Arial" size="7" isBold="true"/>
+                    <font fontName="DejaVu Sans" size="7" isBold="true"/>
                 </textElement>
                 <textFieldExpression><![CDATA["✓"]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="281" y="590" width="256" height="11" uuid="aa000172-0000-0000-0000-000000000172"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[For disapproval due to:]]></text>
             </staticText>
             <textField>
                 <reportElement x="271" y="602" width="266" height="28" uuid="aa000173-0000-0000-0000-000000000173"/>
                 <box><pen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{disapprovalReason}]]></textFieldExpression>
             </textField>
 
@@ -1330,17 +1334,17 @@
             <textField>
                 <reportElement x="271" y="634" width="266" height="13" uuid="aa000175-0000-0000-0000-000000000175"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="8"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{supervisorName}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="271" y="648" width="266" height="10" uuid="aa000176-0000-0000-0000-000000000176"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="6"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Authorized Officer)]]></text>
             </staticText>
             <textField>
                 <reportElement x="271" y="659" width="266" height="11" uuid="aa000177-0000-0000-0000-000000000177"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{supervisorTitle}]]></textFieldExpression>
             </textField>
 
@@ -1354,12 +1358,12 @@
             <!-- 7C / 7D sub-headers -->
             <staticText>
                 <reportElement x="2" y="684" width="264" height="11" uuid="aa000179-0000-0000-0000-000000000179"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[7C.  APPROVED FOR:]]></text>
             </staticText>
             <staticText>
                 <reportElement x="271" y="684" width="266" height="11" uuid="aa000180-0000-0000-0000-000000000180"/>
-                <textElement><font fontName="Arial" size="7" isBold="true"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[7D.  DISAPPROVED DUE TO:]]></text>
             </staticText>
 
@@ -1367,12 +1371,12 @@
             <textField>
                 <reportElement x="2" y="696" width="55" height="11" uuid="aa000181-0000-0000-0000-000000000181"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{daysWithPay}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="59" y="696" width="200" height="11" uuid="aa000182-0000-0000-0000-000000000182"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[ days with pay]]></text>
             </staticText>
 
@@ -1380,25 +1384,25 @@
             <textField>
                 <reportElement x="2" y="709" width="55" height="11" uuid="aa000183-0000-0000-0000-000000000183"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{daysWithoutPay}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="59" y="709" width="200" height="11" uuid="aa000184-0000-0000-0000-000000000184"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[ days without pay]]></text>
             </staticText>
 
             <!-- 7C: Others specify -->
             <staticText>
                 <reportElement x="2" y="722" width="60" height="11" uuid="aa000185-0000-0000-0000-000000000185"/>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <text><![CDATA[Others (Specify):]]></text>
             </staticText>
             <textField>
                 <reportElement x="63" y="722" width="205" height="11" uuid="aa000186-0000-0000-0000-000000000186"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{othersApprovalSpec}]]></textFieldExpression>
             </textField>
 
@@ -1406,7 +1410,7 @@
             <textField>
                 <reportElement x="271" y="696" width="266" height="40" uuid="aa000187-0000-0000-0000-000000000187"/>
                 <box><pen lineWidth="0.5"/></box>
-                <textElement><font fontName="Arial" size="7"/></textElement>
+                <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{disapprovedDueTo}]]></textFieldExpression>
             </textField>
 
@@ -1419,17 +1423,17 @@
             <textField>
                 <reportElement x="0" y="742" width="539" height="13" uuid="aa000189-0000-0000-0000-000000000189"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="Arial" size="9" isBold="true"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="9" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByName}]]></textFieldExpression>
             </textField>
             <staticText>
                 <reportElement x="0" y="769" width="539" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="6"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Authorized Official/Approving Authority)]]></text>
             </staticText>
             <textField>
                 <reportElement x="0" y="757" width="539" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
-                <textElement textAlignment="Center"><font fontName="Arial" size="7"/></textElement>
+                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByTitle}]]></textFieldExpression>
             </textField>
 
