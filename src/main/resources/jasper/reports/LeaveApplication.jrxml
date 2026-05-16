@@ -1241,18 +1241,18 @@
                 <reportElement x="2" y="654" width="265" height="1" uuid="aa000163-0000-0000-0000-000000000163"/>
             </line>
             <textField>
-                <reportElement x="2" y="656" width="265" height="13" uuid="aa000164-0000-0000-0000-000000000164"/>
+                <reportElement x="2" y="660" width="265" height="13" uuid="aa000164-0000-0000-0000-000000000164"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{certifiedBy}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="2" y="670" width="265" height="10" uuid="aa000165-0000-0000-0000-000000000165"/>
+                <reportElement x="2" y="676" width="265" height="10" uuid="aa000165-0000-0000-0000-000000000165"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Authorized Officer)]]></text>
             </staticText>
             <textField>
-                <reportElement x="2" y="681" width="265" height="11" uuid="aa000166-0000-0000-0000-000000000166"/>
+                <reportElement x="2" y="688" width="265" height="11" uuid="aa000166-0000-0000-0000-000000000166"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[($P{certDaysWithPay} != null && !$P{certDaysWithPay}.isEmpty())
   ? ("Cert: " + $P{certDaysWithPay} + " w/pay;  " + ($P{certDaysWithoutPay} != null ? $P{certDaysWithoutPay} : "") + " w/o pay")
@@ -1313,18 +1313,18 @@
                 <reportElement x="271" y="651" width="266" height="1" uuid="aa000174-0000-0000-0000-000000000174"/>
             </line>
             <textField>
-                <reportElement x="271" y="653" width="266" height="13" uuid="aa000175-0000-0000-0000-000000000175"/>
+                <reportElement x="271" y="657" width="266" height="13" uuid="aa000175-0000-0000-0000-000000000175"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
                 <textFieldExpression><![CDATA[$P{supervisorName}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="271" y="667" width="266" height="10" uuid="aa000176-0000-0000-0000-000000000176"/>
+                <reportElement x="271" y="673" width="266" height="10" uuid="aa000176-0000-0000-0000-000000000176"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Authorized Officer)]]></text>
             </staticText>
             <textField>
-                <reportElement x="271" y="678" width="266" height="11" uuid="aa000177-0000-0000-0000-000000000177"/>
+                <reportElement x="271" y="685" width="266" height="11" uuid="aa000177-0000-0000-0000-000000000177"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{supervisorTitle}]]></textFieldExpression>
             </textField>
@@ -1401,9 +1401,9 @@
             <line>
                 <reportElement x="0" y="751" width="539" height="1" uuid="aa000188-0000-0000-0000-000000000188"/>
             </line>
-            <!-- Signature line for Authorized Official (blank space y=752..763 = 12 px for handwriting) -->
+            <!-- Signature line for Authorized Official (aligned with label) -->
             <line>
-                <reportElement x="170" y="764" width="200" height="1" uuid="cc000192-0000-0000-0000-000000000192"/>
+                <reportElement x="170" y="779" width="200" height="1" uuid="cc000192-0000-0000-0000-000000000192"/>
             </line>
             <textField>
                 <reportElement x="170" y="766" width="200" height="11" uuid="aa000189-0000-0000-0000-000000000189"/>
