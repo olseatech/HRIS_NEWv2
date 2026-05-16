@@ -490,8 +490,8 @@ public class LeaveReportController {
         boolean chkForApproval    = supRec.contains("APPROVED") && !supRec.contains("DISAPPROVED");
         boolean chkForDisapproval = supRec.equalsIgnoreCase("DISAPPROVED");
 
-        String daysWithPay    = app.getFinalDaysWithPay()    != null ? fmt(app.getFinalDaysWithPay())    : "";
-        String daysWithoutPay = app.getFinalDaysWithoutPay() != null ? fmt(app.getFinalDaysWithoutPay()) : "";
+        String daysWithPay    = app.getFinalDaysWithPay()    != null ? fmtHuman(app.getFinalDaysWithPay())    : "";
+        String daysWithoutPay = app.getFinalDaysWithoutPay() != null ? fmtHuman(app.getFinalDaysWithoutPay()) : "";
 
         boolean isDisapproved = app.getStatus() == LeaveApplication.LeaveStatus.DISAPPROVED;
         String disapprovedDueTo = isDisapproved && app.getRemarks() != null ? app.getRemarks() : "";
@@ -539,7 +539,7 @@ public class LeaveReportController {
         params.put("chkTerminalLeave",       chkTerminalLeave);
 
         params.put("inclusiveDates",         inclusiveDates);
-        params.put("numberOfWorkingDays",    fmt(app.getNumberOfDays()));
+        params.put("numberOfWorkingDays",    fmtHuman(app.getNumberOfDays()) + " days");
         params.put("chkCommutationRequested",    app.isRequestedCommutation());
         params.put("chkCommutationNotRequested", !app.isRequestedCommutation());
 
@@ -595,6 +595,17 @@ public class LeaveReportController {
     /** Format a double as a leave-days string with 3 decimal places. */
     private String fmt(double value) {
         return String.format("%.3f", value);
+    }
+
+    /**
+     * Format a leave-days double as a human-readable string.
+     * Whole numbers → integer (e.g. 5.0 → "5"), fractions → 1 dp (e.g. 5.5 → "5.5").
+     */
+    private String fmtHuman(double value) {
+        long rounded = Math.round(value);
+        return (Math.abs(value - rounded) < 0.005)
+               ? String.valueOf(rounded)
+               : String.format("%.1f", value);
     }
 
     // -----------------------------------------------------------------------
