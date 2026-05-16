@@ -1106,31 +1106,24 @@
             </staticText>
 
             <!-- ================================================================ -->
-            <!-- APPLICANT SIGNATURE BLOCK                                        -->
+            <!-- APPLICANT SIGNATURE BLOCK — inside 6D column                    -->
             <!-- ================================================================ -->
+            <!-- Signature line and label sit in the 6D right column (x=271)    -->
+            <!-- after the "Requested" checkbox (bottom y=491), before y=508     -->
+            <line>
+                <reportElement x="271" y="495" width="268" height="1" uuid="cc000141-0000-0000-0000-000000000141"/>
+            </line>
+            <staticText>
+                <reportElement x="271" y="497" width="268" height="9" uuid="cc000142-0000-0000-0000-000000000142"/>
+                <textElement textAlignment="Center">
+                    <font fontName="DejaVu Sans" size="6"/>
+                </textElement>
+                <text><![CDATA[(Signature of Applicant)]]></text>
+            </staticText>
+            <!-- Full-width separator between section 6 and section 7 -->
             <line>
                 <reportElement x="0" y="508" width="539" height="1" uuid="aa000140-0000-0000-0000-000000000140"/>
             </line>
-            <!-- Signature line — 7 px blank space above, applicant signs here -->
-            <line>
-                <reportElement x="310" y="515" width="227" height="1" uuid="bb000141-0000-0000-0000-000000000141"/>
-            </line>
-            <staticText>
-                <reportElement x="310" y="517" width="227" height="10" uuid="aa000141-0000-0000-0000-000000000141"/>
-                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
-                <text><![CDATA[Signature of Applicant]]></text>
-            </staticText>
-            <textField>
-                <reportElement x="310" y="528" width="227" height="11" uuid="aa000142-0000-0000-0000-000000000142"/>
-                <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="8"/></textElement>
-                <textFieldExpression><![CDATA[$P{applicantSignDate}]]></textFieldExpression>
-            </textField>
-            <staticText>
-                <reportElement x="310" y="540" width="227" height="7" uuid="aa000143-0000-0000-0000-000000000143"/>
-                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
-                <text><![CDATA[(Date)]]></text>
-            </staticText>
 
             <!-- ================================================================ -->
             <!-- SECTION 7 HEADER                                                 -->
@@ -1167,36 +1160,24 @@
             <!-- ================================================================ -->
             <!-- 7A: LEAVE CREDITS TABLE                                          -->
             <!-- ================================================================ -->
-            <!-- Column headers -->
-            <staticText>
-                <reportElement x="2" y="578" width="82" height="11" uuid="aa000149-0000-0000-0000-000000000149"/>
+            <!-- "As of:" full-width row — filing date inline, above column headers -->
+            <textField>
+                <reportElement x="2" y="578" width="267" height="11" uuid="aa000149-0000-0000-0000-000000000149"/>
                 <textElement><font fontName="DejaVu Sans" size="7"/></textElement>
-                <text><![CDATA[As of:]]></text>
-            </staticText>
+                <textFieldExpression><![CDATA["As of:   " + $P{applicantSignDate}]]></textFieldExpression>
+            </textField>
+            <!-- Column headers moved down one row (y=578 → y=590) -->
             <staticText>
-                <reportElement x="85" y="578" width="90" height="11" uuid="aa000150-0000-0000-0000-000000000150"/>
+                <reportElement x="85" y="590" width="90" height="11" uuid="aa000150-0000-0000-0000-000000000150"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[Vacation Leave]]></text>
             </staticText>
             <staticText>
-                <reportElement x="178" y="578" width="90" height="11" uuid="aa000151-0000-0000-0000-000000000151"/>
+                <reportElement x="178" y="590" width="90" height="11" uuid="aa000151-0000-0000-0000-000000000151"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7" isBold="true"/></textElement>
                 <text><![CDATA[Sick Leave]]></text>
             </staticText>
-
-            <!-- As of dates -->
-            <textField>
-                <reportElement x="85" y="590" width="90" height="11" uuid="aa000152-0000-0000-0000-000000000152"/>
-                <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
-                <textFieldExpression><![CDATA[$P{vacAsOf}]]></textFieldExpression>
-            </textField>
-            <textField>
-                <reportElement x="178" y="590" width="90" height="11" uuid="aa000153-0000-0000-0000-000000000153"/>
-                <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
-                <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
-                <textFieldExpression><![CDATA[$P{slAsOf}]]></textFieldExpression>
-            </textField>
+            <!-- vacAsOf / slAsOf year rows removed — date now shown inline above -->
 
             <!-- Total Earned -->
             <staticText>
@@ -1421,18 +1402,18 @@
                 <reportElement x="0" y="740" width="539" height="1" uuid="aa000188-0000-0000-0000-000000000188"/>
             </line>
             <textField>
-                <reportElement x="0" y="742" width="539" height="13" uuid="aa000189-0000-0000-0000-000000000189"/>
+                <reportElement x="170" y="742" width="200" height="13" uuid="aa000189-0000-0000-0000-000000000189"/>
                 <box><pen lineWidth="0.0"/><bottomPen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="9" isBold="true"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByName}]]></textFieldExpression>
             </textField>
             <staticText>
-                <reportElement x="0" y="769" width="539" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
+                <reportElement x="170" y="769" width="200" height="10" uuid="aa000190-0000-0000-0000-000000000190"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="6"/></textElement>
                 <text><![CDATA[(Authorized Official/Approving Authority)]]></text>
             </staticText>
             <textField>
-                <reportElement x="0" y="757" width="539" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
+                <reportElement x="170" y="757" width="200" height="11" uuid="aa000191-0000-0000-0000-000000000191"/>
                 <textElement textAlignment="Center"><font fontName="DejaVu Sans" size="7"/></textElement>
                 <textFieldExpression><![CDATA[$P{approvedByTitle}]]></textFieldExpression>
             </textField>
